@@ -3,7 +3,7 @@ from __future__ import annotations
 import torch
 from torch import nn
 
-from DanRL_retrieval.training.model import mlp
+from DanKS.training.model import mlp
 
 
 class CandidateRecallReranker(nn.Module):

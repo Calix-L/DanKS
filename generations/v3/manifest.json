@@ -1,209 +1,209 @@
 {
   "files": [
     {
-      "path": "DanRL_retrieval/__init__.py",
+      "path": "DanKS/__init__.py",
       "sha256": "2c13182c89ce19e6bd3ef810d0a388b7a807b5cb5f59c2b1b5c1b61db5f14403",
       "size": 31
     },
     {
-      "path": "DanRL_retrieval/environment/requirements-training-core.txt",
+      "path": "DanKS/environment/requirements-training-core.txt",
       "sha256": "72b0fc32fb18c7e62b0887deae8b679e84f09a8573ba90be097ced84d10f3661",
       "size": 362
     },
     {
-      "path": "DanRL_retrieval/environment/requirements-training-npu.txt",
+      "path": "DanKS/environment/requirements-training-npu.txt",
       "sha256": "369c83831591adb0a1ffd750e4a783fbfd3ea673550de46d9875bf15a5bb7cce",
       "size": 225
     },
     {
-      "path": "DanRL_retrieval/retrieval/__init__.py",
+      "path": "DanKS/retrieval/__init__.py",
       "sha256": "a7ab3128a6d1d8acd46055f5441871fca5bb29e509b6ce885ee7dba0679c3457",
       "size": 211
     },
     {
-      "path": "DanRL_retrieval/retrieval/action_generator.py",
+      "path": "DanKS/retrieval/action_generator.py",
       "sha256": "f4868e58ffb0c3ec6ba7d4b6b36f5a3a345082d8ce6d1fdf10a2736d06a9f024",
       "size": 2439
     },
     {
-      "path": "DanRL_retrieval/retrieval/b5_trace.py",
+      "path": "DanKS/retrieval/b5_trace.py",
       "sha256": "ef822025606dbee3e14b427aa65a5c50e51cdef930a56d6c01b801fae25aa153",
       "size": 8209
     },
     {
-      "path": "DanRL_retrieval/retrieval/candidate_coverage.py",
+      "path": "DanKS/retrieval/candidate_coverage.py",
       "sha256": "7eeab569f482d2d26252cac7c916462f967d4e1044ac7d92573ded28b2cf3270",
       "size": 2348
     },
     {
-      "path": "DanRL_retrieval/retrieval/card_memory.py",
+      "path": "DanKS/retrieval/card_memory.py",
       "sha256": "a130d796984948c7af5aef566bb315c9f12f073556f0c1f88eafc49a2e1c64c8",
       "size": 13606
     },
     {
-      "path": "DanRL_retrieval/retrieval/cards.py",
+      "path": "DanKS/retrieval/cards.py",
       "sha256": "7085d80690c04b3c9991af1f6a963e0dcfabaeaf5288d3301fe30babad8f5473",
       "size": 4528
     },
     {
-      "path": "DanRL_retrieval/retrieval/context.py",
+      "path": "DanKS/retrieval/context.py",
       "sha256": "97145b87a0524bff733f82734c7f9621876334d81c8d9d480ab411af38796c24",
       "size": 2601
     },
     {
-      "path": "DanRL_retrieval/retrieval/diagnostics.py",
+      "path": "DanKS/retrieval/diagnostics.py",
       "sha256": "0e44ede0ffe7b3351a4da670bd373c2ff2b2a02b294799102d7fc2519dac43cf",
       "size": 5443
     },
     {
-      "path": "DanRL_retrieval/retrieval/gpu_frontier.py",
+      "path": "DanKS/retrieval/gpu_frontier.py",
       "sha256": "7f0008a4c10a719f0b6ecbdb67e28751e254035acc7c44f775c0ec8c2e702461",
       "size": 4796
     },
     {
-      "path": "DanRL_retrieval/retrieval/models.py",
+      "path": "DanKS/retrieval/models.py",
       "sha256": "39eaeaafbc8651ea10f139ce82bae7c7e7810c1727dc9be8216f7041c92214df",
       "size": 2567
     },
     {
-      "path": "DanRL_retrieval/retrieval/native_actor_core.py",
+      "path": "DanKS/retrieval/native_actor_core.py",
       "sha256": "93188c9a6ac59c5e535313838dc8ce3818d9753cf911744dfcf4d52f283322c4",
       "size": 9481
     },
     {
-      "path": "DanRL_retrieval/retrieval/native_cover.py",
+      "path": "DanKS/retrieval/native_cover.py",
       "sha256": "9eaf9d8742df7f625b98202fcfa989a1e1e391cc30487eddd80904f9700a7cc8",
       "size": 16926
     },
     {
-      "path": "DanRL_retrieval/retrieval/native_cpp/__init__.py",
-      "sha256": "9ad8d919ac53d5fcc293f09e22e7f6b442706889986b9039cca92574f95a9f93",
-      "size": 196
+      "path": "DanKS/retrieval/native_cpp/__init__.py",
+      "sha256": "9fc677eef392a5000e68d000d10309b266dde2467c0d403fd3f697b3b968a17d",
+      "size": 186
     },
     {
-      "path": "DanRL_retrieval/retrieval/native_cpp/actor_core.cpp",
+      "path": "DanKS/retrieval/native_cpp/actor_core.cpp",
       "sha256": "37d248c5556cc6131fd8f12297750abc8cb0ba6657572e70681d529688db80ed",
       "size": 48655
     },
     {
-      "path": "DanRL_retrieval/retrieval/native_cpp/cover.cpp",
+      "path": "DanKS/retrieval/native_cpp/cover.cpp",
       "sha256": "9f52732ad18f11da69563919e8f2bfd3e8b8418a0dcbd6d7e7e6a8c261c0f554",
       "size": 222025
     },
     {
-      "path": "DanRL_retrieval/retrieval/native_cpp/setup.py",
+      "path": "DanKS/retrieval/native_cpp/setup.py",
       "sha256": "af5086254b0ea8fb9d0ec44c0b66975a16d106fdebacd23184602558d40c251a",
       "size": 1963
     },
     {
-      "path": "DanRL_retrieval/retrieval/partitioner.py",
+      "path": "DanKS/retrieval/partitioner.py",
       "sha256": "87926b4e3b0dbf59ba4984511edc5d436625273560484a0c1c3b2f2edcf3343b",
       "size": 95738
     },
     {
-      "path": "DanRL_retrieval/retrieval/pressure.py",
+      "path": "DanKS/retrieval/pressure.py",
       "sha256": "ef5e731b28d123584b389135dd12da9c5a6f70786c6735978e32e3c24c65c87c",
       "size": 1158
     },
     {
-      "path": "DanRL_retrieval/retrieval/ranker.py",
+      "path": "DanKS/retrieval/ranker.py",
       "sha256": "681b78569350935a39d011658dcd008f69e8696b128787c7f04fd40e97adc7b2",
       "size": 89296
     },
     {
-      "path": "DanRL_retrieval/retrieval/rules.py",
+      "path": "DanKS/retrieval/rules.py",
       "sha256": "cd24d626f91e0e3861ad1bff44ec48f47d0389a398019cff38d47ee1fa3a2a13",
       "size": 5106
     },
     {
-      "path": "DanRL_retrieval/retrieval/scoring.py",
+      "path": "DanKS/retrieval/scoring.py",
       "sha256": "7ff75861ccb9254c4b9ce270cfaaaa93f0b95e758501d80a20c95ef5b29d13cb",
       "size": 62328
     },
     {
-      "path": "DanRL_retrieval/retrieval/structural_calibration.py",
+      "path": "DanKS/retrieval/structural_calibration.py",
       "sha256": "c4d55800e7b4ba31dff7c67d03c7c8325611c936965f808e1e049eb34637c66b",
       "size": 4734
     },
     {
-      "path": "DanRL_retrieval/retrieval/tempo.py",
+      "path": "DanKS/retrieval/tempo.py",
       "sha256": "083c56e23dd9c7f836c95c8a1c4ecbc243a732516a79cd24caeff6427309f9e6",
       "size": 8241
     },
     {
-      "path": "DanRL_retrieval/training/__init__.py",
-      "sha256": "4506404f5b0a708780f079df84b67a083fe60465b6ba4138320306d35226db25",
-      "size": 77
+      "path": "DanKS/training/__init__.py",
+      "sha256": "e0fe5caa2e7abab45ad104856f8327c73371e4daddf35cd753eacd2788888282",
+      "size": 67
     },
     {
-      "path": "DanRL_retrieval/training/accelerator.py",
+      "path": "DanKS/training/accelerator.py",
       "sha256": "d530acf5b93b72ac03aaedd8e75115a6786c5b8f1cbca3159d516026b3331c8f",
       "size": 3057
     },
     {
-      "path": "DanRL_retrieval/training/candidate_pool.py",
-      "sha256": "c4304a4dfd5029de753afed812a82e9116a86a3eacc735e23d855344e7138dbd",
-      "size": 7199
+      "path": "DanKS/training/candidate_pool.py",
+      "sha256": "cb319b3018d09530c4d5bdbc9a72c65c4e1e8d0355614fc51efcc2c68cd7e664",
+      "size": 7179
     },
     {
-      "path": "DanRL_retrieval/training/featurizer.py",
-      "sha256": "ac51a9d874a930812e051d3b2a9a25e616b542260023578fe3e5fc422401c79e",
-      "size": 19693
+      "path": "DanKS/training/featurizer.py",
+      "sha256": "0c60c16c89dade0936674b8a911ada8080870173d38a984e7d51c719b25d8355",
+      "size": 19623
     },
     {
-      "path": "DanRL_retrieval/training/model.py",
-      "sha256": "a6135b5c4cd30f3fd4cbb6eb9fbf096bc623269b9c42d85783f7a2f3fd86fe65",
-      "size": 52006
+      "path": "DanKS/training/model.py",
+      "sha256": "73ace39a6fc32fb2003b38a3dd3229e779d45cb3b947b86bad043d95d7f7ba22",
+      "size": 51976
     },
     {
-      "path": "DanRL_retrieval/training/persistent_ppo_server.py",
-      "sha256": "09e61af7830fe063c01fdee43eac5884e9eb74b8bd46247b31b0af63cf64189b",
-      "size": 4811
+      "path": "DanKS/training/persistent_ppo_server.py",
+      "sha256": "81301712a0efdc3986a56dc204c58379c660f73f04f76e195bd98edcf51be68b",
+      "size": 4791
     },
     {
-      "path": "DanRL_retrieval/training/persistent_ppo_transport.py",
+      "path": "DanKS/training/persistent_ppo_transport.py",
       "sha256": "b4586f6f00ee21939e71c2df3bce5feeddce6b1ea08ec65947e2e21f5e732ca6",
       "size": 3555
     },
     {
-      "path": "DanRL_retrieval/training/ppo.py",
-      "sha256": "a6b9ba65722ba3cdafaa097eaf991cdbbf478bd6a7d8e434c86f9bcab8afddeb",
-      "size": 12938
+      "path": "DanKS/training/ppo.py",
+      "sha256": "05a860e68febed7344b52483b0d4864682900989c740f8b0b6170938ba76c738",
+      "size": 12908
     },
     {
-      "path": "DanRL_retrieval/training/recall_model.py",
-      "sha256": "9e64b3806c255e6ab1c909277808e4570fbd19db7fce50f49b3d28a89dc3fee6",
-      "size": 5175
+      "path": "DanKS/training/recall_model.py",
+      "sha256": "d670778958c8407497d27619f8135a8267385350d50710e8948bc7617c4db2b4",
+      "size": 5165
     },
     {
-      "path": "DanRL_retrieval/training/recall_runtime.py",
-      "sha256": "9b63b1eecf94aae7fce26548a752662577f66c0114ce2574995908b6ee777e38",
-      "size": 7331
+      "path": "DanKS/training/recall_runtime.py",
+      "sha256": "e5dcc44c84bfb0815a2a571b0f2c98f9961cd6186032fda3fb97dbdef21635fe",
+      "size": 7251
     },
     {
-      "path": "DanRL_retrieval/training/schema.py",
-      "sha256": "0b3039157c2f47c7ecb15e794250b575a3bd93a56a82b412f32d0333a2593bcf",
-      "size": 9335
+      "path": "DanKS/training/schema.py",
+      "sha256": "d772ab2e12c81fb99ef1648e573b00e2bdeec8074e147cfe0911fadfbb5d3aeb",
+      "size": 9315
     },
     {
-      "path": "DanRL_retrieval/training/team_belief.py",
-      "sha256": "3da9d948a665e5624d0e616767b8fea8a598431bd10f10c1c8a8fd85ac6b55a3",
-      "size": 15173
+      "path": "DanKS/training/team_belief.py",
+      "sha256": "ac93417dd3b09a5d226a7c1bf9d7bed5472a8dd53cca701f00c8a9d3d794d8e7",
+      "size": 15103
     },
     {
-      "path": "DanRL_retrieval/training/train_ppo.py",
-      "sha256": "b209c31b8c38be821387f21ab1ea69bce171ee5b262d7e328f3f50d6f03e31ab",
-      "size": 64553
+      "path": "DanKS/training/train_ppo.py",
+      "sha256": "bcc15da36eec8a9c95ae252864dcaf460023743b2850ab3d615db4ff065c1bc0",
+      "size": 64473
     },
     {
-      "path": "DanRL_retrieval/training/training_state.py",
+      "path": "DanKS/training/training_state.py",
       "sha256": "b383cd4ef20f0ab508f661b8b6a61a6292dfbf8d9d9e6a351cf842aeaf8da4b6",
       "size": 5249
     },
     {
-      "path": "DanRL_retrieval/training/type_suppression.py",
-      "sha256": "736e153728fc99014286516c3b25dde230229ce7e20c989500d4e61decacb80c",
-      "size": 8564
+      "path": "DanKS/training/type_suppression.py",
+      "sha256": "34be5f0ef5881b77b5e339af1e6c90c76c54c44dbb31d1e309dbe35ec548861c",
+      "size": 8514
     }
   ],
   "generation": "v3",

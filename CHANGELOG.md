@@ -13,7 +13,7 @@ All notable public repository changes are documented here. This project follows 
 - Apache-2.0 licensing and public contributor documentation.
 - Unified `python -m danks_repo` navigation, verification, and packaging commands.
 - Generation-specific Quickstart and source map.
-- Importable `DanRL_retrieval` namespace for the V3 snapshot.
+- Importable `DanKS` namespace for the V3 snapshot.
 - Shared importable `guandan.engine` rules package.
 - Complete V3 PPO learner, persistent transport, training-state, model, feature, and team-belief source.
 

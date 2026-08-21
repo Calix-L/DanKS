@@ -7,23 +7,23 @@ from typing import NamedTuple
 
 import numpy as np
 
-from DanRL_retrieval.retrieval.action_generator import ActionGenerator
-from DanRL_retrieval.retrieval.context import RetrievalContext
-from DanRL_retrieval.retrieval.cards import CARD_INDEX, card_rank
-from DanRL_retrieval.retrieval.models import (
+from DanKS.retrieval.action_generator import ActionGenerator
+from DanKS.retrieval.context import RetrievalContext
+from DanKS.retrieval.cards import CARD_INDEX, card_rank
+from DanKS.retrieval.models import (
     ActionCandidate,
     CardGroup,
     ScoredAction,
 )
-from DanRL_retrieval.retrieval.partitioner import FullSearchPartitioner
-from DanRL_retrieval.retrieval.rules import (
+from DanKS.retrieval.partitioner import FullSearchPartitioner
+from DanKS.retrieval.rules import (
     can_follow_action,
     group_to_action,
     is_bomb_kind,
     normalize_kind,
     normalize_rank,
 )
-from DanRL_retrieval.training.schema import (
+from DanKS.training.schema import (
     TEAM_BELIEF_SEAT_COUNT,
     TEAM_BELIEF_TARGET_DIM,
 )

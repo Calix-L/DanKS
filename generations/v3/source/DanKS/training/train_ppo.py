@@ -17,7 +17,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 if __name__ == "__main__" and os.environ.get("DANRL_DISABLE_PERSISTENT_PPO", "").lower() not in {"1", "true", "yes"}:
-    from DanRL_retrieval.training.persistent_ppo_transport import maybe_run_client
+    from DanKS.training.persistent_ppo_transport import maybe_run_client
 
     persistent_returncode = maybe_run_client()
     if persistent_returncode is not None:
@@ -29,7 +29,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader, TensorDataset
 
 
-from DanRL_retrieval.training.model import (  # noqa: E402
+from DanKS.training.model import (  # noqa: E402
     EfficientTeamBeliefTop10Selector,
     Phase14Top10Selector,
     Top10Selector,
@@ -38,8 +38,8 @@ from DanRL_retrieval.training.model import (  # noqa: E402
     selector_config_from_checkpoint,
     selector_model_type,
 )
-from DanRL_retrieval.training.ppo import PPOConfig, Top10PPOAgent, tensor_batch  # noqa: E402
-from DanRL_retrieval.training.schema import (  # noqa: E402
+from DanKS.training.ppo import PPOConfig, Top10PPOAgent, tensor_batch  # noqa: E402
+from DanKS.training.schema import (  # noqa: E402
     ACTION_KINDS, CARD_DIM, CANDIDATE_DIM, CANDIDATE_TACTICAL_SCALAR_OFFSET,
     FEATURE_VERSION, HISTORY_EVENT_DIM, HISTORY_LENGTH,
     HISTORY_EVENT_SEMANTICS, HISTORY_PROTOCOL, STATE_DIM, TOPK, FULL_LEGAL,
@@ -48,8 +48,8 @@ from DanRL_retrieval.training.schema import (  # noqa: E402
     TEAM_BELIEF_TARGET_NAMES,
     normalize_candidate_contract,
 )
-from DanRL_retrieval.training.accelerator import device_name, initialize_device, is_accelerator, seed_accelerator  # noqa: E402
-from DanRL_retrieval.training.training_state import (  # noqa: E402
+from DanKS.training.accelerator import device_name, initialize_device, is_accelerator, seed_accelerator  # noqa: E402
+from DanKS.training.training_state import (  # noqa: E402
     load_optimizer_training_state,
     save_optimizer_training_state,
     training_state_path,
@@ -59,7 +59,7 @@ from DanRL_retrieval.training.training_state import (  # noqa: E402
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Train a PPO top10 policy on frozen retrieval-baseline top10 rollout data.")
-    parser.add_argument("--rollout", default=str(ROOT / "DanRL_retrieval" / "data" / "ppo_rollout_bc_smoke.npz"))
+    parser.add_argument("--rollout", default=str(ROOT / "DanKS" / "data" / "ppo_rollout_bc_smoke.npz"))
     parser.add_argument(
         "--rollout-shards",
         nargs="*",
@@ -74,7 +74,7 @@ def parse_args() -> argparse.Namespace:
         help="team_belief selects the V11 calibrated tactical-quality network with pressure state and hidden-hand auxiliary supervision.",
     )
     parser.add_argument("--init-checkpoint", default="", help="Warm-start from a schema-compatible Top10 selector/PPO checkpoint.")
-    parser.add_argument("--output", default=str(ROOT / "DanRL_retrieval" / "checkpoints" / "top10_selector_ppo_smoke.pt"))
+    parser.add_argument("--output", default=str(ROOT / "DanKS" / "checkpoints" / "top10_selector_ppo_smoke.pt"))
     parser.add_argument("--hidden-dim", type=int, default=256)
     parser.add_argument("--candidate-hidden-dim", type=int, default=192)
     parser.add_argument("--behavior-pretrain-epochs", type=int, default=1, help="Supervised warmup on rollout behavior actions before PPO; useful for retrieval-baseline rollouts.")

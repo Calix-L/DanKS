@@ -25,9 +25,9 @@ For a guided walkthrough, read [Quickstart](docs/QUICKSTART.md). To locate impor
 | --- | --- | --- | --- |
 | `V1` | `DanKS` | [`generations/v1/README.md`](generations/v1/README.md) | Retrieval and NumPy selector foundations |
 | `V2` | `DanKS` | [`generations/v2/README.md`](generations/v2/README.md) | Staged-training retrieval and selector stack |
-| `V3` | `DanRL_retrieval` | [`generations/v3/README.md`](generations/v3/README.md) | Team-belief retrieval and PPO training stack |
+| `V3` | `DanKS` | [`generations/v3/README.md`](generations/v3/README.md) | Team-belief retrieval and PPO training stack |
 
-Do not put two generations on the same `PYTHONPATH`. The two `DanKS` packages are intentionally isolated snapshots, not interchangeable implementations.
+Do not put multiple generations on the same `PYTHONPATH`. All three expose the `DanKS` namespace but remain intentionally isolated, non-interchangeable implementations.
 
 ## Repository layout
 
@@ -45,7 +45,7 @@ DanKS/
 │   └── v3/
 │       ├── README.md
 │       ├── manifest.json
-│       └── source/DanRL_retrieval/
+│       └── source/DanKS/
 ├── guandan/             # shared 108-card rules engine
 ├── danks_repo/          # list/show/verify/package implementation
 ├── docs/                # public usage and repository documentation

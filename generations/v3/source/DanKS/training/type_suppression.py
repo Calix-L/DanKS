@@ -3,11 +3,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 import math
 
-from DanRL_retrieval.retrieval.card_memory import ResponseEvent, SeatPlayStats
-from DanRL_retrieval.retrieval.cards import action_type_size, rank_strength
-from DanRL_retrieval.retrieval.context import RetrievalContext
-from DanRL_retrieval.retrieval.models import ActionCandidate
-from DanRL_retrieval.retrieval.rules import normalize_kind, plain_points
+from DanKS.retrieval.card_memory import ResponseEvent, SeatPlayStats
+from DanKS.retrieval.cards import action_type_size, rank_strength
+from DanKS.retrieval.context import RetrievalContext
+from DanKS.retrieval.models import ActionCandidate
+from DanKS.retrieval.rules import normalize_kind, plain_points
 
 
 BASE_RESPONSE_RISK = 0.65

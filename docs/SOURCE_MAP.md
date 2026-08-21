@@ -31,7 +31,7 @@ Base: `generations/v2/source/DanKS`
 
 ## V3
 
-Base: `generations/v3/source/DanRL_retrieval`
+Base: `generations/v3/source/DanKS`
 
 | Area | Entry point |
 | --- | --- |

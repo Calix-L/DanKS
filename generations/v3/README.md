@@ -1,18 +1,18 @@
 # V3
 
-V3 contains the team-belief retrieval and PPO training stack. Its Python package is `DanRL_retrieval`.
+V3 contains the team-belief retrieval and PPO training stack. Its Python package is `DanKS`.
 
 ## Import
 
 ```bash
-python -m pip install -r generations/v3/source/DanRL_retrieval/environment/requirements-training-core.txt
-PYTHONPATH=generations/v3/source python -c "import DanRL_retrieval; print(DanRL_retrieval.__file__)"
+python -m pip install -r generations/v3/source/DanKS/environment/requirements-training-core.txt
+PYTHONPATH=generations/v3/source python -c "import DanKS; print(DanKS.__file__)"
 ```
 
 ## Read the code
 
 ```text
-source/DanRL_retrieval/
+source/DanKS/
 ├── retrieval/             # action generation, memory, partitioning, ranking
 ├── training/              # features, team belief, model, PPO, training runtime
 └── environment/           # public dependency specifications
@@ -20,11 +20,11 @@ source/DanRL_retrieval/
 
 Recommended first files:
 
-1. `source/DanRL_retrieval/retrieval/card_memory.py`
-2. `source/DanRL_retrieval/retrieval/ranker.py`
-3. `source/DanRL_retrieval/training/team_belief.py`
-4. `source/DanRL_retrieval/training/model.py`
-5. `source/DanRL_retrieval/training/ppo.py`
+1. `source/DanKS/retrieval/card_memory.py`
+2. `source/DanKS/retrieval/ranker.py`
+3. `source/DanKS/training/team_belief.py`
+4. `source/DanKS/training/model.py`
+5. `source/DanKS/training/ppo.py`
 
 The public V3 snapshot keeps the complete PPO learner, persistent learner transport, optimizer-state handling, recall path, and network feature stack. It excludes later experimental networks, operational services, evaluation tooling, generated Cython sources, and data conversion utilities. `manifest.json` is the authoritative inventory.
 

@@ -9,14 +9,14 @@ from typing import Any, Sequence
 import numpy as np
 import torch
 
-from DanRL_retrieval.retrieval.context import RetrievalContext
-from DanRL_retrieval.retrieval.candidate_coverage import tactical_coverage_indices
-from DanRL_retrieval.retrieval.models import ScoredAction
-from DanRL_retrieval.training.candidate_pool import shortlist_indices
-from DanRL_retrieval.training.featurizer import candidate_features, state_features
-from DanRL_retrieval.training.recall_model import CandidateRecallReranker
-from DanRL_retrieval.training.schema import CANDIDATE_DIM, FEATURE_VERSION, STATE_DIM, TOPK
-from DanRL_retrieval.training.accelerator import initialize_device
+from DanKS.retrieval.context import RetrievalContext
+from DanKS.retrieval.candidate_coverage import tactical_coverage_indices
+from DanKS.retrieval.models import ScoredAction
+from DanKS.training.candidate_pool import shortlist_indices
+from DanKS.training.featurizer import candidate_features, state_features
+from DanKS.training.recall_model import CandidateRecallReranker
+from DanKS.training.schema import CANDIDATE_DIM, FEATURE_VERSION, STATE_DIM, TOPK
+from DanKS.training.accelerator import initialize_device
 
 
 ORIGINAL_RANK_DETAIL = "xzz_original_retrieval_rank"

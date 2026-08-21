@@ -13,7 +13,7 @@ def make_catalog_repository(root: Path) -> Path:
     for generation, package_path in (
         ("v1", "DanKS"),
         ("v2", "DanKS"),
-        ("v3", "DanRL_retrieval"),
+        ("v3", "DanKS"),
     ):
         generation_root = root / "generations" / generation
         source = generation_root / "source" / package_path
@@ -60,7 +60,7 @@ def test_generation_summary_is_manifest_backed(tmp_path: Path) -> None:
     assert summary == {
         "generation": "v3",
         "display_name": "V3",
-        "package": "DanRL_retrieval",
+        "package": "DanKS",
         "files": 1,
         "bytes": 1,
         "source_path": "generations/v3/source",
@@ -74,10 +74,10 @@ def test_cli_list_and_show_are_immediately_useful(tmp_path: Path, capsys: pytest
     assert "V1" in listed
     assert "V2" in listed
     assert "V3" in listed
-    assert "DanRL_retrieval" in listed
+    assert "DanKS" in listed
 
     assert main(["--repository", str(repository), "show", "v3"]) == 0
     shown = capsys.readouterr().out
     assert "PYTHONPATH=generations/v3/source" in shown
-    assert "import DanRL_retrieval" in shown
+    assert "import DanKS" in shown
     assert "Model weights: not included" in shown

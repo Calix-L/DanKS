@@ -5,7 +5,7 @@ from typing import Any, Iterable
 
 import numpy as np
 
-from DanRL_retrieval.retrieval.cards import (
+from DanKS.retrieval.cards import (
     ALL_CARDS,
     CARD_INDEX,
     RANKS,
@@ -14,16 +14,16 @@ from DanRL_retrieval.retrieval.cards import (
     normalize_cards,
     rank_strength,
 )
-from DanRL_retrieval.retrieval.context import RetrievalContext
-from DanRL_retrieval.retrieval.card_memory import (
+from DanKS.retrieval.context import RetrievalContext
+from DanKS.retrieval.card_memory import (
     NETWORK_PLAY_STAT_FIELDS,
     NETWORK_PLAY_STAT_SCALES,
     SEAT_COUNT,
 )
-from DanRL_retrieval.retrieval.models import ScoredAction
-from DanRL_retrieval.retrieval.rules import normalize_kind
-from DanRL_retrieval.training.type_suppression import candidate_response_profile
-from DanRL_retrieval.training.schema import (
+from DanKS.retrieval.models import ScoredAction
+from DanKS.retrieval.rules import normalize_kind
+from DanKS.training.type_suppression import candidate_response_profile
+from DanKS.training.schema import (
     ACTION_KINDS,
     ACTION_KIND_DIM,
     CARD_DIM,

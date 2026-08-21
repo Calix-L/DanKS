@@ -6,11 +6,11 @@ from typing import Iterable, Sequence
 
 import numpy as np
 
-from DanRL_retrieval.retrieval.structural_calibration import (
+from DanKS.retrieval.structural_calibration import (
     StructuralCalibrationProfile,
     score_from_terms,
 )
-from DanRL_retrieval.training.schema import ACTION_KIND_DIM, CARD_DIM, RANK_DIM, TOPK
+from DanKS.training.schema import ACTION_KIND_DIM, CARD_DIM, RANK_DIM, TOPK
 
 POOL_VERSION = "ragged_candidate_pool_v1"
 

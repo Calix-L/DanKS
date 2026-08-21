@@ -16,6 +16,7 @@ from danks_repo.repository import (
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 FORBIDDEN_PLATFORM_TOKEN = "p" + "lm"
+LEGACY_V3_PACKAGE = "Dan" + "RL_retrieval"
 FORBIDDEN_GENERATION_DIRECTORIES = {
     "KSplatform",
     "scripts",
@@ -116,7 +117,7 @@ def test_public_generations_are_lean_and_platform_neutral() -> None:
         or FORBIDDEN_PLATFORM_TOKEN in path.read_text(encoding="utf-8").lower()
     ]
 
-    v3_training = generation_root / "v3/source/DanRL_retrieval/training"
+    v3_training = generation_root / "v3/source/DanKS/training"
     assert {
         "model.py",
         "ppo.py",
@@ -129,7 +130,7 @@ def test_public_generations_are_lean_and_platform_neutral() -> None:
 
 def test_generation_absolute_imports_resolve_inside_each_snapshot() -> None:
     missing: list[str] = []
-    for generation, package in (("v1", "DanKS"), ("v2", "DanKS"), ("v3", "DanRL_retrieval")):
+    for generation, package in (("v1", "DanKS"), ("v2", "DanKS"), ("v3", "DanKS")):
         source_root = REPOSITORY_ROOT / "generations" / generation / "source"
         for source_path in source_root.rglob("*.py"):
             tree = ast.parse(source_path.read_text(encoding="utf-8"), filename=str(source_path))
@@ -145,6 +146,22 @@ def test_generation_absolute_imports_resolve_inside_each_snapshot() -> None:
                     )
 
     assert missing == []
+
+
+def test_legacy_v3_package_name_is_absent() -> None:
+    offenders = []
+    for path in REPOSITORY_ROOT.rglob("*"):
+        if not path.is_file() or any(part in {".git", "dist", "__pycache__"} for part in path.parts):
+            continue
+        relative = path.relative_to(REPOSITORY_ROOT).as_posix()
+        if LEGACY_V3_PACKAGE.lower() in relative.lower():
+            offenders.append(relative)
+            continue
+        if path.suffix.lower() in {".py", ".md", ".json", ".toml", ".yml", ".yaml", ".txt"}:
+            if LEGACY_V3_PACKAGE.lower() in path.read_text(encoding="utf-8").lower():
+                offenders.append(relative)
+
+    assert offenders == []
 
 
 def test_shared_guandan_engine_is_packaged_once() -> None:

@@ -19,8 +19,8 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from DanRL_retrieval.training import train_ppo  # noqa: E402
-from DanRL_retrieval.training.persistent_ppo_transport import read_message, write_message  # noqa: E402
+from DanKS.training import train_ppo  # noqa: E402
+from DanKS.training.persistent_ppo_transport import read_message, write_message  # noqa: E402
 
 
 def parse_args() -> argparse.Namespace:

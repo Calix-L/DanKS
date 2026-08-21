@@ -8,9 +8,9 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from DanRL_retrieval.training.model import Top10Selector
-from DanRL_retrieval.training.accelerator import ACCELERATOR_TYPES
-from DanRL_retrieval.training.schema import (
+from DanKS.training.model import Top10Selector
+from DanKS.training.accelerator import ACCELERATOR_TYPES
+from DanKS.training.schema import (
     TEAM_BELIEF_TARGET_DIM,
     TEAM_BELIEF_TARGET_NAMES,
 )

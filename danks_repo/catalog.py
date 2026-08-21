@@ -21,7 +21,7 @@ GENERATION_CATALOG = {
     },
     "v3": {
         "display_name": "V3",
-        "package": "DanRL_retrieval",
+        "package": "DanKS",
         "focus": "team-belief retrieval and PPO training code",
     },
 }

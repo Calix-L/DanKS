@@ -18,6 +18,6 @@ Generation manifests are authoritative for snapshot contents. A file below `sour
 
 The root project version describes packaging tools only. It must not be used as an alias for V1, V2, or V3.
 
-V3 is nested below `source/DanRL_retrieval` so setting `PYTHONPATH=generations/v3/source` preserves its actual import namespace. V1 and V2 retain their original `source/DanKS` package roots.
+Every generation is nested below `source/DanKS`. Select exactly one generation with its `PYTHONPATH`; the shared namespace does not imply checkpoint or runtime compatibility across generations.
 
 Operational services, model-serving adapters, evaluation harnesses, copied per-generation tests, and data-preparation utilities are intentionally outside the public generation trees. V3 retains the full PPO learner and its runtime dependencies.

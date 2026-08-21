@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import hashlib
 
-from DanRL_retrieval.retrieval.card_memory import NETWORK_PLAY_STAT_FIELDS
-from DanRL_retrieval.retrieval.cards import ALL_CARDS, NORMAL_RANKS, RANKS
+from DanKS.retrieval.card_memory import NETWORK_PLAY_STAT_FIELDS
+from DanKS.retrieval.cards import ALL_CARDS, NORMAL_RANKS, RANKS
 
 
 TOPK = 10

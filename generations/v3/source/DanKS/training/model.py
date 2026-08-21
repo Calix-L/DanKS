@@ -8,7 +8,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 
-from DanRL_retrieval.training.schema import (
+from DanKS.training.schema import (
     ACTION_KINDS,
     ACTION_KIND_DIM,
     CARD_DIM,
@@ -1063,7 +1063,7 @@ EFFICIENT_TEAM_BELIEF_SELECTOR_TYPE = FEATURE_VERSION
 def _validate_phase14_history_contract(payload: dict[str, Any], model_type: str) -> None:
     if model_type not in {PHASE14_SELECTOR_TYPE, EFFICIENT_TEAM_BELIEF_SELECTOR_TYPE}:
         return
-    from DanRL_retrieval.training.schema import (
+    from DanKS.training.schema import (
         HISTORY_EVENT_DIM,
         HISTORY_LENGTH,
         HISTORY_PROTOCOL,
@@ -1129,7 +1129,7 @@ def selector_config_from_checkpoint(payload: dict[str, Any]) -> dict[str, int]:
 
 
 def build_selector_from_checkpoint(payload: dict[str, Any], *, device: torch.device | str | None = None) -> Top10Selector:
-    from DanRL_retrieval.training.schema import TOPK, normalize_candidate_contract
+    from DanKS.training.schema import TOPK, normalize_candidate_contract
 
     normalize_candidate_contract(
         payload.get("candidate_capacity", TOPK),

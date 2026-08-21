@@ -48,8 +48,8 @@ PYTHONPATH=generations/v2/source python -c "import DanKS; print(DanKS.__file__)"
 ### V3
 
 ```bash
-python -m pip install -r generations/v3/source/DanRL_retrieval/environment/requirements-training-core.txt
-PYTHONPATH=generations/v3/source python -c "import DanRL_retrieval; print(DanRL_retrieval.__file__)"
+python -m pip install -r generations/v3/source/DanKS/environment/requirements-training-core.txt
+PYTHONPATH=generations/v3/source python -c "import DanKS; print(DanKS.__file__)"
 ```
 
 V3 also needs a PyTorch build appropriate for your hardware. These commands verify package layout only; they do not download or provide private weights or training data.
