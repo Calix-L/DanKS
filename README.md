@@ -59,27 +59,136 @@ DanKS/
 └── NOTICE
 ```
 
-## Quick start
+## Environment setup
 
-Clone the repository and install the shared engine with the development checks:
+DanKS supports Python 3.10 and newer. Use a separate virtual environment for each generation so that its dependencies and `DanKS` namespace remain isolated.
+
+### Validated configurations
+
+| Target | System | Python | Framework | Key packages |
+| --- | --- | --- | --- | --- |
+| CI and shared engine | Linux | 3.10, 3.12 | — | pytest 7+ |
+| V1 | CPU | 3.11+ | NumPy selector | NumPy 2.4.6 |
+| V2 | CPU | 3.11+ | ONNX selector | NumPy 2.4.6, ONNX Runtime 1.27.0 |
+| V3 NVIDIA server | H100, driver 575.57.08 | 3.11.14 | PyTorch 2.8.0 + CUDA 12.8 | NumPy 2.4.6, pybind11 3.0.4 |
+| V3 Ascend server | Ubuntu 22.04.5, 910B2C, driver 24.1.0, CANN 8.5.0 | 3.10.12 | PyTorch 2.7.1 + torch_npu 2.7.1.post2 | NumPy 1.26.0, pybind11 3.0.4 |
+
+The two accelerator rows reproduce the project servers; they are reference configurations, not minimum hardware requirements.
+
+### 1. Clone and create a base environment
 
 ```bash
 git clone https://github.com/Calix-L/DanKS.git
 cd DanKS
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip
 python -m pip install -e '.[dev]'
 python -m pytest -q
 ```
 
-Select an AI generation through `PYTHONPATH`:
+On Windows PowerShell, activate the environment with `.venv\Scripts\Activate.ps1`.
+
+### 2. Select V1 or V2
+
+Create a Python 3.11 environment for one generation and expose only its package root:
 
 ```bash
+# V1
+python3.11 -m venv .venv-v1
+source .venv-v1/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e '.[dev]'
 python -m pip install -r versions/v1/requirements.txt
-PYTHONPATH=versions/v1 python -c "import DanKS; print(DanKS.__file__)"
+export PYTHONPATH="$PWD/versions/v1"
+python -c "import DanKS; print(DanKS.__file__)"
 ```
 
-Replace `v1` with `v2` or `v3` as needed. Do not place multiple generations on the same `PYTHONPATH`.
+For V2, use a different environment:
+
+```bash
+python3.11 -m venv .venv-v2
+source .venv-v2/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e '.[dev]'
+python -m pip install -r versions/v2/requirements.txt
+export PYTHONPATH="$PWD/versions/v2"
+python -c "import DanKS; print(DanKS.__file__)"
+```
+
+Do not place multiple generations on the same `PYTHONPATH`; their feature schemas and checkpoints are intentionally independent.
+
+### 3. Build a V3 CPU or NVIDIA environment
+
+Create a fresh Python 3.11 environment and install the shared and V3 dependencies:
+
+```bash
+python3.11 -m venv .venv-v3
+source .venv-v3/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e '.[dev]'
+python -m pip install -r versions/v3/DanKS/environment/requirements-training-core.txt
+export PYTHONPATH="$PWD/versions/v3"
+```
+
+Install exactly one PyTorch build. These commands match the tested server version; choose the wheel index appropriate for your machine using the [official PyTorch installation matrix](https://pytorch.org/get-started/previous-versions/).
+
+```bash
+# CPU
+python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+
+# NVIDIA CUDA 12.8
+python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128
+```
+
+Verify the environment:
+
+```bash
+python -c "import numpy, torch; print('numpy', numpy.__version__); print('torch', torch.__version__); print('cuda', torch.cuda.is_available())"
+python -m DanKS.training.train_ppo --help
+```
+
+### 4. Build a V3 Ascend NPU environment
+
+The Ascend runtime is coupled to the host driver and CANN installation. Install the matching CANN release first, then use the vendor-provided PyTorch and `torch_npu` wheels. The public [`requirements-training-npu.txt`](versions/v3/DanKS/environment/requirements-training-npu.txt) records the validated pair.
+
+```bash
+source /usr/local/Ascend/cann/set_env.sh
+python3.10 -m venv --system-site-packages .venv-v3-npu
+source .venv-v3-npu/bin/activate
+python -m pip install -r versions/v3/DanKS/environment/requirements-training-core.txt
+
+# Replace these paths with the matching vendor wheels for your platform.
+python -m pip install --no-deps \
+  /path/to/torch-2.7.1+cpu-cp310-cp310-manylinux_2_28_x86_64.whl \
+  /path/to/torch_npu-2.7.1.post2-cp310-cp310-manylinux_2_28_x86_64.whl
+
+export PYTHONPATH="$PWD/versions/v3"
+export TORCH_DEVICE_BACKEND_AUTOLOAD=0
+```
+
+Verify that PyTorch can see the accelerator:
+
+```bash
+python -c "import torch, torch_npu; print('torch', torch.__version__); print('torch_npu', torch_npu.__version__); print('npu', torch.npu.is_available())"
+python -m DanKS.training.train_ppo --help
+```
+
+Do not install CUDA packages into the NPU environment. If your driver, CANN, architecture, or Python version differs, obtain a matching wheel pair from the Ascend software distribution instead of forcing the versions above.
+
+### 5. Build the optional V3 C++ kernels
+
+The optimized retrieval kernels require a C++17 compiler, Python development headers, and `pybind11`. Build them inside the active V3 environment on the target machine:
+
+```bash
+cd versions/v3/DanKS/retrieval/native_cpp
+python setup.py build_ext --inplace
+cd ../../../../../
+
+PYTHONPATH=versions/v3 python -c "from DanKS.retrieval.native_cover import available; from DanKS.retrieval.native_actor_core import available as actor_available; print('cover', available()); print('actor', actor_available())"
+```
+
+Both values should be `True`. The build uses host-specific compiler optimization, so rebuild the extensions after changing Python versions or moving to a different CPU architecture.
 
 ## Shared game engine
 
@@ -100,13 +209,7 @@ The public API also exports `Move` and `Moves` for move representation and legal
 
 ## Train V3 with PPO
 
-Install a hardware-appropriate PyTorch build first, followed by the hardware-neutral dependencies:
-
-```bash
-python -m pip install -r versions/v3/DanKS/environment/requirements-training-core.txt
-```
-
-Then provide your own rollout and output paths:
+After activating and verifying a V3 environment, provide your own rollout and output paths:
 
 ```bash
 PYTHONPATH=versions/v3 python -m DanKS.training.train_ppo \
