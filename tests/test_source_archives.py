@@ -176,3 +176,15 @@ def test_repository_audit_rejects_root_level_bypass_artifacts(tmp_path: Path) ->
     assert any("forbidden repository artifact: private.pt" in error for error in errors)
     assert any("forbidden repository artifact: docs/internal.docx" in error for error in errors)
     assert any("forbidden repository artifact: .DS_Store" in error for error in errors)
+
+
+def test_repository_audit_and_archive_ignore_editable_install_metadata(
+    tmp_path: Path,
+) -> None:
+    repository = make_repository(tmp_path / "DanKS")
+    write_file(repository, "danks_repository_tools.egg-info/PKG-INFO")
+
+    assert verify_repository(repository) == []
+    output = build_source_archive(repository, "all", tmp_path / "bundle.tar.gz")
+    members, _ = open_members(output)
+    assert not any(".egg-info/" in member.name for member in members)

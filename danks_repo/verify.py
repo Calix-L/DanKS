@@ -168,7 +168,7 @@ def verify_repository(repository_root: Path) -> list[str]:
             relative = path.relative_to(repository_root)
             if path.is_symlink():
                 errors.append(f"forbidden repository symlink: {relative.as_posix()}")
-            elif name not in IGNORED_LOCAL_DIRECTORIES:
+            elif name not in IGNORED_LOCAL_DIRECTORIES and not name.endswith(".egg-info"):
                 retained.append(name)
         directory_names[:] = retained
         for name in sorted(file_names):

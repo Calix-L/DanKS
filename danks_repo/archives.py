@@ -41,7 +41,7 @@ def _selected_repository_files(repository_root: Path, generation: str) -> list[P
             relative = path.relative_to(repository_root)
             if path.is_symlink():
                 raise ValueError(f"repository audit failed: forbidden symlink: {relative}")
-            if name in EXCLUDED_REPOSITORY_DIRECTORIES:
+            if name in EXCLUDED_REPOSITORY_DIRECTORIES or name.endswith(".egg-info"):
                 continue
             if relative_directory == Path("generations") and name in GENERATIONS:
                 if generation != "all" and name != generation:
