@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "danks-repository-tools"
+name = "DanKS"
 version = "0.1.0"
-description = "Validation and deterministic packaging tools for the DanKS code archive"
+description = "Three generations of GuanDan AI and a shared Python game engine"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
@@ -19,14 +19,11 @@ classifiers = [
 ]
 dependencies = []
 
-[project.scripts]
-danks = "danks_repo.cli:main"
-
 [project.optional-dependencies]
 dev = ["pytest>=7"]
 
 [tool.setuptools]
-packages = ["danks_repo", "guandan", "guandan.engine"]
+packages = ["guandan", "guandan.engine"]
 
 [tool.pytest.ini_options]
 addopts = "-ra"

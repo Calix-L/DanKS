@@ -7,6 +7,9 @@ on:
 permissions:
   contents: read
 
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -19,11 +22,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-      - name: Install repository tools
+      - name: Install test dependencies
         run: python -m pip install -e '.[dev]'
       - name: Run tests
-        run: make test
-      - name: Audit public source boundary
-        run: make audit
-      - name: Build deterministic archives
-        run: make package
+        run: python -m pytest -q

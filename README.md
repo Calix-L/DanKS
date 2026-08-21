@@ -1,85 +1,83 @@
 # DanKS
 
-DanKS is a compact, code-only repository for three generations of GuanDan AI research. The public generations are named **V1**, **V2**, and **V3**. Each keeps its original model namespace and compatibility boundary, while shared game rules and repository tooling live only once at the root.
+DanKS is a compact, code-only repository for three generations of GuanDan AI. All versions expose the `DanKS` Python namespace and are intentionally isolated so their retrieval, feature, and model contracts remain readable as complete implementations.
 
-> [!IMPORTANT]
-> Model weights, datasets, internal documents, evaluation results, and private deployment material are not distributed.
+> Model weights, datasets, evaluation records, private documents, and deployment configuration are not included.
 
-## Start here
+## Versions
 
-From the repository root, no installation is needed for navigation:
+| Version | Focus | Start here |
+| --- | --- | --- |
+| V1 | Retrieval and NumPy selector foundations | `versions/v1/DanKS/retrieval/ranker.py` |
+| V2 | Expanded action generation and ONNX selector | `versions/v2/DanKS/retrieval/action_generator.py` |
+| V3 | Card memory, team belief, recall, and PPO | `versions/v3/DanKS/training/model.py` |
 
-```bash
-python -m danks_repo list
-python -m danks_repo show v3
-python -m danks_repo verify
-```
-
-The first command shows the three generations, package names, file counts, and sizes. The second prints the exact `PYTHONPATH` import command for a generation. The third verifies every manifest, source hash, privacy boundary, and repository path.
-
-For a guided walkthrough, read [Quickstart](docs/QUICKSTART.md). To locate important code immediately, use the [Source map](docs/SOURCE_MAP.md).
-
-## Choose a generation
-
-| Generation | Python package | Start with | Scope |
-| --- | --- | --- | --- |
-| `V1` | `DanKS` | [`generations/v1/README.md`](generations/v1/README.md) | Retrieval and NumPy selector foundations |
-| `V2` | `DanKS` | [`generations/v2/README.md`](generations/v2/README.md) | Staged-training retrieval and selector stack |
-| `V3` | `DanKS` | [`generations/v3/README.md`](generations/v3/README.md) | Team-belief retrieval and PPO training stack |
-
-Do not put multiple generations on the same `PYTHONPATH`. All three expose the `DanKS` namespace but remain intentionally isolated, non-interchangeable implementations.
-
-## Repository layout
+## Layout
 
 ```text
 DanKS/
-├── generations/
-│   ├── v1/
-│   │   ├── README.md
-│   │   ├── manifest.json
-│   │   └── source/DanKS/
-│   ├── v2/
-│   │   ├── README.md
-│   │   ├── manifest.json
-│   │   └── source/DanKS/
-│   └── v3/
-│       ├── README.md
-│       ├── manifest.json
-│       └── source/DanKS/
-├── guandan/             # shared 108-card rules engine
-├── danks_repo/          # list/show/verify/package implementation
-├── docs/                # public usage and repository documentation
-├── tests/               # repository-boundary tests
-└── tools/               # small verification and packaging wrappers
+├── versions/
+│   ├── v1/DanKS/       # retrieval + NumPy selector
+│   ├── v2/DanKS/       # retrieval + ONNX selector
+│   └── v3/DanKS/       # retrieval + model + PPO training
+├── guandan/engine/     # shared 108-card rules engine
+├── tests/              # repository and engine checks
+├── pyproject.toml
+└── LICENSE
 ```
 
-## Common commands
+## Quick start
+
+Install the shared engine and development checks:
 
 ```bash
-make help
-make overview
-make show GENERATION=v3
-make test
-make audit
-make package
+python -m pip install -e '.[dev]'
+python -m pytest -q
 ```
 
-`make package` writes four deterministic archives to `dist/`: one per generation and one combined bundle. Rebuilding unchanged content produces byte-identical files.
+Select exactly one AI version with `PYTHONPATH`:
 
-## What works without private assets
+```bash
+PYTHONPATH=versions/v1 python -c "import DanKS; print(DanKS.__file__)"
+PYTHONPATH=versions/v2 python -c "import DanKS; print(DanKS.__file__)"
+PYTHONPATH=versions/v3 python -c "import DanKS; print(DanKS.__file__)"
+```
 
-- Browse and analyze every included source file.
-- Run the shared Python GuanDan rules engine without model weights.
-- Import the generation package after installing that generation's public dependencies.
-- Run repository validation and deterministic packaging.
-- Study and run V3's model, feature, team-belief, and PPO training implementation with your own data.
+Do not place multiple versions on the same `PYTHONPATH` or assume checkpoints are compatible across versions.
 
-Pretrained inference, original evaluation reproduction, and full training reproduction require private assets and are not promised by this code-only release.
+## V3 PPO
 
-## Public boundary
+V3 retains the complete PPO learner, persistent learner transport, optimizer-state handling, feature pipeline, recall path, and team-belief network:
 
-Generation manifests record every included file by path, size, and SHA256. The repository audit rejects weights, datasets, generated binaries, private paths, credentials, fixed remote endpoints, and platform-specific evaluation code.
+```text
+versions/v3/DanKS/training/
+├── model.py
+├── ppo.py
+├── train_ppo.py
+├── persistent_ppo_server.py
+├── persistent_ppo_transport.py
+├── training_state.py
+├── featurizer.py
+└── team_belief.py
+```
+
+Install a hardware-appropriate PyTorch build plus the public core requirements before using the training entry point:
+
+```bash
+python -m pip install -r versions/v3/DanKS/environment/requirements-training-core.txt
+PYTHONPATH=versions/v3 python -m DanKS.training.train_ppo --help
+```
+
+Training requires user-supplied rollout data and produces user-owned checkpoints; neither is distributed here.
+
+## Shared game engine
+
+```python
+from guandan.engine import Environment, Move, Moves
+```
+
+The shared package contains the Python table lifecycle, legal move generation, tribute flow, settlement types, and public environment wrapper.
 
 ## License
 
-Original DanKS repository material is licensed under the [Apache License 2.0](LICENSE). Third-party material retains its applicable notices; see [Licensing](docs/LICENSING.md).
+DanKS is licensed under the [Apache License 2.0](LICENSE). Third-party dependencies retain their own licenses. See [NOTICE](NOTICE).

@@ -11,7 +11,7 @@ htmlcov/
 .venv/
 venv/
 
-# Generated repository artifacts
+# Build artifacts
 dist/
 build/
 
