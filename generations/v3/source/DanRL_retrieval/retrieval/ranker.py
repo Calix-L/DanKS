@@ -7,14 +7,14 @@ import os
 from typing import Any, Iterable
 
 from .cards import card_sort_key, normalize_cards, rank_strength
-from .action_generator import PLMActionGenerator
+from .action_generator import ActionGenerator
 from .candidate_coverage import tactical_topk
 from .context import RetrievalContext, build_context
 from .models import ActionCandidate, CardGroup, NativePartitionCovers, Partition, ScoredAction
 from . import native_cover
 from . import native_actor_core
 from .partitioner import FullSearchPartitioner, HeuristicPartitioner
-from .plm_rules import is_bomb_kind, normalize_kind, normalize_rank
+from .rules import is_bomb_kind, normalize_kind, normalize_rank
 from .scoring import (
     BREAK_PENALTY_PROFILES,
     BreakPenaltyProfile,
@@ -106,7 +106,7 @@ class StructuralCandidateRanker:
         exact_best_cache_size: int = 8192,
     ) -> None:
         self.partitioner = partitioner or FullSearchPartitioner(use_native_all=True)
-        self.action_generator = PLMActionGenerator(self.partitioner)
+        self.action_generator = ActionGenerator(self.partitioner)
         implicit_profile = break_profile is None
         raw_profile_name = os.environ.get("DANRL_BREAK_PROFILE", "").strip()
         profile_selected_by_env = implicit_profile and bool(raw_profile_name)
@@ -1516,27 +1516,6 @@ class StructuralCandidateRanker:
             hasattr(module, "best_cover_by_score_entries_with_retake")
             and os.environ.get("DANRL_DISABLE_NATIVE_RETAKE_SUMMARY", "").strip().lower() not in {"1", "true", "yes", "on"}
         )
-        use_gpu_dp = os.environ.get("DANRL_ENABLE_GPU_SCORE_DP", "").strip().lower() in {"1", "true", "yes", "on"}
-        if use_gpu_dp and use_retake:
-            try:
-                from DanRL_retrieval.scripts.prototype_exact_frontier_dp import flatten_cover, run_frontier_dp
-
-                best, total, parts_values, _stats = run_frontier_dp(
-                    tuple(int(value) for value in state),
-                    native_buckets,
-                    flat_entries,
-                    scorer.weights,
-                    pressure_values,
-                    int(os.environ.get("DANRL_GPU_SCORE_DP_FRONTIER_LIMIT", "200000")),
-                    backend="cuda",
-                    device_name=os.environ.get("DANRL_GPU_SCORE_DP_DEVICE", "cuda:1"),
-                    cuda_min_items=int(os.environ.get("DANRL_GPU_SCORE_DP_MIN_ITEMS", "16")),
-                    cuda_min_hand_size=int(os.environ.get("DANRL_GPU_SCORE_DP_MIN_HAND_SIZE", "18")),
-                )
-                return list(flatten_cover(best.cover)), float(total), parts_values, None
-            except Exception:
-                if os.environ.get("DANRL_GPU_SCORE_DP_STRICT", "").strip().lower() in {"1", "true", "yes", "on"}:
-                    raise
         use_dp = os.environ.get("DANRL_ENABLE_NATIVE_SCORE_DP", "").strip().lower() in {"1", "true", "yes", "on"}
         frontier_limit = int(os.environ.get("DANRL_NATIVE_SCORE_DP_FRONTIER_LIMIT", "200000"))
         if use_dp and use_retake and hasattr(module, "best_cover_by_score_entries_dp_with_retake"):

@@ -7,7 +7,7 @@ from DanRL_retrieval.retrieval.card_memory import ResponseEvent, SeatPlayStats
 from DanRL_retrieval.retrieval.cards import action_type_size, rank_strength
 from DanRL_retrieval.retrieval.context import RetrievalContext
 from DanRL_retrieval.retrieval.models import ActionCandidate
-from DanRL_retrieval.retrieval.plm_rules import normalize_kind, plain_points
+from DanRL_retrieval.retrieval.rules import normalize_kind, plain_points
 
 
 BASE_RESPONSE_RISK = 0.65

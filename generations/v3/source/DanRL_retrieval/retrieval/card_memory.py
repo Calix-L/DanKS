@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from .cards import ALL_CARDS, CARD_INDEX, card_rank, normalize_cards
-from .plm_rules import normalize_kind, normalize_rank
+from .rules import normalize_kind, normalize_rank
 
 
 SEAT_COUNT = 4

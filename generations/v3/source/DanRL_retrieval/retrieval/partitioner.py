@@ -40,9 +40,9 @@ GROUP_PRIORITY_BASE = {
     "Single": 4.0,
 }
 
-PLM_VALUE = {"A": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "T": 10, "J": 11, "Q": 12, "K": 13}
-PLM_RANK = {value: rank for rank, value in PLM_VALUE.items()}
-PLM_POINTS = {"2": 1, "3": 2, "4": 3, "5": 4, "6": 5, "7": 6, "8": 7, "9": 8, "T": 9, "J": 10, "Q": 11, "K": 12, "A": 13, "BJ": 14, "RJ": 15}
+SEQUENCE_VALUE = {"A": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "T": 10, "J": 11, "Q": 12, "K": 13}
+SEQUENCE_RANK = {value: rank for rank, value in SEQUENCE_VALUE.items()}
+RANK_POINTS = {"2": 1, "3": 2, "4": 3, "5": 4, "6": 5, "7": 6, "8": 7, "9": 8, "T": 9, "J": 10, "Q": 11, "K": 12, "A": 13, "BJ": 14, "RJ": 15}
 
 
 def _make_group(
@@ -65,17 +65,17 @@ def _group_priority(group: CardGroup) -> float:
     return base + group.strength * 12.0
 
 
-def _plm_follow_rank(level: str, lower: str, higher: str) -> bool:
+def _follow_rank(level: str, lower: str, higher: str) -> bool:
     if lower == higher:
         return False
     if higher == level:
         return lower not in {"BJ", "RJ"}
     if lower == level:
         return higher in {"BJ", "RJ"}
-    return PLM_POINTS.get(higher, 0) > PLM_POINTS.get(lower, 0)
+    return RANK_POINTS.get(higher, 0) > RANK_POINTS.get(lower, 0)
 
 
-def _plm_sequence_value(cards: tuple[str, ...], wildcards: list[str] | tuple[str, ...], group_size: int) -> str | None:
+def _sequence_value(cards: tuple[str, ...], wildcards: list[str] | tuple[str, ...], group_size: int) -> str | None:
     counts = [0] * 13
     wild_counter = Counter(wildcards)
     for card in cards:
@@ -83,16 +83,16 @@ def _plm_sequence_value(cards: tuple[str, ...], wildcards: list[str] | tuple[str
             wild_counter[card] -= 1
             continue
         rank = card_rank(card)
-        if rank not in PLM_VALUE:
+        if rank not in SEQUENCE_VALUE:
             return None
-        counts[PLM_VALUE[rank] - 1] += 1
-    return _plm_sequence_value_from_counts(counts, len(wildcards), group_size)
+        counts[SEQUENCE_VALUE[rank] - 1] += 1
+    return _sequence_value_from_counts(counts, len(wildcards), group_size)
 
 
-def _plm_sequence_value_from_counts(counts: list[int], laizi: int, group_size: int) -> str | None:
-    idx_2 = PLM_VALUE["2"] - 1
-    idx_k = PLM_VALUE["K"] - 1
-    idx_a = PLM_VALUE["A"] - 1
+def _sequence_value_from_counts(counts: list[int], laizi: int, group_size: int) -> str | None:
+    idx_2 = SEQUENCE_VALUE["2"] - 1
+    idx_k = SEQUENCE_VALUE["K"] - 1
+    idx_a = SEQUENCE_VALUE["A"] - 1
     min_idx = idx_2
     while min_idx <= idx_k and counts[min_idx] == 0:
         min_idx += 1
@@ -127,10 +127,10 @@ def _plm_sequence_value_from_counts(counts: list[int], laizi: int, group_size: i
         if short <= laizi:
             return "A"
         max_idx += laizi // group_size
-    return PLM_RANK.get(max_idx + 1)
+    return SEQUENCE_RANK.get(max_idx + 1)
 
 
-def _plm_triple_plus_value(cards: tuple[str, ...], wildcards: list[str] | tuple[str, ...], level: str) -> str | None:
+def _triple_plus_value(cards: tuple[str, ...], wildcards: list[str] | tuple[str, ...], level: str) -> str | None:
     counts = Counter(card_rank(card) for card in cards)
     for card, count in Counter(wildcards).items():
         rank = card_rank(card)
@@ -150,13 +150,13 @@ def _plm_triple_plus_value(cards: tuple[str, ...], wildcards: list[str] | tuple[
         return normal[0][0]
     if len(normal) != 2 or any(count > 3 for _rank, count in normal):
         return None
-    normal.sort(key=lambda item: PLM_VALUE[item[0]])
+    normal.sort(key=lambda item: SEQUENCE_VALUE[item[0]])
     (r1, c1), (r2, c2) = normal
     if c1 == 3:
         return r1
     if c2 == 3:
         return r2
-    return r2 if _plm_follow_rank(level, r1, r2) else r1
+    return r2 if _follow_rank(level, r1, r2) else r1
 
 
 def _counter_to_key(counter: Counter[str]) -> tuple[int, ...]:

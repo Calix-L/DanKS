@@ -6,7 +6,7 @@ DanKS supports reproducibility of the **public code bundles**, not reproduction 
 
 Each generation manifest contains a stable generation name and a sorted list of file paths, byte sizes, and SHA256 values. It contains no source-machine path or import timestamp.
 
-The importer uses explicit top-level allowlists, omits generated Cython sources, and deterministically normalizes approved private workspace prefixes. These transformations are part of the public snapshot definition.
+The public boundary admits only source and safe source configuration. It excludes generated binaries, model and dataset artifacts, private paths, fixed service endpoints, and evaluation-platform code.
 
 ## Archive identity
 

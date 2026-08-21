@@ -1,10 +1,14 @@
 # Architecture
 
-DanKS is organized around isolation and provenance rather than a merged runtime.
+DanKS is organized around a small shared rules layer, isolated model generations, and reproducible source packaging.
 
 ## Repository layer
 
-The root `danks_repo` package implements source selection, manifest generation, validation, and deterministic archives. It is independent of gameplay and model code. The `tools/` commands are thin entry points over this package.
+The root `danks_repo` package implements manifest generation, validation, and deterministic archives. It is independent of gameplay and model code. The `tools/` directory contains only thin verification and packaging entry points.
+
+## Shared game layer
+
+`guandan.engine` contains the Python 108-card game environment, move generator, action types, table lifecycle, tribute flow, and settlement logic. It is packaged once and can be imported independently of V1, V2, or V3.
 
 ## Generation layer
 
@@ -26,7 +30,7 @@ The code snapshots originated in systems that also use models, data, and operati
 ## Design principles
 
 1. **No implicit compatibility.** A checkpoint or runtime from one generation must not be assumed compatible with another.
-2. **Code-only snapshots.** Import policy admits explicitly allowlisted code roots and public-safe source configuration, not upstream documentation or runtime artifacts. Private machine-path prefixes are normalized during import.
+2. **Core source only.** Generation trees contain retrieval, feature, model, and training code—not copied platform services, evaluation harnesses, or operational wrappers.
 3. **Content-addressed provenance.** Generation manifests make changes visible and reviewable.
 4. **Deterministic distribution.** Archive ordering and metadata are normalized.
 5. **Fail closed.** Unknown generations, path escapes, symlinks, and forbidden artifacts cause validation failure.

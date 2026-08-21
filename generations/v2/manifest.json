@@ -6,44 +6,14 @@
       "size": 31
     },
     {
-      "path": "DanKS/gdai_adapter/__init__.py",
-      "sha256": "4aa57994df7a3dfa6f143bb3f7d76a7b0202f1fe57bbe8cceaeaf4b4ad10dd40",
-      "size": 56
-    },
-    {
-      "path": "DanKS/gdai_adapter/gdai_payload.py",
-      "sha256": "e3fddcfc0e615975398871841976aa0a924fc32e79b73eb14ab95367a1ca48f1",
-      "size": 9379
-    },
-    {
-      "path": "DanKS/plm_eval/__init__.py",
-      "sha256": "7280880222706128b97c7f008232a161b1f5a2bc6489d245d1f6763ee43b1cbd",
-      "size": 51
-    },
-    {
-      "path": "DanKS/plm_eval/finalize.py",
-      "sha256": "0bb73365e36cc7c4ad770da06471871d0d1813c3bbc3bc8c57f98e24932a0625",
-      "size": 12216
-    },
-    {
-      "path": "DanKS/plm_eval/pailemen_native.py",
-      "sha256": "73aa701293fbec9d4a850e89675110248e2cf8e42a60dbd448a822bd22c7aa65",
-      "size": 14831
-    },
-    {
-      "path": "DanKS/plm_eval/summarize.py",
-      "sha256": "c1f9b04fe82e1950266048869a909a1a76b93f755071f8cbfc713b02323a2bf2",
-      "size": 6763
-    },
-    {
       "path": "DanKS/retrieval/__init__.py",
       "sha256": "a7ab3128a6d1d8acd46055f5441871fca5bb29e509b6ce885ee7dba0679c3457",
       "size": 211
     },
     {
       "path": "DanKS/retrieval/action_generator.py",
-      "sha256": "714174d14f426704d9d0b2deed7a0980ce23caea6ed131df807441c9b6f90b66",
-      "size": 2492
+      "sha256": "f4868e58ffb0c3ec6ba7d4b6b36f5a3a345082d8ce6d1fdf10a2736d06a9f024",
+      "size": 2439
     },
     {
       "path": "DanKS/retrieval/action_semantics.py",
@@ -102,13 +72,8 @@
     },
     {
       "path": "DanKS/retrieval/partitioner.py",
-      "sha256": "a219dd37aad068f841992aaaa02309a5af10fe2fd71d6dd7267e1a0c00beabda",
-      "size": 89201
-    },
-    {
-      "path": "DanKS/retrieval/plm_rules.py",
-      "sha256": "4d202c0404bb5241d0f253ba2ae03fce84654b4fc3d97882a0386a525a06f3a7",
-      "size": 5098
+      "sha256": "fdc5134748bbef4abc4ae2bb1dd2ee2bbc688dddfffdbafd5df25306a043abd2",
+      "size": 89230
     },
     {
       "path": "DanKS/retrieval/pressure.py",
@@ -117,33 +82,28 @@
     },
     {
       "path": "DanKS/retrieval/ranker.py",
-      "sha256": "aa97eb78222cec0464f6c44d4e51badab78d25cc392bb129247c0b504bc8e67c",
-      "size": 89905
+      "sha256": "81397e6cadd47b0a41a2ff41603f39134dd3b60f514efe5ed5cdcc7cefe19e00",
+      "size": 88669
+    },
+    {
+      "path": "DanKS/retrieval/rules.py",
+      "sha256": "cd24d626f91e0e3861ad1bff44ec48f47d0389a398019cff38d47ee1fa3a2a13",
+      "size": 5106
     },
     {
       "path": "DanKS/retrieval/scoring.py",
-      "sha256": "5067a99177ce0d9c0bb85fb4251295528f551c1059f9ccf64d7a4a93246ada5d",
-      "size": 61685
+      "sha256": "961a1ac4552186616a4d94f3c44e150b96863b453e67d15e861ce8dfe243c692",
+      "size": 61681
     },
     {
       "path": "DanKS/retrieval/structural_calibration.py",
-      "sha256": "e9c969689ca0f7d64aee5954d4ec4aa6fe0c2cadb835cbb1d18c9b487497024b",
-      "size": 4738
+      "sha256": "c4d55800e7b4ba31dff7c67d03c7c8325611c936965f808e1e049eb34637c66b",
+      "size": 4734
     },
     {
       "path": "DanKS/retrieval/tempo.py",
-      "sha256": "b0e08a981861c478da68b4eb7ede597f6f030def56a697700d3c980b59c2c750",
-      "size": 8245
-    },
-    {
-      "path": "DanKS/table_runtime/__init__.py",
-      "sha256": "5895eb9c683618b615c50b786d226ce0a35ee23a2455221b237fd6b855dba0c9",
-      "size": 53
-    },
-    {
-      "path": "DanKS/table_runtime/server.py",
-      "sha256": "d890707ea22a405db1a18d272c30fac1dc9477fcce54df3f897952fd5890c83b",
-      "size": 51762
+      "sha256": "083c56e23dd9c7f836c95c8a1c4ecbc243a732516a79cd24caeff6427309f9e6",
+      "size": 8241
     },
     {
       "path": "DanKS/training/__init__.py",
@@ -152,8 +112,8 @@
     },
     {
       "path": "DanKS/training/featurizer.py",
-      "sha256": "82b0bfc3c35323be88d59bd9cd3383a0d61214b1355b52b90f6a68dbb2c17c34",
-      "size": 14204
+      "sha256": "f69af4748e43976712a63a29f0f8eee7e51ef4696f1605607822e7f2e2b3c65e",
+      "size": 14200
     },
     {
       "path": "DanKS/training/numpy_selector.py",
@@ -171,99 +131,9 @@
       "size": 5507
     },
     {
-      "path": "KSplatform/Dan_platform/python/engine/__init__.py",
-      "sha256": "f31cb713c31021bd8d4cb16d83be46f2b5071d4997463593c804751e167d5e3e",
-      "size": 130
-    },
-    {
-      "path": "KSplatform/Dan_platform/python/engine/environment.py",
-      "sha256": "bfd6223576eb00e8b5aac7a98633d628cbab5e63279c166c16f24269cd778bd4",
-      "size": 67
-    },
-    {
-      "path": "KSplatform/Dan_platform/python/engine/moves.py",
-      "sha256": "c79a81383c45645b27d141572f96ed7aa2f5e3549073cb73ca6ac87723fcc905",
-      "size": 1084
-    },
-    {
-      "path": "KSplatform/Dan_platform/python/engine/python_rules.py",
-      "sha256": "6060e8bae649d87e7f86e57b430a49d42ecc4a2f157c1ffb558ee100fe612570",
-      "size": 22404
-    },
-    {
-      "path": "KSplatform/Dan_platform/python/engine/table.py",
-      "sha256": "039d29feb80f2ec2e4b6ac3c1c725c85d6e0b7c7b353fdfa473363518ea33e41",
-      "size": 31092
-    },
-    {
-      "path": "KSplatform/Dan_platform/python/engine/types.py",
-      "sha256": "23340f5180a3595f4c1325e71359e73b8498bea22341f6accb0c70070b3d904a",
-      "size": 10830
-    },
-    {
-      "path": "KSplatform/Dan_platform/python/run_smoke.py",
-      "sha256": "2193f62ac4e8496430a34e3f3785a9273efc54d55318cda7cbac55316ad1d939",
-      "size": 2981
-    },
-    {
       "path": "requirements.txt",
       "sha256": "0a9b7d52c548da8a2cfa05ebc0c899458cb7a7f5c026df3885ed2b8ecfdeed94",
       "size": 87
-    },
-    {
-      "path": "scripts/audit_trajectory.py",
-      "sha256": "b155f873b44aaf95a76d4220084c24315be832254314fb43626e09925ec5dedd",
-      "size": 1104
-    },
-    {
-      "path": "scripts/build_release.sh",
-      "sha256": "f6f8ecb89affa37fe93d8be3133c23bd24bdfa05c4ac914a1bbe77011bfdfaa7",
-      "size": 892
-    },
-    {
-      "path": "scripts/check_health.py",
-      "sha256": "4c0c96ef585eb2a7126d5260fe3b91645534f24cd1884eb0966d2447b6039f61",
-      "size": 2427
-    },
-    {
-      "path": "scripts/common_env.sh",
-      "sha256": "d1779aa4b80e26af3e7d5c470a602f95e7be9980e2a0bb167769b7bb54091df5",
-      "size": 863
-    },
-    {
-      "path": "scripts/create_env.sh",
-      "sha256": "148f0c51ccb5601a1c95100b76e748ceab4c296b7fcc7a5bce3eba0b56ce253e",
-      "size": 889
-    },
-    {
-      "path": "scripts/preflight.py",
-      "sha256": "731983534c9f79a198b0785a827a8c621835772bf41cc20c395548f7142a8e40",
-      "size": 8240
-    },
-    {
-      "path": "scripts/preflight.sh",
-      "sha256": "587d14c9aa45b3feee456ae9da507edbdf0c8fc2dd9edb42035d4488a7f2bbc1",
-      "size": 471
-    },
-    {
-      "path": "scripts/run_plm_eval.sh",
-      "sha256": "5c000d765d097637944d50e46c65b7d607471884ef8428cafac46b0c9e60bafe",
-      "size": 2971
-    },
-    {
-      "path": "scripts/run_policy_server.sh",
-      "sha256": "a6b9b85ab25592e3b19964337de40b5e5edd04f0f70ccacf2b30bfed85adaa78",
-      "size": 838
-    },
-    {
-      "path": "scripts/run_two_vs_two_plm.sh",
-      "sha256": "8823b30091c8b84f80585e72916c0300846181ee27d33f0740e56dd06f4cb9aa",
-      "size": 9950
-    },
-    {
-      "path": "scripts/smoke_test.sh",
-      "sha256": "0fed5732fe18f7aca320e7cc1ed20ced47dc6c5fdb4ad141d913b356fa804f24",
-      "size": 2672
     }
   ],
   "generation": "v2",

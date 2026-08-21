@@ -26,7 +26,7 @@ danks = "danks_repo.cli:main"
 dev = ["pytest>=7"]
 
 [tool.setuptools]
-packages = ["danks_repo"]
+packages = ["danks_repo", "guandan", "guandan.engine"]
 
 [tool.pytest.ini_options]
 addopts = "-ra"

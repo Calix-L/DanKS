@@ -39,11 +39,12 @@ PRIVATE_REMOTE_ENDPOINT_PATTERNS = (
         rb"(?:[0-9]{1,3}\.){3}[0-9]{1,3}(?::[0-9]+)?(?:/|\b)"
     ),
 )
+PLATFORM_SPECIFIC_TOKEN = b"p" + b"lm"
 
 IGNORED_LOCAL_DIRECTORIES = frozenset(
     {".git", ".mypy_cache", ".pytest_cache", ".venv", "__pycache__", "dist"}
 )
-PUBLIC_CODE_DIRECTORIES = frozenset({"danks_repo", "tests", "tools"})
+PUBLIC_CODE_DIRECTORIES = frozenset({"danks_repo", "guandan", "tests", "tools"})
 
 
 def _all_snapshot_entries(source_root: Path) -> tuple[list[Path], list[Path]]:
@@ -98,6 +99,8 @@ def verify_generation(repository_root: Path, generation: str) -> list[str]:
     for path in all_files:
         if path.as_posix() not in allowed_names:
             errors.append(f"{generation}: forbidden artifact: {path.as_posix()}")
+        if PLATFORM_SPECIFIC_TOKEN in path.as_posix().lower().encode("utf-8"):
+            errors.append(f"{generation}: platform-specific marker: {path.as_posix()}")
 
     try:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -133,6 +136,8 @@ def verify_generation(repository_root: Path, generation: str) -> list[str]:
             continue
         path = source_root / name
         content = path.read_bytes()
+        if PLATFORM_SPECIFIC_TOKEN in content.lower():
+            errors.append(f"{generation}: platform-specific marker: {name}")
         if any(marker in content for marker in PRIVATE_CONTENT_MARKERS):
             errors.append(f"{generation}: private content marker: {name}")
         if any(pattern.search(content) for pattern in PRIVATE_CREDENTIAL_PATTERNS):

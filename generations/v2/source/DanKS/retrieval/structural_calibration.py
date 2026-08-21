@@ -8,7 +8,7 @@ from typing import Any, Mapping
 import numpy as np
 
 from .models import ScoredAction
-from .plm_rules import normalize_kind
+from .rules import normalize_kind
 from .scoring import ScoreWeights
 
 

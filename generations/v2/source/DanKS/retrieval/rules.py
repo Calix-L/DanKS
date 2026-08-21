@@ -38,7 +38,7 @@ POINTS = {
     "BJ": 14,
     "RJ": 15,
 }
-PLM_KIND = {
+ACTION_KINDS = {
     "Single",
     "Pair",
     "StraightPair",
@@ -85,7 +85,7 @@ def is_bomb_kind(kind: str) -> bool:
 
 
 def follow_rank(level: str | None, lower: str | None, higher: str | None) -> bool:
-    """PLM numeric comparison for singles/pairs/triples/triple-plus.
+    """Compare ranks for singles, pairs, triples, and triple-plus plays.
 
     Mirrors common.Follow: level rank is above A and below jokers; jokers are
     still top. Sequence comparison should use `plain_points` instead.

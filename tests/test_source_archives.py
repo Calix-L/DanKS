@@ -166,6 +166,17 @@ def test_repository_audit_rejects_fixed_remote_service_endpoints(tmp_path: Path)
     assert any("private remote endpoint" in error for error in errors)
 
 
+def test_repository_audit_rejects_platform_specific_source_markers(tmp_path: Path) -> None:
+    repository = make_repository(tmp_path / "DanKS")
+    token = "p" + "lm"
+    source = repository / "generations" / "v3" / "source" / "v3.py"
+    source.write_text(f'adapter = "{token}_adapter"\n', encoding="utf-8")
+    write_generation_manifest(repository, "v3", source_label="v3-snapshot")
+
+    errors = verify_generation(repository, "v3")
+    assert any("platform-specific marker" in error for error in errors)
+
+
 def test_repository_audit_rejects_root_level_bypass_artifacts(tmp_path: Path) -> None:
     repository = make_repository(tmp_path / "DanKS")
     write_file(repository, "private.pt")

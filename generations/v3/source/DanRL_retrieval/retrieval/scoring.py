@@ -7,7 +7,7 @@ from typing import Mapping
 from .cards import NORMAL_RANKS, card_rank, rank_strength
 from .context import RetrievalContext
 from .models import ActionCandidate, CardGroup, Partition, effective_group_cost
-from .plm_rules import POINTS, can_follow_action, normalize_kind, plain_points
+from .rules import POINTS, can_follow_action, normalize_kind, plain_points
 from .pressure import pressure
 
 

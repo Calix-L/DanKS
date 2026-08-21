@@ -16,7 +16,7 @@ from DanKS.retrieval.cards import (
 )
 from DanKS.retrieval.context import RetrievalContext
 from DanKS.retrieval.models import ScoredAction
-from DanKS.retrieval.plm_rules import normalize_kind
+from DanKS.retrieval.rules import normalize_kind
 from DanKS.training.schema import (
     ACTION_KINDS,
     ACTION_KIND_DIM,

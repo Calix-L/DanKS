@@ -3,16 +3,15 @@ from __future__ import annotations
 from .context import RetrievalContext
 from .models import ActionCandidate, CardGroup
 from .partitioner import FullSearchPartitioner
-from .plm_rules import can_follow_action, group_to_action, normalize_kind
+from .rules import can_follow_action, group_to_action, normalize_kind
 
 
-class PLMActionGenerator:
-    """Generate legal action candidates with PLM-style follow rules.
+class ActionGenerator:
+    """Generate legal GuanDan action candidates from full-search groups.
 
-    This is a Python-side rule adapter inspired by `plm_guandan/common`.
-    It enumerates legal groups from the full-search group universe, then
-    filters them with PLM comparison rules. It does not use PLM's fixed splitter
-    to decide one arrangement.
+    The generator enumerates groups from the full-search universe and filters
+    them with the canonical comparison rules. It does not force a fixed hand
+    partition before constructing candidate actions.
     """
 
     def __init__(self, partitioner: FullSearchPartitioner | None = None) -> None:

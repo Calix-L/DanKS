@@ -386,7 +386,7 @@ def _is_plain_straight_flush_interpretation(cards, current_rank):
     return bool(suits) and len(set(suits)) == 1
 
 
-def _plm_sequence_value(cards, current_rank, group_size):
+def _sequence_value(cards, current_rank, group_size):
     counts = [0] * 13
     wild = f"H{current_rank}"
     wild_count = cards.count(wild)
@@ -398,10 +398,10 @@ def _plm_sequence_value(cards, current_rank, group_size):
         if card in ("SB", "HR"):
             return None
         counts[NUMBER_VALUE[card[1]] - 1] += 1
-    return _plm_sequence_value_from_counts(counts, wild_count, group_size)
+    return _sequence_value_from_counts(counts, wild_count, group_size)
 
 
-def _plm_sequence_value_from_counts(counts, laizi, group_size):
+def _sequence_value_from_counts(counts, laizi, group_size):
     idx_a = NUMBER_VALUE["A"] - 1
     idx_2 = NUMBER_VALUE["2"] - 1
     idx_k = NUMBER_VALUE["K"] - 1
@@ -442,7 +442,7 @@ def _plm_sequence_value_from_counts(counts, laizi, group_size):
     return VALUE_RANK.get(max_idx + 1)
 
 
-def _plm_triple_plus_value(cards, current_rank):
+def _triple_plus_value(cards, current_rank):
     wild = f"H{current_rank}"
     counts = Counter(card[1] if card not in ("SB", "HR") else card[1] for card in cards)
     wild_count = cards.count(wild)
@@ -482,13 +482,13 @@ def _canonicalize_action(action, current_rank):
     elif action_type == "Single":
         rank = cards[0][1]
     elif action_type in ("Straight", "StraightFlush"):
-        rank = _plm_sequence_value(cards, current_rank, 1)
+        rank = _sequence_value(cards, current_rank, 1)
     elif action_type == "ThreePair":
-        rank = _plm_sequence_value(cards, current_rank, 2)
+        rank = _sequence_value(cards, current_rank, 2)
     elif action_type == "TwoTrips":
-        rank = _plm_sequence_value(cards, current_rank, 3)
+        rank = _sequence_value(cards, current_rank, 3)
     elif action_type == "ThreeWithTwo":
-        rank = _plm_triple_plus_value(cards, current_rank)
+        rank = _triple_plus_value(cards, current_rank)
     else:
         wild = f"H{current_rank}"
         natural = [card for card in cards if card != wild]

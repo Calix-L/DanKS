@@ -15,12 +15,7 @@ PYTHONPATH=generations/v2/source python -c "import DanKS; print(DanKS.__file__)"
 source/
 ├── DanKS/
 │   ├── retrieval/       # action generation, partitioning, ranking, scoring
-│   ├── training/        # features, schema, NumPy and ONNX selectors
-│   ├── gdai_adapter/    # request payload adapter
-│   ├── table_runtime/   # table-facing runtime source
-│   └── plm_eval/        # evaluation-side source code
-├── KSplatform/          # platform protocol source
-├── scripts/             # operational wrappers retained with the snapshot
+│   └── training/        # features, schema, NumPy and ONNX selectors
 └── requirements.txt
 ```
 
@@ -31,4 +26,4 @@ Recommended first files:
 3. `source/DanKS/training/featurizer.py`
 4. `source/DanKS/training/onnx_phase14_selector.py`
 
-`manifest.json` is the authoritative inventory. Model weights and original internal documentation are not included. Do not combine this package with V1 or V3 in one Python process.
+The shared game environment is available as `guandan.engine` at the repository root. `manifest.json` is the authoritative inventory. Model weights and original internal documentation are not included. Do not combine this package with V1 or V3 in one Python process.

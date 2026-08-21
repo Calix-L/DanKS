@@ -1,6 +1,6 @@
 # DanKS
 
-DanKS is a code-only archive of three generations of Guandan AI research. The public repository names them simply **V1**, **V2**, and **V3**. Each generation keeps its original package namespace and compatibility boundary, while a small repository CLI makes the archive easy to navigate, validate, and package.
+DanKS is a compact, code-only repository for three generations of GuanDan AI research. The public generations are named **V1**, **V2**, and **V3**. Each keeps its original model namespace and compatibility boundary, while shared game rules and repository tooling live only once at the root.
 
 > [!IMPORTANT]
 > Model weights, datasets, internal documents, evaluation results, and private deployment material are not distributed.
@@ -46,10 +46,11 @@ DanKS/
 │       ├── README.md
 │       ├── manifest.json
 │       └── source/DanRL_retrieval/
+├── guandan/             # shared 108-card rules engine
 ├── danks_repo/          # list/show/verify/package implementation
 ├── docs/                # public usage and repository documentation
 ├── tests/               # repository-boundary tests
-└── tools/               # maintainer wrappers and snapshot importer
+└── tools/               # small verification and packaging wrappers
 ```
 
 ## Common commands
@@ -68,15 +69,16 @@ make package
 ## What works without private assets
 
 - Browse and analyze every included source file.
+- Run the shared Python GuanDan rules engine without model weights.
 - Import the generation package after installing that generation's public dependencies.
 - Run repository validation and deterministic packaging.
-- Run source tests that do not require private models, data, services, or hardware.
+- Study and run V3's model, feature, team-belief, and PPO training implementation with your own data.
 
 Pretrained inference, original evaluation reproduction, and full training reproduction require private assets and are not promised by this code-only release.
 
 ## Public boundary
 
-The importer uses explicit source-root allowlists, excludes upstream documents and generated artifacts, and normalizes approved machine-specific workspace prefixes to `/workspace/danks`. Generation manifests record every included file by path, size, and SHA256.
+Generation manifests record every included file by path, size, and SHA256. The repository audit rejects weights, datasets, generated binaries, private paths, credentials, fixed remote endpoints, and platform-specific evaluation code.
 
 ## License
 

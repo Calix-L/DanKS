@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from .cards import action_type_size
 from .context import RetrievalContext
 from .models import ActionCandidate, Partition
-from .plm_rules import normalize_kind
+from .rules import normalize_kind
 from .scoring import control_by_kind, current_control_value
 
 

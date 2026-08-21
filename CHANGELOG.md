@@ -14,4 +14,14 @@ All notable public repository changes are documented here. This project follows 
 - Unified `python -m danks_repo` navigation, verification, and packaging commands.
 - Generation-specific Quickstart and source map.
 - Importable `DanRL_retrieval` namespace for the V3 snapshot.
-- Curated V3 core tests without references to excluded private, experimental, or operations modules.
+- Shared importable `guandan.engine` rules package.
+- Complete V3 PPO learner, persistent transport, training-state, model, feature, and team-belief source.
+
+### Changed
+
+- Reduced each generation to its retrieval and model/training core.
+- Consolidated duplicated game rules into one shared package.
+
+### Removed
+
+- Copied platform services, per-generation tests, evaluation harnesses, deployment wrappers, and non-core data conversion utilities.

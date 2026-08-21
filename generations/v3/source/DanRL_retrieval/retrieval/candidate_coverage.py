@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 from .models import ActionCandidate, ScoredAction
-from .plm_rules import is_bomb_kind, normalize_kind
+from .rules import is_bomb_kind, normalize_kind
 
 
 def tactical_coverage_indices(

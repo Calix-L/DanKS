@@ -21,7 +21,7 @@ from DanRL_retrieval.retrieval.card_memory import (
     SEAT_COUNT,
 )
 from DanRL_retrieval.retrieval.models import ScoredAction
-from DanRL_retrieval.retrieval.plm_rules import normalize_kind
+from DanRL_retrieval.retrieval.rules import normalize_kind
 from DanRL_retrieval.training.type_suppression import candidate_response_profile
 from DanRL_retrieval.training.schema import (
     ACTION_KINDS,

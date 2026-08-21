@@ -7,7 +7,7 @@ from typing import NamedTuple
 
 import numpy as np
 
-from DanRL_retrieval.retrieval.action_generator import PLMActionGenerator
+from DanRL_retrieval.retrieval.action_generator import ActionGenerator
 from DanRL_retrieval.retrieval.context import RetrievalContext
 from DanRL_retrieval.retrieval.cards import CARD_INDEX, card_rank
 from DanRL_retrieval.retrieval.models import (
@@ -16,7 +16,7 @@ from DanRL_retrieval.retrieval.models import (
     ScoredAction,
 )
 from DanRL_retrieval.retrieval.partitioner import FullSearchPartitioner
-from DanRL_retrieval.retrieval.plm_rules import (
+from DanRL_retrieval.retrieval.rules import (
     can_follow_action,
     group_to_action,
     is_bomb_kind,
@@ -68,7 +68,7 @@ def _candidate_action(candidate: ScoredAction | ActionCandidate) -> ActionCandid
 
 
 def _follow_signature(action: ActionCandidate) -> tuple[str, str | None, int]:
-    """Return exactly the fields used by PLM's ActionCandidate follow rules."""
+    """Return the fields consumed by canonical action-follow rules."""
 
     return normalize_kind(action.kind), normalize_rank(action.rank), len(action.cards)
 
@@ -397,7 +397,7 @@ def build_team_belief_labels(
         return labels, label_mask
 
     partitioner = partitioner or FullSearchPartitioner(use_native_all=True)
-    public_target = PLMActionGenerator(partitioner=partitioner)._target_action(ctx)
+    public_target = ActionGenerator(partitioner=partitioner)._target_action(ctx)
     targets = [
         public_target if _candidate_action(candidate).kind == "PASS"
         else _candidate_action(candidate)

@@ -14,11 +14,8 @@ PYTHONPATH=generations/v3/source python -c "import DanRL_retrieval; print(DanRL_
 ```text
 source/DanRL_retrieval/
 ├── retrieval/             # action generation, memory, partitioning, ranking
-├── training/              # features, team belief, model, PPO, training CLI
-├── openguandan_adapter/   # state and evaluation protocol adapters
-├── plm_adapter/           # PLM request payload adapter
-├── environment/           # public dependency specifications
-└── tests/                 # core source tests
+├── training/              # features, team belief, model, PPO, training runtime
+└── environment/           # public dependency specifications
 ```
 
 Recommended first files:
@@ -29,21 +26,8 @@ Recommended first files:
 4. `source/DanRL_retrieval/training/model.py`
 5. `source/DanRL_retrieval/training/ppo.py`
 
-The public V3 snapshot excludes later experimental network files, dated operations, private deployment/evaluation tooling, generated Cython sources, and machine-specific environment snapshots. `manifest.json` is the authoritative inventory.
+The public V3 snapshot keeps the complete PPO learner, persistent learner transport, optimizer-state handling, recall path, and network feature stack. It excludes later experimental networks, operational services, evaluation tooling, generated Cython sources, and data conversion utilities. `manifest.json` is the authoritative inventory.
 
 Model weights and private datasets are not included, so pretrained inference and full training reproduction are outside this repository.
 
-## Self-contained tests
-
-After installing `pytest`, NumPy, and a hardware-appropriate PyTorch build, run the
-tests that are self-contained inside the public V3 boundary:
-
-```bash
-PYTHONPATH=generations/v3/source python -m pytest \
-  generations/v3/source/DanRL_retrieval/tests
-```
-
-The snapshot intentionally omits tests coupled to private operations and
-adapters, later experimental networks, or an already-built optional native
-extension. This keeps the shipped test command deterministic on a clean source
-checkout.
+Repository-level tests validate V3's package boundary, internal imports, manifests, and PPO source presence without requiring private weights or training data.
