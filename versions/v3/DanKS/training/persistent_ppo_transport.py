@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 
-DEFAULT_ROUTE_FILE = Path("/dev/shm/danrl_persistent_ppo_route.json")
+DEFAULT_ROUTE_FILE = Path("/dev/shm/danks_persistent_ppo_route.json")
 
 
 def _argument_value(argv: list[str], name: str) -> str | None:
@@ -48,7 +48,7 @@ def run_persistent_client(
 
     argv = list(argv)
     route_file = route_file or Path(
-        os.environ.get("DANRL_PERSISTENT_PPO_ROUTE", str(DEFAULT_ROUTE_FILE))
+        os.environ.get("DANKS_PERSISTENT_PPO_ROUTE", str(DEFAULT_ROUTE_FILE))
     )
     try:
         route = json.loads(route_file.read_text(encoding="utf-8"))

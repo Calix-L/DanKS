@@ -105,7 +105,7 @@ class StructuralCandidateRanker:
     ) -> None:
         self.partitioner = partitioner or FullSearchPartitioner(use_native_all=True)
         implicit_profile = break_profile is None
-        raw_profile_name = os.environ.get("DANRL_BREAK_PROFILE", "").strip()
+        raw_profile_name = os.environ.get("DANKS_BREAK_PROFILE", "").strip()
         profile_selected_by_env = implicit_profile and bool(raw_profile_name)
         if break_profile is None:
             profile_name = raw_profile_name or "default"
@@ -113,9 +113,9 @@ class StructuralCandidateRanker:
                 break_profile = BREAK_PENALTY_PROFILES[profile_name]
             except KeyError as exc:
                 choices = ", ".join(sorted(BREAK_PENALTY_PROFILES))
-                raise ValueError(f"unknown DANRL_BREAK_PROFILE={profile_name!r}; expected one of: {choices}") from exc
+                raise ValueError(f"unknown DANKS_BREAK_PROFILE={profile_name!r}; expected one of: {choices}") from exc
         if implicit_profile:
-            raw_break_weight = os.environ.get("DANRL_BREAK_GROUP_WEIGHT", "").strip()
+            raw_break_weight = os.environ.get("DANKS_BREAK_GROUP_WEIGHT", "").strip()
             if raw_break_weight:
                 weights = replace(weights, break_group=float(raw_break_weight))
             elif profile_selected_by_env:
@@ -166,7 +166,7 @@ class StructuralCandidateRanker:
         partition_limit = self._partition_limit(ctx)
         prepared_batch_inputs = None
         reuse_cover_inputs = os.environ.get(
-            "DANRL_NATIVE_BATCH_REUSE_COVER_INPUTS", "0"
+            "DANKS_NATIVE_BATCH_REUSE_COVER_INPUTS", "0"
         ).strip().lower() in {"1", "true", "yes", "on"}
         if (
             partition_limit is not None
@@ -223,7 +223,7 @@ class StructuralCandidateRanker:
         ] = {}
         batch_includes_before = False
         include_before_in_batch = os.environ.get(
-            "DANRL_NATIVE_BATCH_INCLUDE_BEFORE_HAND", "0"
+            "DANKS_NATIVE_BATCH_INCLUDE_BEFORE_HAND", "0"
         ).strip().lower() in {"1", "true", "yes", "on"}
         if (
             partition_limit is not None
@@ -253,14 +253,14 @@ class StructuralCandidateRanker:
                 )
             )
             small_hand_batch = os.environ.get(
-                "DANRL_NATIVE_SMALL_HAND_BATCH", "1"
+                "DANKS_NATIVE_SMALL_HAND_BATCH", "1"
             ).strip().lower() in {"1", "true", "yes", "on"}
             if small_hand_batch:
                 hand_count_window = self.partitioner._env_int(
-                    "DANRL_PARTITION_HAND_COUNT_WINDOW", -1,
+                    "DANKS_PARTITION_HAND_COUNT_WINDOW", -1,
                 )
                 window_min_hand = self.partitioner._env_int(
-                    "DANRL_PARTITION_HAND_COUNT_WINDOW_MIN_HAND", 0,
+                    "DANKS_PARTITION_HAND_COUNT_WINDOW_MIN_HAND", 0,
                 )
                 missing_hands = [
                     key
@@ -280,7 +280,7 @@ class StructuralCandidateRanker:
                         )
                     )
                 native_beam_batch = os.environ.get(
-                    "DANRL_NATIVE_BEAM_BATCH", "0"
+                    "DANKS_NATIVE_BEAM_BATCH", "0"
                 ).strip().lower() in {"1", "true", "yes", "on"}
                 beam_hands = [
                     key
@@ -318,10 +318,10 @@ class StructuralCandidateRanker:
                 before_partitions = self.partitioner.materialize_partitions(before_partitions)
             partitions_by_after_hand[hand_key] = before_partitions
             before_partition, _before_score, _before_parts = self._best_partition(before_partitions, ctx, before_primary_kind, shared_scorer)
-            batch_break_penalty = os.environ.get("DANRL_BATCH_BREAK_PENALTY", "1").strip().lower() in {
+            batch_break_penalty = os.environ.get("DANKS_BATCH_BREAK_PENALTY", "1").strip().lower() in {
                 "1", "true", "yes", "on",
             }
-            indexed_break_penalty = os.environ.get("DANRL_INDEXED_BREAK_PENALTY", "1").strip().lower() in {
+            indexed_break_penalty = os.environ.get("DANKS_INDEXED_BREAK_PENALTY", "1").strip().lower() in {
                 "1", "true", "yes", "on",
             }
             if batch_break_penalty and indexed_break_penalty:
@@ -370,13 +370,13 @@ class StructuralCandidateRanker:
                         prepared_inputs=prepared_batch_inputs,
                     )
                 )
-                small_hand_batch = os.environ.get("DANRL_NATIVE_SMALL_HAND_BATCH", "1").strip().lower() in {
+                small_hand_batch = os.environ.get("DANKS_NATIVE_SMALL_HAND_BATCH", "1").strip().lower() in {
                     "1", "true", "yes", "on",
                 }
                 if small_hand_batch:
-                    hand_count_window = self.partitioner._env_int("DANRL_PARTITION_HAND_COUNT_WINDOW", -1)
+                    hand_count_window = self.partitioner._env_int("DANKS_PARTITION_HAND_COUNT_WINDOW", -1)
                     window_min_hand = self.partitioner._env_int(
-                        "DANRL_PARTITION_HAND_COUNT_WINDOW_MIN_HAND", 0,
+                        "DANKS_PARTITION_HAND_COUNT_WINDOW_MIN_HAND", 0,
                     )
                     missing_hands = [
                         key
@@ -584,7 +584,7 @@ class StructuralCandidateRanker:
         return scored if top_k is None else scored[:top_k]
 
     def _approx_action_limit(self) -> int:
-        raw = os.environ.get("DANRL_APPROX_ACTION_LIMIT", "").strip()
+        raw = os.environ.get("DANKS_APPROX_ACTION_LIMIT", "").strip()
         if not raw:
             return 0
         try:
@@ -606,9 +606,9 @@ class StructuralCandidateRanker:
         if limit <= 0 or len(actions) <= limit:
             return actions
         target = min(len(actions), max(limit, (top_k or 0) * 4, 32))
-        hand_window = self._env_int("DANRL_APPROX_HAND_WINDOW", 2, minimum=0)
-        beam_width = self._env_int("DANRL_APPROX_BEAM_WIDTH", 32, minimum=1)
-        bomb_keep_size = self._env_int("DANRL_APPROX_BOMB_KEEP_SIZE", 6, minimum=4)
+        hand_window = self._env_int("DANKS_APPROX_HAND_WINDOW", 2, minimum=0)
+        beam_width = self._env_int("DANKS_APPROX_BEAM_WIDTH", 32, minimum=1)
+        bomb_keep_size = self._env_int("DANKS_APPROX_BOMB_KEEP_SIZE", 6, minimum=4)
         keep: dict[int, ActionCandidate] = {}
         essential: set[int] = set()
         approx_rows: list[tuple[ActionCandidate, int, float, float]] = []
@@ -634,7 +634,7 @@ class StructuralCandidateRanker:
             )
         before_steps = min((part.hand_count for part in before_parts), default=len(hand))
         batch_prefilter_break = os.environ.get(
-            "DANRL_APPROX_BATCH_BREAK_PENALTY", "0"
+            "DANKS_APPROX_BATCH_BREAK_PENALTY", "0"
         ).strip().lower() in {"1", "true", "yes", "on"}
         break_proxy_cache: dict[int, float] = (
             self._batch_break_group_penalties(actions, before_parts)
@@ -910,7 +910,7 @@ class StructuralCandidateRanker:
         actions: list[ActionCandidate],
         ctx: RetrievalContext,
     ) -> dict[int, tuple[float, float, float, float, float, float]]:
-        enabled = os.environ.get("DANRL_NATIVE_ACTION_FEATURE_BATCH", "0").strip().lower() in {
+        enabled = os.environ.get("DANKS_NATIVE_ACTION_FEATURE_BATCH", "0").strip().lower() in {
             "1", "true", "yes", "on",
         }
         if not enabled or not actions or not native_actor_core.available():
@@ -931,7 +931,7 @@ class StructuralCandidateRanker:
         actions: list[ActionCandidate],
         partitions: list[Partition],
     ) -> dict[int, float]:
-        enabled = os.environ.get("DANRL_NATIVE_BREAK_PENALTY_BATCH", "0").strip().lower() in {
+        enabled = os.environ.get("DANKS_NATIVE_BREAK_PENALTY_BATCH", "0").strip().lower() in {
             "1", "true", "yes", "on",
         }
         if enabled and actions and partitions and native_actor_core.available():
@@ -991,7 +991,7 @@ class StructuralCandidateRanker:
         hand: tuple[str, ...],
         ctx: RetrievalContext,
     ) -> tuple[str, ...]:
-        enabled = os.environ.get("DANRL_STABLE_SEARCH_UNIVERSE", "0").strip().lower() in {
+        enabled = os.environ.get("DANKS_STABLE_SEARCH_UNIVERSE", "0").strip().lower() in {
             "1", "true", "yes", "on",
         }
         if not enabled:
@@ -1026,7 +1026,7 @@ class StructuralCandidateRanker:
         scorer = scorer or PartitionScorer(ctx, self.weights, self.break_profile)
         pressure_values = scorer._pressure_values_for_primary(primary_kind)
         native_selected_score = os.environ.get(
-            "DANRL_NATIVE_SELECTED_PARTITION_SCORE", "0"
+            "DANKS_NATIVE_SELECTED_PARTITION_SCORE", "0"
         ).strip().lower() in {"1", "true", "yes", "on"}
         if (
             native_selected_score
@@ -1092,7 +1092,7 @@ class StructuralCandidateRanker:
         ],
         scorer: PartitionScorer,
     ) -> dict[tuple[tuple[str, ...], str], tuple[Partition, float, dict[str, float]]]:
-        enabled = os.environ.get("DANRL_NATIVE_SELECTED_PARTITION_BATCH", "0").strip().lower() in {
+        enabled = os.environ.get("DANKS_NATIVE_SELECTED_PARTITION_BATCH", "0").strip().lower() in {
             "1", "true", "yes", "on",
         }
         if (
@@ -1331,7 +1331,7 @@ class StructuralCandidateRanker:
         partition_context_suffix: tuple | None,
     ) -> tuple[tuple, tuple[str, ...], tuple[CardGroup, ...], list[list[list[int]]], str] | None:
         if (
-            os.environ.get("DANRL_DISABLE_NATIVE_SUPER_HAND_UNIVERSE", "").strip().lower() in {"1", "true", "yes", "on"}
+            os.environ.get("DANKS_DISABLE_NATIVE_SUPER_HAND_UNIVERSE", "").strip().lower() in {"1", "true", "yes", "on"}
             or partition_context_suffix is None
             or not isinstance(self.partitioner, FullSearchPartitioner)
             or not native_cover.available()
@@ -1407,7 +1407,7 @@ class StructuralCandidateRanker:
     ) -> dict[tuple[tuple[str, ...], str], tuple[Partition, float, dict[str, float]]]:
         if (
             not best_keys
-            or os.environ.get("DANRL_DISABLE_NATIVE_SUPER_HAND_BATCH", "").strip().lower() in {"1", "true", "yes", "on"}
+            or os.environ.get("DANKS_DISABLE_NATIVE_SUPER_HAND_BATCH", "").strip().lower() in {"1", "true", "yes", "on"}
             or not hasattr(native_cover.module(), "best_covers_by_score_entries_with_retake_batch")
         ):
             return {}
@@ -1476,10 +1476,10 @@ class StructuralCandidateRanker:
         module = native_cover.module()
         use_retake = (
             hasattr(module, "best_cover_by_score_entries_with_retake")
-            and os.environ.get("DANRL_DISABLE_NATIVE_RETAKE_SUMMARY", "").strip().lower() not in {"1", "true", "yes", "on"}
+            and os.environ.get("DANKS_DISABLE_NATIVE_RETAKE_SUMMARY", "").strip().lower() not in {"1", "true", "yes", "on"}
         )
-        use_dp = os.environ.get("DANRL_ENABLE_NATIVE_SCORE_DP", "").strip().lower() in {"1", "true", "yes", "on"}
-        frontier_limit = int(os.environ.get("DANRL_NATIVE_SCORE_DP_FRONTIER_LIMIT", "200000"))
+        use_dp = os.environ.get("DANKS_ENABLE_NATIVE_SCORE_DP", "").strip().lower() in {"1", "true", "yes", "on"}
+        frontier_limit = int(os.environ.get("DANKS_NATIVE_SCORE_DP_FRONTIER_LIMIT", "200000"))
         if use_dp and use_retake and hasattr(module, "best_cover_by_score_entries_dp_with_retake"):
             best_with_retake = native_cover.best_cover_by_score_entries_dp_with_retake(
                 state,
@@ -1534,7 +1534,7 @@ class StructuralCandidateRanker:
         scorer: PartitionScorer,
         groups_only,
     ) -> list[list[float | int]]:
-        if os.environ.get("DANRL_DISABLE_FLAT_SCORE_ENTRY_CACHE", "").strip().lower() in {"1", "true", "yes", "on"}:
+        if os.environ.get("DANKS_DISABLE_FLAT_SCORE_ENTRY_CACHE", "").strip().lower() in {"1", "true", "yes", "on"}:
             return scorer.flat_cover_score_entries(groups_only)
         key = (
             partition_key,

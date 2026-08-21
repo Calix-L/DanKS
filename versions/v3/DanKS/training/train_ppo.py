@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-if __name__ == "__main__" and os.environ.get("DANRL_DISABLE_PERSISTENT_PPO", "").lower() not in {"1", "true", "yes"}:
+if __name__ == "__main__" and os.environ.get("DANKS_DISABLE_PERSISTENT_PPO", "").lower() not in {"1", "true", "yes"}:
     from DanKS.training.persistent_ppo_transport import maybe_run_client
 
     persistent_returncode = maybe_run_client()
@@ -388,7 +388,7 @@ def take_persistent_checkpoint(
 ) -> tuple[Top10Selector, dict] | None:
     """Consume an exact in-memory successor checkpoint when the chain is intact."""
 
-    if not env_enabled("DANRL_PERSISTENT_LEARNER_REUSE"):
+    if not env_enabled("DANKS_PERSISTENT_LEARNER_REUSE"):
         return None
     resolved = str(path.resolve())
     cached = _PERSISTENT_CHECKPOINTS.pop(resolved, None)
@@ -413,7 +413,7 @@ def publish_persistent_checkpoint(
 ) -> None:
     """Remember a successfully published checkpoint without retaining CPU weights."""
 
-    if not env_enabled("DANRL_PERSISTENT_LEARNER_REUSE"):
+    if not env_enabled("DANKS_PERSISTENT_LEARNER_REUSE"):
         return
     metadata = {key: value for key, value in payload.items() if key != "model_state_dict"}
     resolved = str(path.resolve())
@@ -435,10 +435,10 @@ def publish_persistent_checkpoint(
 
 def shard_load_executor(path_count: int) -> concurrent.futures.ThreadPoolExecutor | None:
     global _SHARD_LOAD_EXECUTOR
-    if path_count <= 1 or not env_enabled("DANRL_PARALLEL_SHARD_LOAD", default=True):
+    if path_count <= 1 or not env_enabled("DANKS_PARALLEL_SHARD_LOAD", default=True):
         return None
     if _SHARD_LOAD_EXECUTOR is None:
-        workers = min(path_count, max(1, int(os.environ.get("DANRL_SHARD_LOAD_THREADS", "8"))))
+        workers = min(path_count, max(1, int(os.environ.get("DANKS_SHARD_LOAD_THREADS", "8"))))
         _SHARD_LOAD_EXECUTOR = concurrent.futures.ThreadPoolExecutor(
             max_workers=workers,
             thread_name_prefix="ppo-shard-load",
@@ -718,8 +718,8 @@ def make_continuous_adamw(
 ) -> tuple[torch.optim.Optimizer, str]:
     """Keep Adam moments across updates and restore them after a restart."""
 
-    continuous = env_enabled("DANRL_CONTINUOUS_OPTIMIZER", default=True)
-    reuse = continuous and env_enabled("DANRL_PERSISTENT_LEARNER_REUSE")
+    continuous = env_enabled("DANKS_CONTINUOUS_OPTIMIZER", default=True)
+    reuse = continuous and env_enabled("DANKS_PERSISTENT_LEARNER_REUSE")
     key = (id(model), float(lr), float(weight_decay), float(eps), bool(fused))
     checkpoint = Path(init_checkpoint) if init_checkpoint else None
     resolved = str(checkpoint.resolve()) if checkpoint is not None else ""
@@ -784,7 +784,7 @@ def iter_device_batches(
     # the sole batch (the production 3.2k rows use batch_size=8192).
     if (
         allow_direct_full_batch
-        and os.environ.get("DANRL_DIRECT_FULL_BATCH", "1").lower()
+        and os.environ.get("DANKS_DIRECT_FULL_BATCH", "1").lower()
         not in {"0", "false", "no", "off"}
         and batch_size >= indices.numel()
         and all(array.shape[0] == indices.numel() for array in arrays)
@@ -805,11 +805,11 @@ def snapshot_state_dict_to_cpu(model: torch.nn.Module) -> dict[str, torch.Tensor
 
     state = model.state_dict()
     tensors = list(state.values())
-    flat_storage = env_enabled("DANRL_FLAT_CHECKPOINT_STORAGE")
+    flat_storage = env_enabled("DANKS_FLAT_CHECKPOINT_STORAGE")
     if (
         not tensors
         or tensors[0].device.type != "cuda"
-        or os.environ.get("DANRL_ASYNC_CHECKPOINT_SNAPSHOT", "1").lower()
+        or os.environ.get("DANKS_ASYNC_CHECKPOINT_SNAPSHOT", "1").lower()
         in {"0", "false", "no", "off"}
     ):
         snapshot = {key: value.detach().cpu() for key, value in state.items()}
@@ -978,7 +978,7 @@ def build_initial_model(args: argparse.Namespace, device: torch.device) -> tuple
             # the same selector checkpoint without preserving backend device tags.
             load_kwargs = (
                 {"weights_only": False}
-                if env_enabled("DANRL_TRUSTED_CHECKPOINT_FAST_LOAD")
+                if env_enabled("DANKS_TRUSTED_CHECKPOINT_FAST_LOAD")
                 else {}
             )
             payload = torch.load(checkpoint, map_location="cpu", **load_kwargs)
@@ -1008,7 +1008,7 @@ def build_initial_model(args: argparse.Namespace, device: torch.device) -> tuple
             int(config["candidate_hidden_dim"]),
         )
         reuse = (
-            os.environ.get("DANRL_PERSISTENT_LEARNER_REUSE", "0").lower()
+            os.environ.get("DANKS_PERSISTENT_LEARNER_REUSE", "0").lower()
             not in {"0", "false", "no", "off"}
         )
         model = resident_model
@@ -1349,7 +1349,7 @@ def main() -> None:
         model_config=model_config,
     )
     print(
-        f"optimizer_continuity={int(env_enabled('DANRL_CONTINUOUS_OPTIMIZER', default=True))} "
+        f"optimizer_continuity={int(env_enabled('DANKS_CONTINUOUS_OPTIMIZER', default=True))} "
         f"optimizer_state={optimizer_source}",
         flush=True,
     )
@@ -1508,7 +1508,7 @@ def main() -> None:
         "kind": "top10_ppo",
         "init_checkpoint_metadata": init_payload.get("metadata", {}) if init_payload else {},
     }
-    continuous_optimizer = env_enabled("DANRL_CONTINUOUS_OPTIMIZER", default=True)
+    continuous_optimizer = env_enabled("DANKS_CONTINUOUS_OPTIMIZER", default=True)
     if continuous_optimizer:
         checkpoint_payload["training_state_file"] = training_state_path(output).name
         checkpoint_payload["optimizer_continuity"] = "adamw_sidecar_v1"

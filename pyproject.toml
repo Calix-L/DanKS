@@ -1,17 +1,17 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "DanKS"
+name = "danks-engine"
 version = "0.1.0"
 description = "Three generations of GuanDan AI and a shared Python game engine"
 readme = "README.md"
 requires-python = ">=3.10"
-license = { file = "LICENSE" }
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
 authors = [{ name = "DanKS Contributors" }]
 classifiers = [
-  "License :: OSI Approved :: Apache Software License",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
@@ -20,7 +20,10 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=7"]
+dev = [
+  "pytest>=7",
+  "tomli>=2; python_version < '3.11'",
+]
 
 [tool.setuptools]
 packages = ["guandan", "guandan.engine"]

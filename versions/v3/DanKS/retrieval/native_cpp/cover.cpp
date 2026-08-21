@@ -30,7 +30,7 @@ using Buckets = std::vector<std::vector<EncodedGroup>>;
 using Cover = std::vector<unsigned short>;
 using Covers = std::vector<Cover>;
 
-constexpr const char* kNativeBucketsCapsuleName = "danrl.native_buckets.v1";
+constexpr const char* kNativeBucketsCapsuleName = "danks.native_buckets.v1";
 
 static const Buckets& native_buckets_from_capsule(const py::capsule& capsule) {
     void* pointer = PyCapsule_GetPointer(capsule.ptr(), kNativeBucketsCapsuleName);
@@ -171,7 +171,7 @@ private:
 class PackedDepthMemo {
 public:
     PackedDepthMemo() {
-        const char* raw = std::getenv("DANRL_NATIVE_FLAT_DEPTH_MEMO");
+        const char* raw = std::getenv("DANKS_NATIVE_FLAT_DEPTH_MEMO");
         flat_ = raw != nullptr && std::string(raw) != "0" && std::string(raw) != "false";
     }
 
@@ -261,7 +261,7 @@ private:
 class PackedScoreMemo {
 public:
     PackedScoreMemo() {
-        const char* raw = std::getenv("DANRL_NATIVE_FLAT_EFFECTIVE_SCORE_MEMO");
+        const char* raw = std::getenv("DANKS_NATIVE_FLAT_EFFECTIVE_SCORE_MEMO");
         flat_ = raw != nullptr && std::string(raw) != "0" && std::string(raw) != "false";
     }
 
@@ -478,7 +478,7 @@ struct SafeBoundContext {
 };
 
 static std::size_t native_batch_threads() {
-    const char* raw = std::getenv("DANRL_NATIVE_BATCH_THREADS");
+    const char* raw = std::getenv("DANKS_NATIVE_BATCH_THREADS");
     if (raw == nullptr || raw[0] == '\0') {
         return 1;
     }
@@ -860,7 +860,7 @@ static double retake_count_from_score_state(const ScoreState& score_state) {
 }
 
 static std::size_t native_score_dp_frontier_limit() {
-    const char* raw = std::getenv("DANRL_NATIVE_SCORE_DP_FRONTIER_LIMIT");
+    const char* raw = std::getenv("DANKS_NATIVE_SCORE_DP_FRONTIER_LIMIT");
     if (raw == nullptr || raw[0] == '\0') {
         return 200000;
     }
@@ -873,7 +873,7 @@ static std::size_t native_score_dp_frontier_limit() {
 }
 
 static bool native_score_dp_enabled_for_batch() {
-    const char* raw = std::getenv("DANRL_ENABLE_NATIVE_SCORE_DP");
+    const char* raw = std::getenv("DANKS_ENABLE_NATIVE_SCORE_DP");
     if (raw == nullptr) {
         return false;
     }
@@ -882,7 +882,7 @@ static bool native_score_dp_enabled_for_batch() {
 }
 
 static bool native_safe_bound_enabled() {
-    const char* raw = std::getenv("DANRL_ENABLE_SAFE_BOUND");
+    const char* raw = std::getenv("DANKS_ENABLE_SAFE_BOUND");
     if (raw == nullptr) {
         return false;
     }
@@ -891,7 +891,7 @@ static bool native_safe_bound_enabled() {
 }
 
 static bool native_branch_order_enabled() {
-    const char* raw = std::getenv("DANRL_ENABLE_BRANCH_ORDER");
+    const char* raw = std::getenv("DANKS_ENABLE_BRANCH_ORDER");
     if (raw == nullptr) {
         return false;
     }
@@ -900,7 +900,7 @@ static bool native_branch_order_enabled() {
 }
 
 static bool native_initial_incumbent_enabled() {
-    const char* raw = std::getenv("DANRL_ENABLE_INITIAL_INCUMBENT");
+    const char* raw = std::getenv("DANKS_ENABLE_INITIAL_INCUMBENT");
     if (raw == nullptr) {
         return native_safe_bound_enabled();
     }
@@ -909,7 +909,7 @@ static bool native_initial_incumbent_enabled() {
 }
 
 static bool native_shared_upper_memo_enabled() {
-    const char* raw = std::getenv("DANRL_ENABLE_SHARED_UPPER_MEMO");
+    const char* raw = std::getenv("DANKS_ENABLE_SHARED_UPPER_MEMO");
     if (raw == nullptr) {
         return native_safe_bound_enabled();
     }
@@ -918,7 +918,7 @@ static bool native_shared_upper_memo_enabled() {
 }
 
 static bool native_batch_shared_window_memo_enabled() {
-    const char* raw = std::getenv("DANRL_NATIVE_BATCH_SHARED_WINDOW_MEMO");
+    const char* raw = std::getenv("DANKS_NATIVE_BATCH_SHARED_WINDOW_MEMO");
     if (raw == nullptr) {
         return true;
     }
@@ -927,7 +927,7 @@ static bool native_batch_shared_window_memo_enabled() {
 }
 
 static bool native_batch_shared_top_memo_enabled() {
-    const char* raw = std::getenv("DANRL_NATIVE_BATCH_SHARED_TOP_MEMO");
+    const char* raw = std::getenv("DANKS_NATIVE_BATCH_SHARED_TOP_MEMO");
     if (raw == nullptr) {
         return false;
     }
@@ -936,7 +936,7 @@ static bool native_batch_shared_top_memo_enabled() {
 }
 
 static bool native_batch_packed_top_memo_enabled() {
-    const char* raw = std::getenv("DANRL_NATIVE_BATCH_PACKED_TOP_MEMO");
+    const char* raw = std::getenv("DANKS_NATIVE_BATCH_PACKED_TOP_MEMO");
     if (raw == nullptr) {
         return false;
     }
@@ -945,7 +945,7 @@ static bool native_batch_packed_top_memo_enabled() {
 }
 
 static bool native_batch_packed_window_memo_enabled() {
-    const char* raw = std::getenv("DANRL_NATIVE_BATCH_PACKED_WINDOW_MEMO");
+    const char* raw = std::getenv("DANKS_NATIVE_BATCH_PACKED_WINDOW_MEMO");
     if (raw == nullptr) {
         return true;
     }
@@ -954,7 +954,7 @@ static bool native_batch_packed_window_memo_enabled() {
 }
 
 static bool native_batch_window_transition_memo_enabled() {
-    const char* raw = std::getenv("DANRL_NATIVE_BATCH_WINDOW_TRANSITION_MEMO");
+    const char* raw = std::getenv("DANKS_NATIVE_BATCH_WINDOW_TRANSITION_MEMO");
     if (raw == nullptr) {
         return false;
     }
@@ -963,7 +963,7 @@ static bool native_batch_window_transition_memo_enabled() {
 }
 
 static bool native_parallel_window_batch_enabled() {
-    const char* raw = std::getenv("DANRL_NATIVE_PARALLEL_WINDOW_BATCH");
+    const char* raw = std::getenv("DANKS_NATIVE_PARALLEL_WINDOW_BATCH");
     if (raw == nullptr) {
         return false;
     }
@@ -973,14 +973,14 @@ static bool native_parallel_window_batch_enabled() {
 
 static bool native_compact_parallel_window_batch_enabled() {
     static const bool enabled = []() {
-        const char* value = std::getenv("DANRL_NATIVE_COMPACT_PARALLEL_WINDOW_BATCH");
+        const char* value = std::getenv("DANKS_NATIVE_COMPACT_PARALLEL_WINDOW_BATCH");
         return value != nullptr && std::string(value) == "1";
     }();
     return enabled;
 }
 
 static bool native_window_suffix_memo_enabled() {
-    const char* raw = std::getenv("DANRL_NATIVE_WINDOW_SUFFIX_MEMO");
+    const char* raw = std::getenv("DANKS_NATIVE_WINDOW_SUFFIX_MEMO");
     if (raw == nullptr) {
         return false;
     }
@@ -989,7 +989,7 @@ static bool native_window_suffix_memo_enabled() {
 }
 
 static bool native_depth_window_upper_bound_enabled() {
-    const char* raw = std::getenv("DANRL_NATIVE_DEPTH_WINDOW_UPPER_BOUND");
+    const char* raw = std::getenv("DANKS_NATIVE_DEPTH_WINDOW_UPPER_BOUND");
     if (raw == nullptr) {
         return false;
     }
@@ -998,7 +998,7 @@ static bool native_depth_window_upper_bound_enabled() {
 }
 
 static bool native_compact_window_dp_enabled() {
-    const char* raw = std::getenv("DANRL_NATIVE_COMPACT_WINDOW_DP");
+    const char* raw = std::getenv("DANKS_NATIVE_COMPACT_WINDOW_DP");
     if (raw == nullptr) {
         return false;
     }
@@ -1008,7 +1008,7 @@ static bool native_compact_window_dp_enabled() {
 
 static std::size_t native_compact_window_min_states() {
     static const std::size_t threshold = []() {
-        const char* raw = std::getenv("DANRL_NATIVE_COMPACT_WINDOW_MIN_STATES");
+        const char* raw = std::getenv("DANKS_NATIVE_COMPACT_WINDOW_MIN_STATES");
         if (raw == nullptr || *raw == '\0') {
             return std::size_t{16};
         }
@@ -1024,7 +1024,7 @@ static std::size_t native_compact_window_min_states() {
 
 static bool native_lazy_compact_window_dp_enabled() {
     static const bool enabled = []() {
-        const char* value = std::getenv("DANRL_NATIVE_LAZY_COMPACT_WINDOW_DP");
+        const char* value = std::getenv("DANKS_NATIVE_LAZY_COMPACT_WINDOW_DP");
         return value != nullptr && std::string(value) == "1";
     }();
     return enabled;
@@ -1032,14 +1032,14 @@ static bool native_lazy_compact_window_dp_enabled() {
 
 static bool native_lazy_selected_bound_enabled() {
     static const bool enabled = []() {
-        const char* value = std::getenv("DANRL_NATIVE_LAZY_SELECTED_BOUND");
+        const char* value = std::getenv("DANKS_NATIVE_LAZY_SELECTED_BOUND");
         return value != nullptr && std::string(value) == "1";
     }();
     return enabled;
 }
 
 static bool native_compact_top_dp_enabled() {
-    const char* raw = std::getenv("DANRL_NATIVE_COMPACT_TOP_DP");
+    const char* raw = std::getenv("DANKS_NATIVE_COMPACT_TOP_DP");
     if (raw == nullptr) {
         return false;
     }
@@ -1049,21 +1049,21 @@ static bool native_compact_top_dp_enabled() {
 
 static bool native_lazy_compact_top_dp_enabled() {
     static const bool enabled = []() {
-        const char* value = std::getenv("DANRL_NATIVE_LAZY_COMPACT_TOP_DP");
+        const char* value = std::getenv("DANKS_NATIVE_LAZY_COMPACT_TOP_DP");
         return value != nullptr && std::string(value) == "1";
     }();
     return enabled;
 }
 
 static bool native_window_astar_enabled() {
-    const char* raw = std::getenv("DANRL_NATIVE_WINDOW_ASTAR");
+    const char* raw = std::getenv("DANKS_NATIVE_WINDOW_ASTAR");
     if (raw == nullptr) return false;
     const std::string value(raw);
     return value == "1" || value == "true" || value == "TRUE" || value == "yes" || value == "on";
 }
 
 static bool native_batch_direct_packed_state_enabled() {
-    const char* raw = std::getenv("DANRL_NATIVE_BATCH_DIRECT_PACKED_STATE");
+    const char* raw = std::getenv("DANKS_NATIVE_BATCH_DIRECT_PACKED_STATE");
     if (raw == nullptr) {
         return true;
     }
@@ -1072,7 +1072,7 @@ static bool native_batch_direct_packed_state_enabled() {
 }
 
 static bool native_batch_precompiled_groups_enabled() {
-    const char* raw = std::getenv("DANRL_NATIVE_BATCH_PRECOMPILED_GROUPS");
+    const char* raw = std::getenv("DANKS_NATIVE_BATCH_PRECOMPILED_GROUPS");
     if (raw == nullptr) {
         return true;
     }
@@ -1081,7 +1081,7 @@ static bool native_batch_precompiled_groups_enabled() {
 }
 
 static bool native_packed_effective_window_batch_enabled() {
-    const char* raw = std::getenv("DANRL_NATIVE_PACKED_EFFECTIVE_WINDOW_BATCH");
+    const char* raw = std::getenv("DANKS_NATIVE_PACKED_EFFECTIVE_WINDOW_BATCH");
     if (raw == nullptr) {
         return false;
     }
@@ -2076,7 +2076,7 @@ static std::vector<Covers> top_covers_beam_batch(
 ) {
     py::gil_scoped_release release;
     std::vector<Covers> out(states.size());
-    const char* raw_parallel = std::getenv("DANRL_NATIVE_PARALLEL_BEAM_BATCH");
+    const char* raw_parallel = std::getenv("DANKS_NATIVE_PARALLEL_BEAM_BATCH");
     const bool parallel = raw_parallel != nullptr && (
         std::strcmp(raw_parallel, "1") == 0 ||
         std::strcmp(raw_parallel, "true") == 0 ||
@@ -5747,7 +5747,7 @@ std::vector<Covers> top_covers_effective_hand_count_window_selected_batch(
     return results;
 }
 
-PYBIND11_MODULE(danrl_cover, m) {
+PYBIND11_MODULE(danks_cover, m) {
     m.attr("packed_effective_window_flat_score_memo_supported") = py::bool_(true);
     m.attr("packed_effective_window_flat_depth_memo_supported") = py::bool_(true);
     m.def(

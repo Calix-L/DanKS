@@ -4,25 +4,25 @@ from typing import Any
 
 
 try:
-    from .native_cpp import danrl_cover
+    from .native_cpp import danks_cover
 except Exception:  # pragma: no cover - exercised when the extension is absent.
-    danrl_cover = None
+    danks_cover = None
 
 
 def available() -> bool:
-    return danrl_cover is not None
+    return danks_cover is not None
 
 
 def enumerate_covers(state: list[int], groups_by_first: list[list[list[int]]]) -> list[list[int]]:
-    if danrl_cover is None:
+    if danks_cover is None:
         raise RuntimeError("C++ cover kernel is not available")
-    return danrl_cover.enumerate_covers(state, groups_by_first)
+    return danks_cover.enumerate_covers(state, groups_by_first)
 
 
 def count_covers(state: list[int], groups_by_first: list[list[list[int]]]) -> int:
-    if danrl_cover is None:
+    if danks_cover is None:
         raise RuntimeError("C++ cover kernel is not available")
-    return int(danrl_cover.count_covers(state, groups_by_first))
+    return int(danks_cover.count_covers(state, groups_by_first))
 
 
 def top_covers(
@@ -33,9 +33,9 @@ def top_covers(
     max_results: int,
     enable_upper_bound: bool = False,
 ) -> list[list[int]]:
-    if danrl_cover is None:
+    if danks_cover is None:
         raise RuntimeError("C++ cover kernel is not available")
-    return danrl_cover.top_covers(state, groups_by_first, group_scores, tie_keys, max_results, enable_upper_bound)
+    return danks_cover.top_covers(state, groups_by_first, group_scores, tie_keys, max_results, enable_upper_bound)
 
 
 def top_covers_batch(
@@ -46,9 +46,9 @@ def top_covers_batch(
     max_results: int,
     enable_upper_bound: bool = False,
 ) -> list[list[list[int]]]:
-    if danrl_cover is None or not hasattr(danrl_cover, "top_covers_batch"):
+    if danks_cover is None or not hasattr(danks_cover, "top_covers_batch"):
         raise RuntimeError("C++ batch top-cover kernel is not available")
-    return danrl_cover.top_covers_batch(
+    return danks_cover.top_covers_batch(
         states,
         groups_by_first,
         group_scores,
@@ -68,13 +68,13 @@ def top_covers_selected_batch(
     selected_results: int,
     enable_upper_bound: bool = False,
 ) -> list[list[list[int]]]:
-    if danrl_cover is None or not hasattr(danrl_cover, "top_covers_selected_batch"):
+    if danks_cover is None or not hasattr(danks_cover, "top_covers_selected_batch"):
         raise RuntimeError("C++ selected batch top-cover kernel is not available")
     if (
         type(groups_by_first).__name__ == "PyCapsule"
-        and hasattr(danrl_cover, "top_covers_selected_batch_capsule")
+        and hasattr(danks_cover, "top_covers_selected_batch_capsule")
     ):
-        return danrl_cover.top_covers_selected_batch_capsule(
+        return danks_cover.top_covers_selected_batch_capsule(
             states,
             groups_by_first,
             group_scores,
@@ -84,7 +84,7 @@ def top_covers_selected_batch(
             int(selected_results),
             bool(enable_upper_bound),
         )
-    return danrl_cover.top_covers_selected_batch(
+    return danks_cover.top_covers_selected_batch(
         states,
         groups_by_first,
         group_scores,
@@ -105,13 +105,13 @@ def top_covers_beam_batch(
     beam_width: int,
     max_results: int,
 ) -> list[list[list[int]]]:
-    if danrl_cover is None or not hasattr(danrl_cover, "top_covers_beam_batch"):
+    if danks_cover is None or not hasattr(danks_cover, "top_covers_beam_batch"):
         raise RuntimeError("C++ batch beam-cover kernel is not available")
     if (
         type(groups_by_first).__name__ == "PyCapsule"
-        and hasattr(danrl_cover, "top_covers_beam_batch_capsule")
+        and hasattr(danks_cover, "top_covers_beam_batch_capsule")
     ):
-        return danrl_cover.top_covers_beam_batch_capsule(
+        return danks_cover.top_covers_beam_batch_capsule(
             states,
             groups_by_first,
             group_scores,
@@ -120,7 +120,7 @@ def top_covers_beam_batch(
             int(beam_width),
             int(max_results),
         )
-    return danrl_cover.top_covers_beam_batch(
+    return danks_cover.top_covers_beam_batch(
         states,
         groups_by_first,
         group_scores,
@@ -139,11 +139,11 @@ def top_covers_hand_count_window(
     window: int,
     max_results: int,
 ) -> list[list[int]]:
-    if danrl_cover is None:
+    if danks_cover is None:
         raise RuntimeError("C++ cover kernel is not available")
-    if not hasattr(danrl_cover, "top_covers_hand_count_window"):
+    if not hasattr(danks_cover, "top_covers_hand_count_window"):
         raise RuntimeError("C++ hand-count-window cover kernel is not available")
-    return danrl_cover.top_covers_hand_count_window(state, groups_by_first, group_scores, tie_keys, int(window), int(max_results))
+    return danks_cover.top_covers_hand_count_window(state, groups_by_first, group_scores, tie_keys, int(window), int(max_results))
 
 
 def top_covers_hand_count_window_batch(
@@ -154,9 +154,9 @@ def top_covers_hand_count_window_batch(
     window: int,
     max_results: int,
 ) -> list[list[list[int]]]:
-    if danrl_cover is None or not hasattr(danrl_cover, "top_covers_hand_count_window_batch"):
+    if danks_cover is None or not hasattr(danks_cover, "top_covers_hand_count_window_batch"):
         raise RuntimeError("C++ batch hand-count-window cover kernel is not available")
-    return danrl_cover.top_covers_hand_count_window_batch(
+    return danks_cover.top_covers_hand_count_window_batch(
         states, groups_by_first, group_scores, tie_keys, int(window), int(max_results)
     )
 
@@ -171,9 +171,9 @@ def top_covers_hand_count_window_selected(
     max_results: int,
     selected_results: int,
 ) -> list[list[int]]:
-    if danrl_cover is None or not hasattr(danrl_cover, "top_covers_hand_count_window_selected"):
+    if danks_cover is None or not hasattr(danks_cover, "top_covers_hand_count_window_selected"):
         raise RuntimeError("C++ selected hand-count-window kernel is not available")
-    return danrl_cover.top_covers_hand_count_window_selected(
+    return danks_cover.top_covers_hand_count_window_selected(
         state,
         groups_by_first,
         group_scores,
@@ -195,13 +195,13 @@ def top_covers_hand_count_window_selected_batch(
     max_results: int,
     selected_results: int,
 ) -> list[list[list[int]]]:
-    if danrl_cover is None or not hasattr(danrl_cover, "top_covers_hand_count_window_selected_batch"):
+    if danks_cover is None or not hasattr(danks_cover, "top_covers_hand_count_window_selected_batch"):
         raise RuntimeError("C++ selected batch hand-count-window kernel is not available")
     if (
         type(groups_by_first).__name__ == "PyCapsule"
-        and hasattr(danrl_cover, "top_covers_hand_count_window_selected_batch_capsule")
+        and hasattr(danks_cover, "top_covers_hand_count_window_selected_batch_capsule")
     ):
-        return danrl_cover.top_covers_hand_count_window_selected_batch_capsule(
+        return danks_cover.top_covers_hand_count_window_selected_batch_capsule(
             states,
             groups_by_first,
             group_scores,
@@ -211,7 +211,7 @@ def top_covers_hand_count_window_selected_batch(
             int(max_results),
             int(selected_results),
         )
-    return danrl_cover.top_covers_hand_count_window_selected_batch(
+    return danks_cover.top_covers_hand_count_window_selected_batch(
         states,
         groups_by_first,
         group_scores,
@@ -229,9 +229,9 @@ def best_cover_by_group_scores(
     group_scores: list[float],
     tie_keys: list[str],
 ) -> list[int]:
-    if danrl_cover is None:
+    if danks_cover is None:
         raise RuntimeError("C++ cover kernel is not available")
-    return list(danrl_cover.best_cover_by_group_scores(state, groups_by_first, group_scores, tie_keys))
+    return list(danks_cover.best_cover_by_group_scores(state, groups_by_first, group_scores, tie_keys))
 
 
 def best_selected_cover_by_score_entries(
@@ -240,9 +240,9 @@ def best_selected_cover_by_score_entries(
     weights: list[float],
     pressure_values: list[float] | tuple[float, ...],
 ) -> tuple[int, float, tuple[float, float, float, float], float] | None:
-    if danrl_cover is None or not hasattr(danrl_cover, "best_selected_cover_by_score_entries"):
+    if danks_cover is None or not hasattr(danks_cover, "best_selected_cover_by_score_entries"):
         raise RuntimeError("C++ selected-partition score kernel is not available")
-    out = danrl_cover.best_selected_cover_by_score_entries(
+    out = danks_cover.best_selected_cover_by_score_entries(
         covers,
         group_entries,
         weights,
@@ -259,9 +259,9 @@ def best_selected_covers_by_score_entries_batch(
     weights: list[float],
     pressure_values_by_batch: list[list[float] | tuple[float, ...]],
 ) -> list[tuple[int, float, tuple[float, float, float, float], float] | None]:
-    if danrl_cover is None or not hasattr(danrl_cover, "best_selected_covers_by_score_entries_batch"):
+    if danks_cover is None or not hasattr(danks_cover, "best_selected_covers_by_score_entries_batch"):
         raise RuntimeError("C++ selected-partition batch score kernel is not available")
-    raw = danrl_cover.best_selected_covers_by_score_entries_batch(
+    raw = danks_cover.best_selected_covers_by_score_entries_batch(
         cover_batches,
         group_entries,
         weights,
@@ -282,11 +282,11 @@ def best_cover_by_score_entries(
     weights: list[float],
     pressure_values: list[float],
 ) -> tuple[list[int], float, tuple[float, float, float, float]] | None:
-    if danrl_cover is None:
+    if danks_cover is None:
         raise RuntimeError("C++ cover kernel is not available")
-    if not hasattr(danrl_cover, "best_cover_by_score_entries"):
+    if not hasattr(danks_cover, "best_cover_by_score_entries"):
         raise RuntimeError("C++ score-entry kernel is not available")
-    out = danrl_cover.best_cover_by_score_entries(state, groups_by_first, group_entries, weights, pressure_values)
+    out = danks_cover.best_cover_by_score_entries(state, groups_by_first, group_entries, weights, pressure_values)
     if not out or out[0] is None:
         return None
     return list(out[0]), float(out[1]), tuple(float(value) for value in out[2])
@@ -299,11 +299,11 @@ def best_cover_by_score_entries_with_retake(
     weights: list[float],
     pressure_values: list[float],
 ) -> tuple[list[int], float, tuple[float, float, float, float], float] | None:
-    if danrl_cover is None:
+    if danks_cover is None:
         raise RuntimeError("C++ cover kernel is not available")
-    if not hasattr(danrl_cover, "best_cover_by_score_entries_with_retake"):
+    if not hasattr(danks_cover, "best_cover_by_score_entries_with_retake"):
         raise RuntimeError("C++ score-entry retake kernel is not available")
-    out = danrl_cover.best_cover_by_score_entries_with_retake(state, groups_by_first, group_entries, weights, pressure_values)
+    out = danks_cover.best_cover_by_score_entries_with_retake(state, groups_by_first, group_entries, weights, pressure_values)
     if not out or out[0] is None:
         return None
     return list(out[0]), float(out[1]), tuple(float(value) for value in out[2]), float(out[3])
@@ -316,11 +316,11 @@ def best_covers_by_score_entries_with_retake_batch(
     weights: list[float],
     pressure_values_by_state: list[list[float]],
 ) -> list[tuple[list[int], float, tuple[float, float, float, float], float] | None]:
-    if danrl_cover is None:
+    if danks_cover is None:
         raise RuntimeError("C++ cover kernel is not available")
-    if not hasattr(danrl_cover, "best_covers_by_score_entries_with_retake_batch"):
+    if not hasattr(danks_cover, "best_covers_by_score_entries_with_retake_batch"):
         raise RuntimeError("C++ score-entry retake batch kernel is not available")
-    raw = danrl_cover.best_covers_by_score_entries_with_retake_batch(
+    raw = danks_cover.best_covers_by_score_entries_with_retake_batch(
         states,
         groups_by_first,
         group_entries,
@@ -344,11 +344,11 @@ def best_cover_by_score_entries_dp(
     pressure_values: list[float],
     frontier_limit: int = 200000,
 ) -> tuple[list[int], float, tuple[float, float, float, float]] | None:
-    if danrl_cover is None:
+    if danks_cover is None:
         raise RuntimeError("C++ cover kernel is not available")
-    if not hasattr(danrl_cover, "best_cover_by_score_entries_dp"):
+    if not hasattr(danks_cover, "best_cover_by_score_entries_dp"):
         raise RuntimeError("C++ score-entry DP kernel is not available")
-    out = danrl_cover.best_cover_by_score_entries_dp(
+    out = danks_cover.best_cover_by_score_entries_dp(
         state,
         groups_by_first,
         group_entries,
@@ -369,11 +369,11 @@ def best_cover_by_score_entries_dp_with_retake(
     pressure_values: list[float],
     frontier_limit: int = 200000,
 ) -> tuple[list[int], float, tuple[float, float, float, float], float] | None:
-    if danrl_cover is None:
+    if danks_cover is None:
         raise RuntimeError("C++ cover kernel is not available")
-    if not hasattr(danrl_cover, "best_cover_by_score_entries_dp_with_retake"):
+    if not hasattr(danks_cover, "best_cover_by_score_entries_dp_with_retake"):
         raise RuntimeError("C++ score-entry DP retake kernel is not available")
-    out = danrl_cover.best_cover_by_score_entries_dp_with_retake(
+    out = danks_cover.best_cover_by_score_entries_dp_with_retake(
         state,
         groups_by_first,
         group_entries,
@@ -387,4 +387,4 @@ def best_cover_by_score_entries_dp_with_retake(
 
 
 def module() -> Any:
-    return danrl_cover
+    return danks_cover

@@ -1,4 +1,4 @@
-"""DanRL retrieval prototype."""
+"""DanKS retrieval prototype."""
 
 from .context import RetrievalContext, build_context
 from .ranker import StructuralCandidateRanker

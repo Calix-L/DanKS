@@ -1,0 +1,50 @@
+name: Bug report
+description: Report a reproducible DanKS defect
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - Shared game engine
+        - V1
+        - V2
+        - V3
+        - Packaging or CI
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Operating system, Python version, and accelerator/runtime when relevant.
+      placeholder: Ubuntu 22.04, Python 3.11, CPU
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Provide the smallest commands or code that reproduce the issue.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      render: shell
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Public-data confirmation
+      options:
+        - label: I removed credentials, private paths, model weights, datasets, and private evaluation records.
+          required: true

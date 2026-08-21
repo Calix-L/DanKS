@@ -17,7 +17,7 @@ namespace py = pybind11;
 
 namespace {
 
-constexpr const char* kNativeBucketsCapsuleName = "danrl.native_buckets.v1";
+constexpr const char* kNativeBucketsCapsuleName = "danks.native_buckets.v1";
 using NativeEncodedGroup = std::vector<unsigned short>;
 using NativeBuckets = std::vector<std::vector<NativeEncodedGroup>>;
 using EncodedCoverInputs = std::pair<std::vector<unsigned char>, NativeBuckets>;
@@ -555,7 +555,7 @@ SequenceOptions multi_rank_sequence_options(
 
 bool native_reuse_same_rank_groups_enabled() {
     static const bool enabled = []() {
-        const char* value = std::getenv("DANRL_NATIVE_REUSE_SAME_RANK_GROUPS");
+        const char* value = std::getenv("DANKS_NATIVE_REUSE_SAME_RANK_GROUPS");
         return value != nullptr && std::string(value) == "1";
     }();
     return enabled;
@@ -1168,8 +1168,8 @@ py::tuple build_group_records_and_cover_inputs(
     return py::make_tuple(records, start, buckets);
 }
 
-PYBIND11_MODULE(danrl_actor_core, m) {
-    m.doc() = "Native actor-side helpers for DanRL retrieval.";
+PYBIND11_MODULE(danks_actor_core, m) {
+    m.doc() = "Native actor-side helpers for DanKS retrieval.";
     m.def(
         "batch_action_static_features",
         &batch_action_static_features,
@@ -1198,7 +1198,7 @@ PYBIND11_MODULE(danrl_actor_core, m) {
         &remove_cards_sorted,
         py::arg("hand"),
         py::arg("action"),
-        "Remove action cards from a hand and return cards sorted by DanRL retrieval order."
+        "Remove action cards from a hand and return cards sorted by DanKS retrieval order."
     );
     m.def(
         "remove_cards_sorted_batch",

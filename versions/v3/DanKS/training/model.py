@@ -215,7 +215,7 @@ class Phase14Enhancer(nn.Module):
 
         self.card_encoder = CardTokenEncoder(CARD_DIM, hidden_dim)
         self.compact_card_tokens = os.environ.get(
-            "DANRL_PHASE14_COMPACT_TOKENS", "1",
+            "DANKS_PHASE14_COMPACT_TOKENS", "1",
         ).lower() not in {"0", "false", "no", "off"}
         self.state_structure_projection = nn.Sequential(
             nn.Linear(hidden_dim, hidden_dim),

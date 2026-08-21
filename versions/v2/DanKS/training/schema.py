@@ -100,7 +100,7 @@ def derive_uniform_action_seed(action_seed: int, deal_seed: int, side: int) -> i
         raise ValueError("action_seed and deal_seed must be nonnegative")
     if side not in {0, 1}:
         raise ValueError("side must be 0 or 1")
-    material = f"cardks-uniform-action-v1:{action_seed}:{deal_seed}:{side}".encode("ascii")
+    material = f"danks-uniform-action-v1:{action_seed}:{deal_seed}:{side}".encode("ascii")
     return int.from_bytes(hashlib.sha256(material).digest()[:8], "big")
 
 

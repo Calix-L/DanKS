@@ -5,11 +5,15 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+try:
+    import tomllib
+except ModuleNotFoundError:  # Python 3.10
+    import tomli as tomllib
 
 
 ROOT = Path(__file__).resolve().parents[1]
 VERSIONS = ("v1", "v2", "v3")
-RETIRED_PACKAGE = "Dan" + "RL_retrieval"
+RETIRED_PACKAGE = "Dan" + "RL"
 PLATFORM_TOKEN = "p" + "lm"
 IGNORED_DIRECTORIES = {".git", ".pytest_cache", ".venv", "__pycache__", "build", "dist"}
 TEXT_SUFFIXES = {".c", ".cpp", ".h", ".hpp", ".json", ".md", ".py", ".sh", ".toml", ".txt", ".yaml", ".yml"}
@@ -17,8 +21,11 @@ FORBIDDEN_SUFFIXES = {".bin", ".ckpt", ".doc", ".docx", ".npy", ".npz", ".onnx",
 PRIVATE_MARKERS = (
     "/home/" + "share/user/",
     "/" + "Users/",
+    "/" + "workspace/",
     "-----BEGIN " + "PRIVATE KEY-----",
     "-----BEGIN " + "OPENSSH PRIVATE KEY-----",
+    "card" + "ks",
+    "xzz" + "_",
 )
 
 
@@ -32,8 +39,72 @@ def public_files() -> list[Path]:
 
 def test_repository_uses_compact_developer_layout() -> None:
     assert all((ROOT / "versions" / version / "DanKS").is_dir() for version in VERSIONS)
+    assert all((ROOT / "versions" / version / "pyproject.toml").is_file() for version in VERSIONS)
     assert all((ROOT / path).is_file() for path in ("README.md", "LICENSE", "NOTICE", "pyproject.toml"))
+    assert all(
+        (ROOT / "examples" / name).is_file()
+        for name in (
+            "engine_quickstart.py",
+            "retrieval_quickstart.py",
+            "v3_model_smoke.py",
+            "v3_ppo_smoke.py",
+        )
+    )
     assert not any((ROOT / name).exists() for name in ("generations", "danks_repo", "tools", "docs"))
+
+
+def test_each_version_has_installable_distribution_metadata() -> None:
+    root_metadata = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    assert root_metadata["project"]["name"] == "danks-engine"
+    assert not any(
+        classifier.startswith("License ::")
+        for classifier in root_metadata["project"].get("classifiers", [])
+    )
+    assert any(
+        dependency.startswith("tomli")
+        for dependency in root_metadata["project"]["optional-dependencies"]["dev"]
+    )
+    for version in VERSIONS:
+        metadata = tomllib.loads(
+            (ROOT / "versions" / version / "pyproject.toml").read_text(encoding="utf-8")
+        )
+        assert metadata["project"]["name"] == f"danks-{version}"
+        assert metadata["project"]["license"] == "Apache-2.0"
+        assert metadata["project"]["license-files"] == ["LICENSE", "NOTICE"]
+        assert metadata["tool"]["setuptools"]["packages"]["find"]["include"] == ["DanKS*"]
+        assert all(
+            (ROOT / "versions" / version / document).is_file()
+            for document in ("LICENSE", "NOTICE")
+        )
+        if version == "v3":
+            package_data = metadata["tool"]["setuptools"]["package-data"]["DanKS"]
+            assert "retrieval/native_cpp/*.cpp" in package_data
+
+
+def test_notice_has_no_broken_document_reference() -> None:
+    notice = (ROOT / "NOTICE").read_text(encoding="utf-8")
+    assert "docs/" + "LICENSING.md" not in notice
+
+
+def test_repository_has_compact_community_files() -> None:
+    assert all(
+        (ROOT / path).is_file()
+        for path in (
+            ".github/CONTRIBUTING.md",
+            ".github/ISSUE_TEMPLATE/bug.yml",
+            ".github/pull_request_template.md",
+        )
+    )
+
+
+def test_ci_installs_generations_and_runs_v3_model() -> None:
+    workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    assert 'package-version: ["v1", "v2", "v3"]' in workflow
+    assert "python -m pip install -e versions/${{ matrix.package-version }}" in workflow
+    assert "python examples/retrieval_quickstart.py --version ${{ matrix.package-version }}" in workflow
+    assert "python examples/v3_model_smoke.py" in workflow
+    assert "python examples/v3_ppo_smoke.py" in workflow
+    assert "python -m DanKS.training.train_ppo --help" in workflow
 
 
 def test_v3_keeps_model_and_ppo_core() -> None:
@@ -79,13 +150,54 @@ def test_each_version_imports_in_isolation() -> None:
         environment["PYTHONDONTWRITEBYTECODE"] = "1"
         environment["PYTHONPATH"] = str(ROOT / "versions" / version)
         result = subprocess.run(
-            [sys.executable, "-c", "import DanKS; print(DanKS.__file__)"],
+            [
+                sys.executable,
+                "-c",
+                "import DanKS; print(DanKS.__file__, DanKS.GENERATION)",
+            ],
             check=True,
             capture_output=True,
             text=True,
             env=environment,
         )
         assert f"versions/{version}/DanKS/__init__.py" in result.stdout.replace("\\", "/")
+        assert result.stdout.rstrip().endswith(version)
+
+
+def test_public_uniform_action_seed_contract_is_stable() -> None:
+    expected = "5062237962189776735"
+    for version in ("v2", "v3"):
+        environment = os.environ.copy()
+        environment["PYTHONDONTWRITEBYTECODE"] = "1"
+        environment["PYTHONPATH"] = str(ROOT / "versions" / version)
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                "from DanKS.training.schema import derive_uniform_action_seed; "
+                "print(derive_uniform_action_seed(2026, 123456, 0))",
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+            env=environment,
+        )
+        assert result.stdout.strip() == expected
+
+
+def test_examples_do_not_rewrite_python_import_paths() -> None:
+    for source in (ROOT / "examples").glob("*.py"):
+        assert "sys.path" not in source.read_text(encoding="utf-8")
+
+
+def test_gpu_frontier_discovers_cuda_portably() -> None:
+    for version in ("v2", "v3"):
+        source = ROOT / "versions" / version / "DanKS" / "retrieval" / "gpu_frontier.py"
+        content = source.read_text(encoding="utf-8")
+        assert "DEFAULT_CUDA_HOME" not in content
+        assert 'shutil.which("nvcc")' in content
+        assert "TORCH_CUDA_HOME" in content
+        assert 'TORCH_CUDA_ARCH_LIST", "9.0"' not in content
 
 
 def test_public_tree_contains_only_source_and_public_metadata() -> None:

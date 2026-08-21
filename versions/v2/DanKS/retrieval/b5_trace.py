@@ -104,9 +104,9 @@ class B5TraceRanker(StructuralCandidateRanker):
             approximate_top_k=approximate_top_k,
         )
         filtered = list(self._captured_prefilter_actions or normalized)
-        previous_limit = os.environ.get("DANRL_APPROX_ACTION_LIMIT")
+        previous_limit = os.environ.get("DANKS_APPROX_ACTION_LIMIT")
         try:
-            os.environ["DANRL_APPROX_ACTION_LIMIT"] = "0"
+            os.environ["DANKS_APPROX_ACTION_LIMIT"] = "0"
             cover_rows = super().rank(
                 hand_cards,
                 filtered,
@@ -116,16 +116,16 @@ class B5TraceRanker(StructuralCandidateRanker):
             )
         finally:
             if previous_limit is None:
-                os.environ.pop("DANRL_APPROX_ACTION_LIMIT", None)
+                os.environ.pop("DANKS_APPROX_ACTION_LIMIT", None)
             else:
-                os.environ["DANRL_APPROX_ACTION_LIMIT"] = previous_limit
+                os.environ["DANKS_APPROX_ACTION_LIMIT"] = previous_limit
         top_indices = tuple(int(row.action.index) for row in top_rows)
         cover_indices = tuple(int(row.action.index) for row in cover_rows)
         score_gaps: tuple[tuple[int, float], ...] = ()
         if self.shadow_ranker is not None:
-            previous_limit = os.environ.get("DANRL_APPROX_ACTION_LIMIT")
+            previous_limit = os.environ.get("DANKS_APPROX_ACTION_LIMIT")
             try:
-                os.environ["DANRL_APPROX_ACTION_LIMIT"] = "0"
+                os.environ["DANKS_APPROX_ACTION_LIMIT"] = "0"
                 shadow_rows = self.shadow_ranker.rank(
                     hand_cards,
                     filtered,
@@ -135,9 +135,9 @@ class B5TraceRanker(StructuralCandidateRanker):
                 )
             finally:
                 if previous_limit is None:
-                    os.environ.pop("DANRL_APPROX_ACTION_LIMIT", None)
+                    os.environ.pop("DANKS_APPROX_ACTION_LIMIT", None)
                 else:
-                    os.environ["DANRL_APPROX_ACTION_LIMIT"] = previous_limit
+                    os.environ["DANKS_APPROX_ACTION_LIMIT"] = previous_limit
             bounded_scores = {int(row.action.index): float(row.score) for row in cover_rows}
             shadow_scores = {int(row.action.index): float(row.score) for row in shadow_rows}
             expected = {int(action.index) for action in filtered}

@@ -19,7 +19,7 @@ from DanKS.training.schema import CANDIDATE_DIM, FEATURE_VERSION, STATE_DIM, TOP
 from DanKS.training.accelerator import initialize_device
 
 
-ORIGINAL_RANK_DETAIL = "xzz_original_retrieval_rank"
+ORIGINAL_RANK_DETAIL = "danks_original_retrieval_rank"
 
 
 def featurize_with_original_ranks(
@@ -49,13 +49,13 @@ class CandidateRecallRuntime:
         payload = torch.load(self.checkpoint, map_location="cpu")
         pool_config = payload.get("pool_config") or {}
         if pool_config.get("pool_limit") is not None:
-            os.environ["DANRL_APPROX_ACTION_LIMIT"] = str(int(pool_config["pool_limit"]))
+            os.environ["DANKS_APPROX_ACTION_LIMIT"] = str(int(pool_config["pool_limit"]))
         if pool_config.get("retrieval_profile"):
-            os.environ["DANRL_BREAK_PROFILE"] = str(pool_config["retrieval_profile"])
+            os.environ["DANKS_BREAK_PROFILE"] = str(pool_config["retrieval_profile"])
         if pool_config.get("break_group_weight") is not None:
-            os.environ["DANRL_BREAK_GROUP_WEIGHT"] = str(float(pool_config["break_group_weight"]))
+            os.environ["DANKS_BREAK_GROUP_WEIGHT"] = str(float(pool_config["break_group_weight"]))
         if pool_config.get("approx_prefilter_version"):
-            os.environ["DANRL_APPROX_PREFILTER_VERSION"] = str(pool_config["approx_prefilter_version"])
+            os.environ["DANKS_APPROX_PREFILTER_VERSION"] = str(pool_config["approx_prefilter_version"])
         if pool_config.get("prefilter_checkpoint"):
             prefilter_path = Path(str(pool_config["prefilter_checkpoint"])).expanduser().resolve()
             expected_hash = pool_config.get("prefilter_checkpoint_sha256")
@@ -66,16 +66,16 @@ class CandidateRecallRuntime:
                         digest.update(block)
                 if digest.hexdigest() != str(expected_hash):
                     raise RuntimeError("prefilter checkpoint SHA256 mismatch")
-            os.environ["DANRL_PREFILTER_CHECKPOINT"] = str(prefilter_path)
+            os.environ["DANKS_PREFILTER_CHECKPOINT"] = str(prefilter_path)
         selection = pool_config.get("prefilter_selection") or {}
         if selection.get("safe_slots") is not None:
-            os.environ["DANRL_PREFILTER_SAFE_SLOTS"] = str(int(selection["safe_slots"]))
+            os.environ["DANKS_PREFILTER_SAFE_SLOTS"] = str(int(selection["safe_slots"]))
         if selection.get("diversity_slots") is not None:
-            os.environ["DANRL_PREFILTER_DIVERSITY_SLOTS"] = str(int(selection["diversity_slots"]))
+            os.environ["DANKS_PREFILTER_DIVERSITY_SLOTS"] = str(int(selection["diversity_slots"]))
         if selection.get("learned_slots") is not None:
-            os.environ["DANRL_PREFILTER_LEARNED_SLOTS"] = str(int(selection["learned_slots"]))
+            os.environ["DANKS_PREFILTER_LEARNED_SLOTS"] = str(int(selection["learned_slots"]))
         if pool_config.get("structural_calibration"):
-            os.environ["DANRL_STRUCTURAL_CALIBRATION_JSON"] = json.dumps(
+            os.environ["DANKS_STRUCTURAL_CALIBRATION_JSON"] = json.dumps(
                 pool_config["structural_calibration"],
                 ensure_ascii=False,
                 separators=(",", ":"),

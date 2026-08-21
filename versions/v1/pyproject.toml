@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "danks-v1"
+version = "0.1.0"
+description = "DanKS V1 structural retrieval and NumPy selector"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+dependencies = ["numpy==2.4.6"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["DanKS*"]

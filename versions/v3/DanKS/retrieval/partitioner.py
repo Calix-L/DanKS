@@ -530,14 +530,14 @@ class FullSearchPartitioner:
             precomputed_groups is None
             and not include_python_buckets
             and self.use_native
-            and os.environ.get("DANRL_USE_NATIVE_RECORD_COVER_INPUTS", "").strip().lower() in {"1", "true", "yes", "on"}
+            and os.environ.get("DANKS_USE_NATIVE_RECORD_COVER_INPUTS", "").strip().lower() in {"1", "true", "yes", "on"}
             and native_actor_core.available()
             and hasattr(native_actor_core.module(), "build_group_records_and_cover_inputs")
         ):
             return self._cover_search_inputs_native_records(cards, ctx, include_priority=include_priority)
 
         cover_cache_size = self._env_int(
-            "DANRL_COVER_INPUT_CACHE_SIZE", 0, minimum=0,
+            "DANKS_COVER_INPUT_CACHE_SIZE", 0, minimum=0,
         )
         cover_cache_key = None
         if cover_cache_size > 0:
@@ -569,7 +569,7 @@ class FullSearchPartitioner:
         native_cover_input_encoding = (
             not include_python_buckets
             and os.environ.get(
-                "DANRL_NATIVE_COVER_INPUT_ENCODING",
+                "DANKS_NATIVE_COVER_INPUT_ENCODING",
                 "0",
             ).strip().lower() in {"1", "true", "yes", "on"}
             and native_actor_core.available()
@@ -598,7 +598,7 @@ class FullSearchPartitioner:
 
         hand_counter = Counter(cards)
         sparse_cover_inputs = os.environ.get(
-            "DANRL_SPARSE_COVER_INPUTS", "0"
+            "DANKS_SPARSE_COVER_INPUTS", "0"
         ).strip().lower() in {"1", "true", "yes", "on"}
         local_cards = sorted(hand_counter, key=card_sort_key)
         local_index = {card: idx for idx, card in enumerate(local_cards)}
@@ -693,8 +693,8 @@ class FullSearchPartitioner:
 
     def generate_top(self, hand_cards: Iterable[str], ctx: RetrievalContext, max_partitions: int = 8) -> list[Partition]:
         cards = normalize_cards(hand_cards)
-        hand_count_window = self._env_int("DANRL_PARTITION_HAND_COUNT_WINDOW", -1)
-        hand_count_window_min_hand = self._env_int("DANRL_PARTITION_HAND_COUNT_WINDOW_MIN_HAND", 0)
+        hand_count_window = self._env_int("DANKS_PARTITION_HAND_COUNT_WINDOW", -1)
+        hand_count_window_min_hand = self._env_int("DANKS_PARTITION_HAND_COUNT_WINDOW_MIN_HAND", 0)
         effective_hand_count_window = hand_count_window if len(cards) >= hand_count_window_min_hand else -1
         key = (
             "top",
@@ -704,7 +704,7 @@ class FullSearchPartitioner:
             self.beam_width,
             effective_hand_count_window,
             hand_count_window_min_hand,
-            self._env_int("DANRL_PARTITION_HAND_COUNT_MAX_COVERS", 512),
+            self._env_int("DANKS_PARTITION_HAND_COUNT_MAX_COVERS", 512),
             self._partition_cache_key(cards, ctx),
         )
         cached = self._cache_get(self._top_cache, key)
@@ -768,8 +768,8 @@ class FullSearchPartitioner:
                 ]
                 group_costs = [effective_group_cost(group) for group in groups_only]
                 tie_keys = [self._native_tie_key(group) for group in groups_only]
-                max_covers = self._env_int("DANRL_PARTITION_HAND_COUNT_MAX_COVERS", 512, minimum=max_partitions)
-                native_select = os.environ.get("DANRL_NATIVE_SELECT_TOP_COVERS", "1").strip().lower() in {
+                max_covers = self._env_int("DANKS_PARTITION_HAND_COUNT_MAX_COVERS", 512, minimum=max_partitions)
+                native_select = os.environ.get("DANKS_NATIVE_SELECT_TOP_COVERS", "1").strip().lower() in {
                     "1", "true", "yes", "on",
                 } and hasattr(native_cover.module(), "top_covers_effective_hand_count_window_selected")
                 if native_select:
@@ -804,7 +804,7 @@ class FullSearchPartitioner:
                         )
                         for cover in covers
                     ]
-                id_postprocess = os.environ.get("DANRL_NATIVE_ID_POSTPROCESS", "1").strip().lower() in {
+                id_postprocess = os.environ.get("DANKS_NATIVE_ID_POSTPROCESS", "1").strip().lower() in {
                     "1", "true", "yes", "on",
                 }
                 if id_postprocess:
@@ -847,7 +847,7 @@ class FullSearchPartitioner:
         groups_only = [entry[0] for entry in group_entries]
         group_scores = [self._effective_group_score(group) for group in groups_only]
         group_costs = [effective_group_cost(group) for group in groups_only]
-        max_covers = self._env_int("DANRL_PARTITION_HAND_COUNT_MAX_COVERS", 512, minimum=max_partitions)
+        max_covers = self._env_int("DANKS_PARTITION_HAND_COUNT_MAX_COVERS", 512, minimum=max_partitions)
 
         for bucket in groups_by_first.values():
             bucket.sort(key=lambda group_id: (-group_scores[group_id], groups_only[group_id].kind, groups_only[group_id].cards))
@@ -925,8 +925,8 @@ class FullSearchPartitioner:
     ) -> dict[tuple[str, ...], list[Partition] | NativePartitionCovers]:
         """Solve many sub-hands against one shared group universe."""
 
-        window = self._env_int("DANRL_PARTITION_HAND_COUNT_WINDOW", -1)
-        min_hand = self._env_int("DANRL_PARTITION_HAND_COUNT_WINDOW_MIN_HAND", 0)
+        window = self._env_int("DANKS_PARTITION_HAND_COUNT_WINDOW", -1)
+        min_hand = self._env_int("DANKS_PARTITION_HAND_COUNT_WINDOW_MIN_HAND", 0)
         module = native_cover.module() if native_cover.available() else None
         if window < 0 or module is None or not hasattr(module, "top_covers_effective_hand_count_window_batch"):
             return {}
@@ -936,7 +936,7 @@ class FullSearchPartitioner:
         if not eligible:
             return {}
         max_covers = self._env_int(
-            "DANRL_PARTITION_HAND_COUNT_MAX_COVERS", 512, minimum=max_partitions
+            "DANKS_PARTITION_HAND_COUNT_MAX_COVERS", 512, minimum=max_partitions
         )
         cache_common = self._bounded_partition_cache_common_key(
             "effective_hand_count_window_v1", super_cards, ctx, max_partitions, window, max_covers
@@ -966,7 +966,7 @@ class FullSearchPartitioner:
             for key in eligible:
                 counts = Counter(key)
                 states.append([int(counts[card]) for card in local_cards])
-            native_select = os.environ.get("DANRL_NATIVE_SELECT_TOP_COVERS", "1").strip().lower() in {
+            native_select = os.environ.get("DANKS_NATIVE_SELECT_TOP_COVERS", "1").strip().lower() in {
                 "1", "true", "yes", "on",
             } and hasattr(module, "top_covers_effective_hand_count_window_selected_batch")
             if native_select:
@@ -994,7 +994,7 @@ class FullSearchPartitioner:
         except Exception:
             return {}
 
-        id_postprocess = os.environ.get("DANRL_NATIVE_ID_POSTPROCESS", "1").strip().lower() in {
+        id_postprocess = os.environ.get("DANKS_NATIVE_ID_POSTPROCESS", "1").strip().lower() in {
             "1", "true", "yes", "on",
         }
         defer_partitions = self._defer_selected_partitions()
@@ -1198,7 +1198,7 @@ class FullSearchPartitioner:
         super_batch = (
             prepared_inputs is not None
             and os.environ.get(
-                "DANRL_NATIVE_BEAM_SUPER_BATCH", "0"
+                "DANKS_NATIVE_BEAM_SUPER_BATCH", "0"
             ).strip().lower() in {"1", "true", "yes", "on"}
         )
         if super_batch:
@@ -1212,7 +1212,7 @@ class FullSearchPartitioner:
                 local_cards = sorted(Counter(super_hand_cards), key=CARD_INDEX.__getitem__)
                 group_sizes = [group.size for group in groups_only]
                 cpp_buckets = os.environ.get(
-                    "DANRL_NATIVE_BEAM_CPP_BUCKETS", "0"
+                    "DANKS_NATIVE_BEAM_CPP_BUCKETS", "0"
                 ).strip().lower() in {"1", "true", "yes", "on"}
                 if cpp_buckets:
                     _beam_start, native_buckets = native_actor_core.build_cover_inputs_beam_order(
@@ -1278,7 +1278,7 @@ class FullSearchPartitioner:
         filter_super_universe = (
             prepared_inputs is not None
             and os.environ.get(
-                "DANRL_NATIVE_BEAM_FILTER_SUPER_UNIVERSE", "0"
+                "DANKS_NATIVE_BEAM_FILTER_SUPER_UNIVERSE", "0"
             ).strip().lower() in {"1", "true", "yes", "on"}
         )
         super_group_entries = prepared_inputs[0] if filter_super_universe else None
@@ -1409,7 +1409,7 @@ class FullSearchPartitioner:
                 counts = Counter(key)
                 states.append([int(counts[card]) for card in local_cards])
             native_select = os.environ.get(
-                "DANRL_NATIVE_SELECT_SMALL_TOP_COVERS", "0"
+                "DANKS_NATIVE_SELECT_SMALL_TOP_COVERS", "0"
             ).strip().lower() in {"1", "true", "yes", "on"} and hasattr(
                 module, "top_covers_selected_batch"
             )
@@ -1434,7 +1434,7 @@ class FullSearchPartitioner:
         except Exception:
             return {}
 
-        id_postprocess = os.environ.get("DANRL_NATIVE_ID_POSTPROCESS", "1").strip().lower() in {
+        id_postprocess = os.environ.get("DANKS_NATIVE_ID_POSTPROCESS", "1").strip().lower() in {
             "1", "true", "yes", "on",
         }
         defer_partitions = self._defer_selected_partitions()
@@ -1517,7 +1517,7 @@ class FullSearchPartitioner:
             groups_only = [entry[0] for entry in group_entries]
             group_scores = [self._effective_group_score(entry[0]) for entry in group_entries]
             tie_keys = [self._native_tie_key(group) for group in groups_only]
-            id_postprocess = os.environ.get("DANRL_NATIVE_ID_POSTPROCESS", "1").strip().lower() in {
+            id_postprocess = os.environ.get("DANKS_NATIVE_ID_POSTPROCESS", "1").strip().lower() in {
                 "1", "true", "yes", "on",
             }
             native_limit = max(max_partitions * 8, max_partitions + 128)
@@ -1568,7 +1568,7 @@ class FullSearchPartitioner:
             for kind, value in self._priority_base_by_kind.items()
         ))
         cache_by_target_hand = os.environ.get(
-            "DANRL_BOUNDED_PARTITION_CACHE_BY_TARGET_HAND", "0"
+            "DANKS_BOUNDED_PARTITION_CACHE_BY_TARGET_HAND", "0"
         ).strip().lower() in {"1", "true", "yes", "on"}
         universe_key = () if cache_by_target_hand else (tuple(normalize_cards(super_cards)),)
         return (
@@ -1591,7 +1591,7 @@ class FullSearchPartitioner:
         dict[tuple[str, ...], list[Partition] | NativePartitionCovers],
         list[tuple[str, ...]],
     ]:
-        capacity = self._env_int("DANRL_BOUNDED_PARTITION_CACHE_SIZE", 0, minimum=0)
+        capacity = self._env_int("DANKS_BOUNDED_PARTITION_CACHE_SIZE", 0, minimum=0)
         if capacity <= 0:
             return {}, hands
         out: dict[tuple[str, ...], list[Partition] | NativePartitionCovers] = {}
@@ -1614,7 +1614,7 @@ class FullSearchPartitioner:
         out: dict[tuple[str, ...], list[Partition] | NativePartitionCovers],
         computed_hands: list[tuple[str, ...]],
     ) -> None:
-        capacity = self._env_int("DANRL_BOUNDED_PARTITION_CACHE_SIZE", 0, minimum=0)
+        capacity = self._env_int("DANKS_BOUNDED_PARTITION_CACHE_SIZE", 0, minimum=0)
         if capacity <= 0:
             return
         for hand in computed_hands:
@@ -1637,7 +1637,7 @@ class FullSearchPartitioner:
     @staticmethod
     def _defer_selected_partitions() -> bool:
         return os.environ.get(
-            "DANRL_DEFER_SELECTED_PARTITIONS", "0"
+            "DANKS_DEFER_SELECTED_PARTITIONS", "0"
         ).strip().lower() in {"1", "true", "yes", "on"}
 
     @staticmethod
@@ -1939,13 +1939,13 @@ class FullSearchPartitioner:
 
     def _generate_groups_native(self, cards: list[str], ctx: RetrievalContext) -> tuple[CardGroup, ...]:
         exact_cache_size = self._env_int(
-            "DANRL_NATIVE_GROUP_EXACT_CACHE_SIZE", 0, minimum=0,
+            "DANKS_NATIVE_GROUP_EXACT_CACHE_SIZE", 0, minimum=0,
         )
         superset_cache_size = self._env_int(
-            "DANRL_NATIVE_GROUP_SUPERSET_CACHE_SIZE", 0, minimum=0,
+            "DANKS_NATIVE_GROUP_SUPERSET_CACHE_SIZE", 0, minimum=0,
         )
         mask_filter = os.environ.get(
-            "DANRL_NATIVE_GROUP_MASK_FILTER", "0"
+            "DANKS_NATIVE_GROUP_MASK_FILTER", "0"
         ).strip().lower() in {"1", "true", "yes", "on"}
         hand_counts_key = _counter_to_key(Counter(cards))
         hand_require_one, hand_require_two = (
@@ -2022,7 +2022,7 @@ class FullSearchPartitioner:
         groups: dict[tuple[str, tuple[str, ...], str | None, tuple], CardGroup] = {}
         strength_cache: dict[str | None, float] = {None: 0.0}
         signature_cache_size = self._env_int(
-            "DANRL_NATIVE_GROUP_SIGNATURE_CACHE_SIZE", 0, minimum=0,
+            "DANKS_NATIVE_GROUP_SIGNATURE_CACHE_SIZE", 0, minimum=0,
         )
         signature_key = (sorted_cards(cards), ctx.cur_rank)
         signatures = (

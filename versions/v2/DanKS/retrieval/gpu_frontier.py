@@ -2,29 +2,44 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import shutil
 from typing import Any
 
 import torch
-from torch.utils.cpp_extension import load_inline
+from torch.utils.cpp_extension import CUDA_HOME as TORCH_CUDA_HOME, load_inline
 
 
-ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_CUDA_HOME = Path("/workspace/danks/sglang-cu128-env")
 _MODULE: Any | None = None
 
 
+def _cuda_home() -> Path | None:
+    configured = os.environ.get("CUDA_HOME", "").strip()
+    if configured:
+        return Path(configured).expanduser().resolve()
+    if TORCH_CUDA_HOME:
+        return Path(TORCH_CUDA_HOME).resolve()
+    nvcc = shutil.which("nvcc")
+    return Path(nvcc).resolve().parents[1] if nvcc else None
+
+
 def _configure_cuda_env() -> None:
-    cuda_home = Path(os.environ.get("CUDA_HOME", str(DEFAULT_CUDA_HOME))).resolve()
+    cuda_home = _cuda_home()
+    if cuda_home is None:
+        raise RuntimeError("CUDA toolkit not found; set CUDA_HOME or add nvcc to PATH")
     nvcc = cuda_home / "bin" / "nvcc"
-    if not nvcc.exists():
+    if not nvcc.is_file():
         raise RuntimeError(f"CUDA nvcc not found: {nvcc}")
     os.environ["CUDA_HOME"] = str(cuda_home)
-    os.environ["PATH"] = f"{cuda_home / 'bin'}:{os.environ.get('PATH', '')}"
-    os.environ.setdefault("TORCH_CUDA_ARCH_LIST", "9.0")
+    os.environ["PATH"] = os.pathsep.join((str(cuda_home / "bin"), os.environ.get("PATH", "")))
 
 
 def available() -> bool:
-    return torch.cuda.is_available() and (DEFAULT_CUDA_HOME / "bin" / "nvcc").exists()
+    cuda_home = _cuda_home()
+    return bool(
+        torch.cuda.is_available()
+        and cuda_home is not None
+        and (cuda_home / "bin" / "nvcc").is_file()
+    )
 
 
 def module() -> Any:
@@ -151,12 +166,12 @@ torch::Tensor frontier_keep_mask(torch::Tensor features) {
 }
 """
     _MODULE = load_inline(
-        name="danrl_gpu_frontier_v9",
+        name="danks_gpu_frontier_v9",
         cpp_sources=[cpp_sources],
         cuda_sources=[cuda_sources],
         functions=["frontier_keep_mask"],
         extra_cuda_cflags=["-O3"],
-        verbose=os.environ.get("DANRL_VERBOSE_CUDA_BUILD", "").strip().lower() in {"1", "true", "yes", "on"},
+        verbose=os.environ.get("DANKS_VERBOSE_CUDA_BUILD", "").strip().lower() in {"1", "true", "yes", "on"},
     )
     return _MODULE
 

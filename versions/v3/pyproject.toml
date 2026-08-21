@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "danks-v3"
+version = "0.1.0"
+description = "DanKS V3 memory-aware retrieval and PPO training"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+dependencies = [
+  "numpy==1.26.0; python_version < '3.11'",
+  "numpy==2.4.6; python_version >= '3.11'",
+  "pybind11==3.0.4",
+  "setuptools==79.0.1",
+  "ninja==1.13.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["DanKS*"]
+
+[tool.setuptools.package-data]
+DanKS = ["environment/*.txt", "retrieval/native_cpp/*.cpp"]
