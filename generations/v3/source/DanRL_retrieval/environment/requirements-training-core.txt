@@ -1,0 +1,8 @@
+# Hardware-neutral Python dependencies used by the DanKS rollout and learner.
+# Install torch separately from the hardware vendor's supported distribution.
+# NumPy 2.4 requires Python >=3.11; the current Ascend image uses Python 3.10.
+numpy==1.26.0; python_version < "3.11"
+numpy==2.4.6; python_version >= "3.11"
+pybind11==3.0.4
+setuptools==79.0.1
+ninja==1.13.0

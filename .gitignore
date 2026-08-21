@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# Environments
+.venv/
+venv/
+
+# Generated repository artifacts
+dist/
+build/
+
+# Private model and runtime artifacts
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.npy
+*.npz
+*.bin
+*.so
+*.dylib
+*.whl
+*.log
+.env
+
+# Data and local tooling
+data/
+datasets/
+checkpoints/
+models/
+runs/
+eval_runs/
+.idea/
+.vscode/
+.DS_Store

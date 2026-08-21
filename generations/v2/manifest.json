@@ -1,0 +1,272 @@
+{
+  "files": [
+    {
+      "path": "DanKS/__init__.py",
+      "sha256": "2c13182c89ce19e6bd3ef810d0a388b7a807b5cb5f59c2b1b5c1b61db5f14403",
+      "size": 31
+    },
+    {
+      "path": "DanKS/gdai_adapter/__init__.py",
+      "sha256": "4aa57994df7a3dfa6f143bb3f7d76a7b0202f1fe57bbe8cceaeaf4b4ad10dd40",
+      "size": 56
+    },
+    {
+      "path": "DanKS/gdai_adapter/gdai_payload.py",
+      "sha256": "e3fddcfc0e615975398871841976aa0a924fc32e79b73eb14ab95367a1ca48f1",
+      "size": 9379
+    },
+    {
+      "path": "DanKS/plm_eval/__init__.py",
+      "sha256": "7280880222706128b97c7f008232a161b1f5a2bc6489d245d1f6763ee43b1cbd",
+      "size": 51
+    },
+    {
+      "path": "DanKS/plm_eval/finalize.py",
+      "sha256": "0bb73365e36cc7c4ad770da06471871d0d1813c3bbc3bc8c57f98e24932a0625",
+      "size": 12216
+    },
+    {
+      "path": "DanKS/plm_eval/pailemen_native.py",
+      "sha256": "73aa701293fbec9d4a850e89675110248e2cf8e42a60dbd448a822bd22c7aa65",
+      "size": 14831
+    },
+    {
+      "path": "DanKS/plm_eval/summarize.py",
+      "sha256": "c1f9b04fe82e1950266048869a909a1a76b93f755071f8cbfc713b02323a2bf2",
+      "size": 6763
+    },
+    {
+      "path": "DanKS/retrieval/__init__.py",
+      "sha256": "a7ab3128a6d1d8acd46055f5441871fca5bb29e509b6ce885ee7dba0679c3457",
+      "size": 211
+    },
+    {
+      "path": "DanKS/retrieval/action_generator.py",
+      "sha256": "714174d14f426704d9d0b2deed7a0980ce23caea6ed131df807441c9b6f90b66",
+      "size": 2492
+    },
+    {
+      "path": "DanKS/retrieval/action_semantics.py",
+      "sha256": "bfb25cc8de0d01f972f91260e6aef1445a461a4480113b9f6740e595375cfc06",
+      "size": 3306
+    },
+    {
+      "path": "DanKS/retrieval/b5_trace.py",
+      "sha256": "ef822025606dbee3e14b427aa65a5c50e51cdef930a56d6c01b801fae25aa153",
+      "size": 8209
+    },
+    {
+      "path": "DanKS/retrieval/card_counter.py",
+      "sha256": "f80212d4a2658effe4df7e284b5573ce2b02978c073092ced3dadb537e086f10",
+      "size": 1971
+    },
+    {
+      "path": "DanKS/retrieval/cards.py",
+      "sha256": "7085d80690c04b3c9991af1f6a963e0dcfabaeaf5288d3301fe30babad8f5473",
+      "size": 4528
+    },
+    {
+      "path": "DanKS/retrieval/context.py",
+      "sha256": "4bfd8a4a8b7978b9e29e669a49efca1ffe30f1ad979ffb4370ef89931b1aa1ae",
+      "size": 3337
+    },
+    {
+      "path": "DanKS/retrieval/diagnostics.py",
+      "sha256": "0e44ede0ffe7b3351a4da670bd373c2ff2b2a02b294799102d7fc2519dac43cf",
+      "size": 5443
+    },
+    {
+      "path": "DanKS/retrieval/gpu_frontier.py",
+      "sha256": "7f0008a4c10a719f0b6ecbdb67e28751e254035acc7c44f775c0ec8c2e702461",
+      "size": 4796
+    },
+    {
+      "path": "DanKS/retrieval/models.py",
+      "sha256": "10bced7b41af70285de4026f4e0823c766ce408b16fc38e3555b5818bda64e36",
+      "size": 1898
+    },
+    {
+      "path": "DanKS/retrieval/native_actor_core.py",
+      "sha256": "93188c9a6ac59c5e535313838dc8ce3818d9753cf911744dfcf4d52f283322c4",
+      "size": 9481
+    },
+    {
+      "path": "DanKS/retrieval/native_cover.py",
+      "sha256": "afb153ee6c4354deeeafdaf297b1c16d4f85da5718dad9dad74237a241e24983",
+      "size": 13446
+    },
+    {
+      "path": "DanKS/retrieval/native_cpp/__init__.py",
+      "sha256": "9fc677eef392a5000e68d000d10309b266dde2467c0d403fd3f697b3b968a17d",
+      "size": 186
+    },
+    {
+      "path": "DanKS/retrieval/partitioner.py",
+      "sha256": "a219dd37aad068f841992aaaa02309a5af10fe2fd71d6dd7267e1a0c00beabda",
+      "size": 89201
+    },
+    {
+      "path": "DanKS/retrieval/plm_rules.py",
+      "sha256": "4d202c0404bb5241d0f253ba2ae03fce84654b4fc3d97882a0386a525a06f3a7",
+      "size": 5098
+    },
+    {
+      "path": "DanKS/retrieval/pressure.py",
+      "sha256": "ef5e731b28d123584b389135dd12da9c5a6f70786c6735978e32e3c24c65c87c",
+      "size": 1158
+    },
+    {
+      "path": "DanKS/retrieval/ranker.py",
+      "sha256": "aa97eb78222cec0464f6c44d4e51badab78d25cc392bb129247c0b504bc8e67c",
+      "size": 89905
+    },
+    {
+      "path": "DanKS/retrieval/scoring.py",
+      "sha256": "5067a99177ce0d9c0bb85fb4251295528f551c1059f9ccf64d7a4a93246ada5d",
+      "size": 61685
+    },
+    {
+      "path": "DanKS/retrieval/structural_calibration.py",
+      "sha256": "e9c969689ca0f7d64aee5954d4ec4aa6fe0c2cadb835cbb1d18c9b487497024b",
+      "size": 4738
+    },
+    {
+      "path": "DanKS/retrieval/tempo.py",
+      "sha256": "b0e08a981861c478da68b4eb7ede597f6f030def56a697700d3c980b59c2c750",
+      "size": 8245
+    },
+    {
+      "path": "DanKS/table_runtime/__init__.py",
+      "sha256": "5895eb9c683618b615c50b786d226ce0a35ee23a2455221b237fd6b855dba0c9",
+      "size": 53
+    },
+    {
+      "path": "DanKS/table_runtime/server.py",
+      "sha256": "d890707ea22a405db1a18d272c30fac1dc9477fcce54df3f897952fd5890c83b",
+      "size": 51762
+    },
+    {
+      "path": "DanKS/training/__init__.py",
+      "sha256": "340e9581f32a874a99921484179ec6ac87d8481ebc294547ae01d0797886b3f0",
+      "size": 82
+    },
+    {
+      "path": "DanKS/training/featurizer.py",
+      "sha256": "82b0bfc3c35323be88d59bd9cd3383a0d61214b1355b52b90f6a68dbb2c17c34",
+      "size": 14204
+    },
+    {
+      "path": "DanKS/training/numpy_selector.py",
+      "sha256": "3edcea2684ea36353a109133bdd12434da7426c3be80ddf6a8a0afbac2d62cfa",
+      "size": 3312
+    },
+    {
+      "path": "DanKS/training/onnx_phase14_selector.py",
+      "sha256": "6f8619aaac8fa49d59c7f186eb8285a75be427fe7dcce0c9377f6354dd3d0720",
+      "size": 2862
+    },
+    {
+      "path": "DanKS/training/schema.py",
+      "sha256": "d6cf41c04804c46f9854b761a768c27cf379f7a7150fc54d278040c6e24e2c8e",
+      "size": 5507
+    },
+    {
+      "path": "KSplatform/Dan_platform/python/engine/__init__.py",
+      "sha256": "f31cb713c31021bd8d4cb16d83be46f2b5071d4997463593c804751e167d5e3e",
+      "size": 130
+    },
+    {
+      "path": "KSplatform/Dan_platform/python/engine/environment.py",
+      "sha256": "bfd6223576eb00e8b5aac7a98633d628cbab5e63279c166c16f24269cd778bd4",
+      "size": 67
+    },
+    {
+      "path": "KSplatform/Dan_platform/python/engine/moves.py",
+      "sha256": "c79a81383c45645b27d141572f96ed7aa2f5e3549073cb73ca6ac87723fcc905",
+      "size": 1084
+    },
+    {
+      "path": "KSplatform/Dan_platform/python/engine/python_rules.py",
+      "sha256": "6060e8bae649d87e7f86e57b430a49d42ecc4a2f157c1ffb558ee100fe612570",
+      "size": 22404
+    },
+    {
+      "path": "KSplatform/Dan_platform/python/engine/table.py",
+      "sha256": "039d29feb80f2ec2e4b6ac3c1c725c85d6e0b7c7b353fdfa473363518ea33e41",
+      "size": 31092
+    },
+    {
+      "path": "KSplatform/Dan_platform/python/engine/types.py",
+      "sha256": "23340f5180a3595f4c1325e71359e73b8498bea22341f6accb0c70070b3d904a",
+      "size": 10830
+    },
+    {
+      "path": "KSplatform/Dan_platform/python/run_smoke.py",
+      "sha256": "2193f62ac4e8496430a34e3f3785a9273efc54d55318cda7cbac55316ad1d939",
+      "size": 2981
+    },
+    {
+      "path": "requirements.txt",
+      "sha256": "0a9b7d52c548da8a2cfa05ebc0c899458cb7a7f5c026df3885ed2b8ecfdeed94",
+      "size": 87
+    },
+    {
+      "path": "scripts/audit_trajectory.py",
+      "sha256": "b155f873b44aaf95a76d4220084c24315be832254314fb43626e09925ec5dedd",
+      "size": 1104
+    },
+    {
+      "path": "scripts/build_release.sh",
+      "sha256": "f6f8ecb89affa37fe93d8be3133c23bd24bdfa05c4ac914a1bbe77011bfdfaa7",
+      "size": 892
+    },
+    {
+      "path": "scripts/check_health.py",
+      "sha256": "4c0c96ef585eb2a7126d5260fe3b91645534f24cd1884eb0966d2447b6039f61",
+      "size": 2427
+    },
+    {
+      "path": "scripts/common_env.sh",
+      "sha256": "d1779aa4b80e26af3e7d5c470a602f95e7be9980e2a0bb167769b7bb54091df5",
+      "size": 863
+    },
+    {
+      "path": "scripts/create_env.sh",
+      "sha256": "148f0c51ccb5601a1c95100b76e748ceab4c296b7fcc7a5bce3eba0b56ce253e",
+      "size": 889
+    },
+    {
+      "path": "scripts/preflight.py",
+      "sha256": "731983534c9f79a198b0785a827a8c621835772bf41cc20c395548f7142a8e40",
+      "size": 8240
+    },
+    {
+      "path": "scripts/preflight.sh",
+      "sha256": "587d14c9aa45b3feee456ae9da507edbdf0c8fc2dd9edb42035d4488a7f2bbc1",
+      "size": 471
+    },
+    {
+      "path": "scripts/run_plm_eval.sh",
+      "sha256": "5c000d765d097637944d50e46c65b7d607471884ef8428cafac46b0c9e60bafe",
+      "size": 2971
+    },
+    {
+      "path": "scripts/run_policy_server.sh",
+      "sha256": "a6b9b85ab25592e3b19964337de40b5e5edd04f0f70ccacf2b30bfed85adaa78",
+      "size": 838
+    },
+    {
+      "path": "scripts/run_two_vs_two_plm.sh",
+      "sha256": "8823b30091c8b84f80585e72916c0300846181ee27d33f0740e56dd06f4cb9aa",
+      "size": 9950
+    },
+    {
+      "path": "scripts/smoke_test.sh",
+      "sha256": "0fed5732fe18f7aca320e7cc1ed20ced47dc6c5fdb4ad141d913b356fa804f24",
+      "size": 2672
+    }
+  ],
+  "generation": "v2",
+  "schema_version": 1,
+  "source": "sanitized-v2-source"
+}

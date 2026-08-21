@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# shellcheck source=/dev/null
+source "$ROOT/config/policy.env"
+
+export PYTHONPATH="$ROOT:$ROOT/KSplatform/Dan_platform/python${PYTHONPATH:+:$PYTHONPATH}"
+export LD_LIBRARY_PATH="$ROOT/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export GUANDAN_MOVE_ENGINE=python
+
+PYTHON="${PYTHON:-$ROOT/.venv/bin/python}"
+CHECKPOINT="${CHECKPOINT:-$ROOT/models/policy.pt}"
+ONNX_MODEL="${ONNX_MODEL:-$ROOT/models/policy.onnx}"
+GDAI_BIN="${GDAI_BIN:-$ROOT/bin/gdai_linux_local}"
+EXPECTED_CHECKPOINT_SHA256="${EXPECTED_CHECKPOINT_SHA256:-}"
+EXPECTED_ONNX_SHA256="${EXPECTED_ONNX_SHA256:-}"
+EXPECTED_GDAI_SHA256="${EXPECTED_GDAI_SHA256:-}"
+
+export ROOT PYTHON CHECKPOINT ONNX_MODEL GDAI_BIN
+export EXPECTED_CHECKPOINT_SHA256 EXPECTED_ONNX_SHA256 EXPECTED_GDAI_SHA256

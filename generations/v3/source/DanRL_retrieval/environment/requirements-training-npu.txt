@@ -1,0 +1,6 @@
+# Validated on Ascend 910B2C, driver 24.1.0 and CANN 8.5.0 (x86_64).
+# torch/torch_npu are installed from matching wheels; never add NVIDIA packages.
+torch==2.7.1+cpu
+torch_npu==2.7.1.post2
+
+-r requirements-training-core.txt
