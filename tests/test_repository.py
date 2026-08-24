@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import ast
+import importlib.util
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 try:
@@ -71,6 +73,64 @@ def test_readme_visual_assets_are_versioned() -> None:
         assert path.is_file()
         assert path.stat().st_size > 0
         assert all(relative in readme for readme in readmes.values())
+
+
+def test_v3_native_build_uses_one_installed_command() -> None:
+    script = ROOT / "versions" / "v3" / "DanKS" / "retrieval" / "native_cpp" / "build.py"
+    assert script.is_file()
+
+    spec = importlib.util.spec_from_file_location("build_v3_native", script)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    command, working_directory = module.build_invocation()
+    assert command == [sys.executable, "setup.py", "build_ext", "--inplace"]
+    assert working_directory == ROOT / "versions" / "v3" / "DanKS" / "retrieval" / "native_cpp"
+
+    metadata = tomllib.loads((ROOT / "versions" / "v3" / "pyproject.toml").read_text(encoding="utf-8"))
+    assert metadata["project"]["scripts"]["danks-build-native"] == (
+        "DanKS.retrieval.native_cpp.build:main"
+    )
+
+    for readme_name in ("README.md", "README.zh-CN.md"):
+        readme = (ROOT / readme_name).read_text(encoding="utf-8")
+        assert "danks-build-native" in readme
+        assert "cd versions/v3/DanKS/retrieval/native_cpp" not in readme
+
+    workflow = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    assert "danks-build-native" in workflow
+
+
+def test_native_build_verification_refreshes_prebuild_import_cache(tmp_path: Path) -> None:
+    version_root = tmp_path / "v3"
+    shutil.copytree(ROOT / "versions" / "v3" / "DanKS", version_root / "DanKS")
+    environment = os.environ.copy()
+    environment["PYTHONDONTWRITEBYTECODE"] = "1"
+    environment["PYTHONPATH"] = str(version_root)
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            """
+from pathlib import Path
+from DanKS.retrieval import native_actor_core, native_cover
+from DanKS.retrieval.native_cpp import build
+
+assert not native_cover.available()
+assert not native_actor_core.available()
+native_directory = Path(build.__file__).resolve().parent
+(native_directory / "danks_cover.py").write_text("READY = True\\n", encoding="utf-8")
+(native_directory / "danks_actor_core.py").write_text("READY = True\\n", encoding="utf-8")
+assert build.verify_extensions() == (True, True)
+""",
+        ],
+        cwd=tmp_path,
+        env=environment,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stderr
 
 
 def test_each_version_has_installable_distribution_metadata() -> None:

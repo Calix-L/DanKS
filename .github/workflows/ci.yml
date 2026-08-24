@@ -81,8 +81,5 @@ jobs:
           cache-dependency-path: versions/v3/pyproject.toml
       - name: Install V3 build dependencies
         run: python -m pip install -e versions/v3
-      - name: Build C++ kernels
-        working-directory: versions/v3/DanKS/retrieval/native_cpp
-        run: python setup.py build_ext --inplace
-      - name: Verify native imports
-        run: python -c "from DanKS.retrieval.native_cover import available; from DanKS.retrieval.native_actor_core import available as actor_available; assert available() and actor_available()"
+      - name: Build and verify C++ kernels
+        run: danks-build-native

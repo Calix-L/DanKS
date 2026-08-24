@@ -198,7 +198,7 @@ Do not install CUDA packages into the NPU environment. If your driver, CANN, arc
 
 ### 5. Build the optional V3 C++ kernels
 
-The optimized retrieval kernels currently support Linux and macOS. They require a C++17 compiler, Python development headers, and `pybind11`; Windows uses the Python fallback. Build them inside the active V3 environment on the target machine:
+The optimized retrieval kernels currently support Linux and macOS. They require a C++17 compiler, Python development headers, and `pybind11`; Windows uses the Python fallback. Install the platform toolchain once:
 
 ```bash
 # Ubuntu/Debian
@@ -208,15 +208,13 @@ sudo apt-get update && sudo apt-get install -y build-essential python3-dev
 xcode-select --install
 ```
 
-```bash
-cd versions/v3/DanKS/retrieval/native_cpp
-python setup.py build_ext --inplace
-cd ../../../../../
+Then build and verify both kernels with one command in the active V3 environment:
 
-python -c "from DanKS.retrieval.native_cover import available; from DanKS.retrieval.native_actor_core import available as actor_available; print('cover', available()); print('actor', actor_available())"
+```bash
+danks-build-native
 ```
 
-Both values should be `True`. Linux builds use host-specific compiler optimization; macOS leaves architecture selection to its Python toolchain so universal2 builds remain valid. Rebuild the extensions after changing Python versions or moving to a different CPU architecture.
+The command locates the installed V3 source tree automatically and finishes with `cover=True, actor=True`. Linux builds use host-specific compiler optimization; macOS leaves architecture selection to its Python toolchain so universal2 builds remain valid. Run the command again after changing Python versions or moving to a different CPU architecture.
 
 ## Run the examples
 

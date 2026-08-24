@@ -198,7 +198,7 @@ python -m DanKS.training.train_ppo --help
 
 ### 5. 构建可选的 V3 C++ 内核
 
-优化后的检索内核目前支持 Linux 和 macOS，需要 C++17 编译器、Python 开发头文件和 `pybind11`；Windows 使用 Python 回退实现。请在目标机器上已激活的 V3 环境中构建：
+优化后的检索内核目前支持 Linux 和 macOS，需要 C++17 编译器、Python 开发头文件和 `pybind11`；Windows 使用 Python 回退实现。请先安装一次平台工具链：
 
 ```bash
 # Ubuntu/Debian
@@ -208,15 +208,13 @@ sudo apt-get update && sudo apt-get install -y build-essential python3-dev
 xcode-select --install
 ```
 
-```bash
-cd versions/v3/DanKS/retrieval/native_cpp
-python setup.py build_ext --inplace
-cd ../../../../../
+然后在已激活的 V3 环境中，用一条命令完成两个内核的构建与验证：
 
-python -c "from DanKS.retrieval.native_cover import available; from DanKS.retrieval.native_actor_core import available as actor_available; print('cover', available()); print('actor', actor_available())"
+```bash
+danks-build-native
 ```
 
-两个输出都应为 `True`。Linux 构建使用主机特定的编译优化；macOS 将架构选择交给 Python 工具链，因此仍然支持 universal2 构建。更换 Python 版本或 CPU 架构后，请重新编译扩展。
+该命令会自动定位已安装的 V3 源码，成功后输出 `cover=True, actor=True`。Linux 构建使用主机特定的编译优化；macOS 将架构选择交给 Python 工具链，因此仍然支持 universal2 构建。更换 Python 版本或 CPU 架构后，请重新运行该命令。
 
 ## 运行示例
 

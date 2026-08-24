@@ -17,6 +17,9 @@ dependencies = [
   "ninja==1.13.0",
 ]
 
+[project.scripts]
+danks-build-native = "DanKS.retrieval.native_cpp.build:main"
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["DanKS*"]
