@@ -44,7 +44,13 @@ The versions are intentionally isolated. Select one version at a time; their fea
 
 ## Why delayed outcomes matter
 
-![Three candidate actions from the same GuanDan state leading to different delayed structural outcomes](assets/structure-aware-delayed-outcomes.png)
+<p align="center">
+  <img
+    src="assets/structure-aware-delayed-outcomes.png"
+    alt="Three candidate actions from the same GuanDan state leading to different delayed structural outcomes"
+    width="620"
+  />
+</p>
 
 A move that looks cheap now can destroy the only useful combination left in the hand; spending a powerful card can preserve structure and create a cleaner future exit. DanKS separates the responsibilities needed to learn that distinction:
 
