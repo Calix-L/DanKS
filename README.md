@@ -1,3 +1,7 @@
+<p align="right">
+  <strong>English</strong> | <a href="README.zh-CN.md">简体中文</a>
+</p>
+
 # DanKS
 
 [![CI](https://github.com/Calix-L/DanKS/actions/workflows/ci.yml/badge.svg)](https://github.com/Calix-L/DanKS/actions/workflows/ci.yml)
@@ -73,6 +77,7 @@ DanKS/
 ├── guandan/engine/     # shared Python rules engine
 ├── examples/           # executable engine, retrieval, and model smoke runs
 ├── tests/              # repository and engine checks
+├── README.zh-CN.md     # complete Simplified Chinese guide
 ├── pyproject.toml
 ├── LICENSE
 └── NOTICE
