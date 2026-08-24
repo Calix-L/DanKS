@@ -2,18 +2,48 @@
   <a href="README.md">English</a> | <strong>简体中文</strong>
 </p>
 
-# DanKS
+<h1 align="center">DanKS</h1>
 
-[![CI](https://github.com/Calix-L/DanKS/actions/workflows/ci.yml/badge.svg)](https://github.com/Calix-L/DanKS/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/Calix-L/DanKS)](https://github.com/Calix-L/DanKS/releases/latest)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-D22128)](LICENSE)
+<p align="center">
+  <strong>一个紧凑、代码优先的仓库，完整呈现三代掼蛋 AI 的技术演进</strong>
+</p>
 
-**一个紧凑、代码优先的仓库，完整呈现三代掼蛋 AI 的技术演进。**
+<p align="center">
+  <a href="#快速开始">快速开始</a> ·
+  <a href="#系统架构">系统架构</a> ·
+  <a href="#三代技术路线">三代路线</a> ·
+  <a href="#使用-ppo-训练-v3">训练</a> ·
+  <a href="https://github.com/Calix-L/CardKS">CardKS 论文主页</a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/Calix-L/DanKS/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/Calix-L/DanKS"></a>
+  <a href="https://www.python.org/"><img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white"></a>
+  <a href="LICENSE"><img alt="Apache-2.0 许可证" src="https://img.shields.io/badge/license-Apache--2.0-D22128"></a>
+</p>
 
 DanKS 保留了一个四人组队掼蛋智能体从结构化检索、学习型候选选择器，到基于 PPO 训练的记忆感知策略的演进过程。每一代都可独立安装，并共用 `DanKS` Python 命名空间；仓库同时提供一套共享的 108 张牌掼蛋规则引擎作为基础。
 
 > 本仓库仅公开源代码。模型权重、数据集、评测记录、私有文档、凭据和部署自动化内容均不在公开范围内。
+
+## 快速开始
+
+最短的可运行路径是在 CPU 上使用 V3。以下命令以 Python 3.11 和 POSIX shell 为例：
+
+```bash
+git clone https://github.com/Calix-L/DanKS.git
+cd DanKS
+python3.11 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e versions/v3
+python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+python examples/retrieval_quickstart.py --version v3
+python examples/v3_model_smoke.py
+```
+
+Windows PowerShell 请使用 `.venv\Scripts\Activate.ps1`。CUDA、昇腾 NPU、V1/V2、原生内核与开发环境请参阅[安装参考](#安装参考)。
 
 ## 系统架构
 
@@ -83,11 +113,52 @@ DanKS/
 └── NOTICE
 ```
 
-## 环境搭建
+## 安装参考
 
-共享引擎和 V3 支持 Python 3.10 及更高版本；V1 和 V2 需要 Python 3.11 及更高版本。请为每一代使用独立虚拟环境，使依赖与 `DanKS` 命名空间保持隔离。
+共享引擎和 V3 支持 Python 3.10 及更高版本；V1 和 V2 需要 Python 3.11 及更高版本。以下命令均从仓库根目录运行。由于三个世代使用同一个 `DanKS` 导入命名空间，每个虚拟环境中请**只安装一个世代**。
 
-### 已验证配置
+### 选择安装包
+
+| 目标 | 安装命令 | 说明 |
+| --- | --- | --- |
+| 共享规则引擎与测试 | `python -m pip install -e '.[dev]'` | 不安装任何 AI 世代。 |
+| V1 · 结构化检索 | `python -m pip install -e versions/v1` | NumPy 选择器；Python 3.11+。 |
+| V2 · 学习型选择 | `python -m pip install -e versions/v2` | ONNX 选择器；Python 3.11+。 |
+| V3 · PPO 策略 | `python -m pip install -e versions/v3` | 还需安装下方一种 PyTorch 构建。 |
+
+### 为 V3 选择一种 PyTorch 构建
+
+| 目标 | 命令 |
+| --- | --- |
+| Linux / Windows CPU | `python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu` |
+| NVIDIA CUDA 12.8 | `python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128` |
+| macOS CPU | `python -m pip install torch==2.8.0` |
+
+如果平台需要不同 wheel，请参考 [PyTorch 官方安装矩阵](https://pytorch.org/get-started/previous-versions/)。使用 `python examples/v3_model_smoke.py` 检查安装，使用 `python -m DanKS.training.train_ppo --help` 查看 learner 的全部参数。
+
+<details>
+<summary><strong>昇腾 NPU 环境</strong></summary>
+
+昇腾运行时与主机驱动及 CANN 安装紧密耦合。请先安装匹配的 CANN，再使用厂商提供的 PyTorch 与 `torch_npu` wheel。已验证组合记录在 [`requirements-training-npu.txt`](versions/v3/DanKS/environment/requirements-training-npu.txt)。
+
+```bash
+source /usr/local/Ascend/cann/set_env.sh
+python3.10 -m venv --system-site-packages .venv-v3-npu
+source .venv-v3-npu/bin/activate
+python -m pip install -e versions/v3
+python -m pip install --no-deps \
+  /path/to/torch-2.7.1+cpu-cp310-cp310-manylinux_2_28_x86_64.whl \
+  /path/to/torch_npu-2.7.1.post2-cp310-cp310-manylinux_2_28_x86_64.whl
+export TORCH_DEVICE_BACKEND_AUTOLOAD=0
+python -m DanKS.training.train_ppo --help
+```
+
+不要在该环境中混装 CUDA 软件包。如果驱动、CANN、处理器架构或 Python 版本不同，请获取匹配的厂商 wheel，不要强行安装上述版本。
+
+</details>
+
+<details>
+<summary><strong>已验证配置</strong></summary>
 
 | 目标 | 系统 | Python | 框架 | 关键软件包 |
 | --- | --- | --- | --- | --- |
@@ -97,106 +168,11 @@ DanKS/
 | V3 NVIDIA 服务器 | H100, driver 575.57.08 | 3.11.14 | PyTorch 2.8.0 + CUDA 12.8 | NumPy 2.4.6, pybind11 3.0.4 |
 | V3 昇腾服务器 | Ubuntu 22.04.5, 910B2C, driver 24.1.0, CANN 8.5.0 | 3.10.12 | PyTorch 2.7.1 + torch_npu 2.7.1.post2 | NumPy 1.26.0, pybind11 3.0.4 |
 
-两行加速器配置复现了项目已验证的服务器环境；它们是参考配置，而不是最低硬件要求。
+这些配置用于复现，不是最低硬件要求。
 
-### 1. 克隆仓库并创建基础环境
+</details>
 
-```bash
-git clone https://github.com/Calix-L/DanKS.git
-cd DanKS
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e '.[dev]'
-python -m pytest -q
-```
-
-Windows PowerShell 请使用 `.venv\Scripts\Activate.ps1` 激活环境。
-
-### 2. 选择 V1 或 V2
-
-创建 Python 3.11 环境，并仅安装一个世代：
-
-```bash
-# V1
-python3.11 -m venv .venv-v1
-source .venv-v1/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e versions/v1
-python -c "import DanKS; print(DanKS.__file__)"
-```
-
-V2 请使用另一个虚拟环境：
-
-```bash
-python3.11 -m venv .venv-v2
-source .venv-v2/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e versions/v2
-python -c "import DanKS; print(DanKS.__file__)"
-```
-
-不要在同一环境中安装多个世代；它们的特征 schema、导入命名空间和 checkpoint 是相互独立的。
-
-### 3. 构建 V3 CPU 或 NVIDIA 环境
-
-创建全新的 Python 3.11 环境并安装 V3：
-
-```bash
-python3.11 -m venv .venv-v3
-source .venv-v3/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e versions/v3
-```
-
-只安装一种 PyTorch 构建。下列命令对应已验证的服务器版本；请根据自己的机器，通过 [PyTorch 官方安装矩阵](https://pytorch.org/get-started/previous-versions/) 选择正确的 wheel 索引。
-
-```bash
-# Linux/Windows CPU
-python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
-
-# NVIDIA CUDA 12.8
-python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128
-
-# macOS CPU
-python -m pip install torch==2.8.0
-```
-
-验证环境：
-
-```bash
-python -c "import numpy, torch; print('numpy', numpy.__version__); print('torch', torch.__version__); print('cuda', torch.cuda.is_available())"
-python -m DanKS.training.train_ppo --help
-```
-
-### 4. 构建 V3 昇腾 NPU 环境
-
-昇腾运行时与主机驱动及 CANN 安装紧密耦合。请先安装匹配的 CANN 版本，再使用厂商提供的 PyTorch 和 `torch_npu` wheel。公开的 [`requirements-training-npu.txt`](versions/v3/DanKS/environment/requirements-training-npu.txt) 记录了已验证的版本组合。
-
-```bash
-source /usr/local/Ascend/cann/set_env.sh
-python3.10 -m venv --system-site-packages .venv-v3-npu
-source .venv-v3-npu/bin/activate
-python -m pip install -e versions/v3
-
-# 请将路径替换为与当前平台匹配的厂商 wheel。
-python -m pip install --no-deps \
-  /path/to/torch-2.7.1+cpu-cp310-cp310-manylinux_2_28_x86_64.whl \
-  /path/to/torch_npu-2.7.1.post2-cp310-cp310-manylinux_2_28_x86_64.whl
-
-export TORCH_DEVICE_BACKEND_AUTOLOAD=0
-```
-
-确认 PyTorch 能够识别加速器：
-
-```bash
-python -c "import torch, torch_npu; print('torch', torch.__version__); print('torch_npu', torch_npu.__version__); print('npu', torch.npu.is_available())"
-python -m DanKS.training.train_ppo --help
-```
-
-不要在 NPU 环境中安装 CUDA 软件包。如果你的驱动、CANN、处理器架构或 Python 版本不同，请从昇腾软件发行渠道获取匹配的 wheel 组合，不要强行安装上述版本。
-
-### 5. 构建可选的 V3 C++ 内核
+### 可选的 V3 C++ 加速
 
 优化后的检索内核目前支持 Linux 和 macOS，需要 C++17 编译器、Python 开发头文件和 `pybind11`；Windows 使用 Python 回退实现。请先安装一次平台工具链：
 
@@ -214,7 +190,14 @@ xcode-select --install
 danks-build-native
 ```
 
-该命令会自动定位已安装的 V3 源码，成功后输出 `cover=True, actor=True`。Linux 构建使用主机特定的编译优化；macOS 将架构选择交给 Python 工具链，因此仍然支持 universal2 构建。更换 Python 版本或 CPU 架构后，请重新运行该命令。
+该命令会自动定位已安装的 V3 源码，成功后输出 `cover=True, actor=True`。Linux 构建使用主机特定的编译优化；macOS 将架构选择交给 Python 工具链，因此仍然支持 universal2 构建。更换 Python 版本或 CPU 架构后请重新运行。Windows 继续使用 Python 回退实现。
+
+### 开发检查
+
+```bash
+python -m pip install -e '.[dev]'
+python -m pytest -q
+```
 
 ## 运行示例
 

@@ -2,18 +2,48 @@
   <strong>English</strong> | <a href="README.zh-CN.md">简体中文</a>
 </p>
 
-# DanKS
+<h1 align="center">DanKS</h1>
 
-[![CI](https://github.com/Calix-L/DanKS/actions/workflows/ci.yml/badge.svg)](https://github.com/Calix-L/DanKS/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/Calix-L/DanKS)](https://github.com/Calix-L/DanKS/releases/latest)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-D22128)](LICENSE)
+<p align="center">
+  <strong>Three generations of GuanDan AI in one compact, code-first repository</strong>
+</p>
 
-**Three generations of GuanDan AI in one compact, code-first repository.**
+<p align="center">
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#architecture">Architecture</a> ·
+  <a href="#generations">Generations</a> ·
+  <a href="#train-v3-with-ppo">Training</a> ·
+  <a href="https://github.com/Calix-L/CardKS">CardKS paper hub</a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/Calix-L/DanKS/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/Calix-L/DanKS"></a>
+  <a href="https://www.python.org/"><img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white"></a>
+  <a href="LICENSE"><img alt="Apache-2.0 license" src="https://img.shields.io/badge/license-Apache--2.0-D22128"></a>
+</p>
 
 DanKS preserves the evolution of a four-player, partnership-based GuanDan agent: from structural retrieval, through a learned selector, to a memory-aware policy trained with PPO. Each generation is self-contained and uses the same `DanKS` Python namespace, while a shared 108-card rules engine provides the game foundation.
 
 > This repository contains source code only. Model weights, datasets, evaluation records, private documents, credentials, and deployment automation are intentionally excluded.
+
+## Quick start
+
+The shortest runnable path uses V3 on CPU. Commands below assume Python 3.11 and a POSIX shell:
+
+```bash
+git clone https://github.com/Calix-L/DanKS.git
+cd DanKS
+python3.11 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e versions/v3
+python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+python examples/retrieval_quickstart.py --version v3
+python examples/v3_model_smoke.py
+```
+
+Use `.venv\Scripts\Activate.ps1` on Windows PowerShell. CUDA, Ascend NPU, V1/V2, native-kernel, and development setups are documented in [Installation reference](#installation-reference).
 
 ## Architecture
 
@@ -83,11 +113,52 @@ DanKS/
 └── NOTICE
 ```
 
-## Environment setup
+## Installation reference
 
-The shared engine and V3 support Python 3.10 and newer; V1 and V2 require Python 3.11 or newer. Use a separate virtual environment for each generation so that its dependencies and `DanKS` namespace remain isolated.
+The shared engine and V3 support Python 3.10 and newer; V1 and V2 require Python 3.11 or newer. All commands below run from the repository root. Because every generation owns the same `DanKS` import namespace, install **exactly one generation per virtual environment**.
 
-### Validated configurations
+### Choose a package
+
+| Goal | Install command | Notes |
+| --- | --- | --- |
+| Shared rules engine and tests | `python -m pip install -e '.[dev]'` | No AI generation is installed. |
+| V1 · structural retrieval | `python -m pip install -e versions/v1` | NumPy selector; Python 3.11+. |
+| V2 · learned selection | `python -m pip install -e versions/v2` | ONNX selector; Python 3.11+. |
+| V3 · PPO policy | `python -m pip install -e versions/v3` | Install one PyTorch build below. |
+
+### Select one V3 PyTorch build
+
+| Target | Command |
+| --- | --- |
+| Linux / Windows CPU | `python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu` |
+| NVIDIA CUDA 12.8 | `python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128` |
+| macOS CPU | `python -m pip install torch==2.8.0` |
+
+Use the [official PyTorch installation matrix](https://pytorch.org/get-started/previous-versions/) when your platform requires a different wheel. Check the resulting installation with `python examples/v3_model_smoke.py` and inspect all learner options with `python -m DanKS.training.train_ppo --help`.
+
+<details>
+<summary><strong>Ascend NPU setup</strong></summary>
+
+The Ascend runtime is coupled to the host driver and CANN installation. Install a matching CANN release first, then use the vendor-provided PyTorch and `torch_npu` wheels. The validated pair is recorded in [`requirements-training-npu.txt`](versions/v3/DanKS/environment/requirements-training-npu.txt).
+
+```bash
+source /usr/local/Ascend/cann/set_env.sh
+python3.10 -m venv --system-site-packages .venv-v3-npu
+source .venv-v3-npu/bin/activate
+python -m pip install -e versions/v3
+python -m pip install --no-deps \
+  /path/to/torch-2.7.1+cpu-cp310-cp310-manylinux_2_28_x86_64.whl \
+  /path/to/torch_npu-2.7.1.post2-cp310-cp310-manylinux_2_28_x86_64.whl
+export TORCH_DEVICE_BACKEND_AUTOLOAD=0
+python -m DanKS.training.train_ppo --help
+```
+
+Do not mix CUDA packages into this environment. If the driver, CANN, architecture, or Python version differs, obtain a matching vendor wheel pair rather than forcing the versions above.
+
+</details>
+
+<details>
+<summary><strong>Validated configurations</strong></summary>
 
 | Target | System | Python | Framework | Key packages |
 | --- | --- | --- | --- | --- |
@@ -97,106 +168,11 @@ The shared engine and V3 support Python 3.10 and newer; V1 and V2 require Python
 | V3 NVIDIA server | H100, driver 575.57.08 | 3.11.14 | PyTorch 2.8.0 + CUDA 12.8 | NumPy 2.4.6, pybind11 3.0.4 |
 | V3 Ascend server | Ubuntu 22.04.5, 910B2C, driver 24.1.0, CANN 8.5.0 | 3.10.12 | PyTorch 2.7.1 + torch_npu 2.7.1.post2 | NumPy 1.26.0, pybind11 3.0.4 |
 
-The two accelerator rows reproduce the project servers; they are reference configurations, not minimum hardware requirements.
+These are reproducibility references, not minimum hardware requirements.
 
-### 1. Clone and create a base environment
+</details>
 
-```bash
-git clone https://github.com/Calix-L/DanKS.git
-cd DanKS
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e '.[dev]'
-python -m pytest -q
-```
-
-On Windows PowerShell, activate the environment with `.venv\Scripts\Activate.ps1`.
-
-### 2. Select V1 or V2
-
-Create a Python 3.11 environment and install only one generation:
-
-```bash
-# V1
-python3.11 -m venv .venv-v1
-source .venv-v1/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e versions/v1
-python -c "import DanKS; print(DanKS.__file__)"
-```
-
-For V2, use a different environment:
-
-```bash
-python3.11 -m venv .venv-v2
-source .venv-v2/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e versions/v2
-python -c "import DanKS; print(DanKS.__file__)"
-```
-
-Do not install multiple generations into the same environment; their feature schemas, import namespace, and checkpoints are intentionally independent.
-
-### 3. Build a V3 CPU or NVIDIA environment
-
-Create a fresh Python 3.11 environment and install V3:
-
-```bash
-python3.11 -m venv .venv-v3
-source .venv-v3/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e versions/v3
-```
-
-Install exactly one PyTorch build. These commands match the tested server version; choose the wheel index appropriate for your machine using the [official PyTorch installation matrix](https://pytorch.org/get-started/previous-versions/).
-
-```bash
-# Linux/Windows CPU
-python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
-
-# NVIDIA CUDA 12.8
-python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128
-
-# macOS CPU
-python -m pip install torch==2.8.0
-```
-
-Verify the environment:
-
-```bash
-python -c "import numpy, torch; print('numpy', numpy.__version__); print('torch', torch.__version__); print('cuda', torch.cuda.is_available())"
-python -m DanKS.training.train_ppo --help
-```
-
-### 4. Build a V3 Ascend NPU environment
-
-The Ascend runtime is coupled to the host driver and CANN installation. Install the matching CANN release first, then use the vendor-provided PyTorch and `torch_npu` wheels. The public [`requirements-training-npu.txt`](versions/v3/DanKS/environment/requirements-training-npu.txt) records the validated pair.
-
-```bash
-source /usr/local/Ascend/cann/set_env.sh
-python3.10 -m venv --system-site-packages .venv-v3-npu
-source .venv-v3-npu/bin/activate
-python -m pip install -e versions/v3
-
-# Replace these paths with the matching vendor wheels for your platform.
-python -m pip install --no-deps \
-  /path/to/torch-2.7.1+cpu-cp310-cp310-manylinux_2_28_x86_64.whl \
-  /path/to/torch_npu-2.7.1.post2-cp310-cp310-manylinux_2_28_x86_64.whl
-
-export TORCH_DEVICE_BACKEND_AUTOLOAD=0
-```
-
-Verify that PyTorch can see the accelerator:
-
-```bash
-python -c "import torch, torch_npu; print('torch', torch.__version__); print('torch_npu', torch_npu.__version__); print('npu', torch.npu.is_available())"
-python -m DanKS.training.train_ppo --help
-```
-
-Do not install CUDA packages into the NPU environment. If your driver, CANN, architecture, or Python version differs, obtain a matching wheel pair from the Ascend software distribution instead of forcing the versions above.
-
-### 5. Build the optional V3 C++ kernels
+### Optional V3 C++ acceleration
 
 The optimized retrieval kernels currently support Linux and macOS. They require a C++17 compiler, Python development headers, and `pybind11`; Windows uses the Python fallback. Install the platform toolchain once:
 
@@ -214,7 +190,14 @@ Then build and verify both kernels with one command in the active V3 environment
 danks-build-native
 ```
 
-The command locates the installed V3 source tree automatically and finishes with `cover=True, actor=True`. Linux builds use host-specific compiler optimization; macOS leaves architecture selection to its Python toolchain so universal2 builds remain valid. Run the command again after changing Python versions or moving to a different CPU architecture.
+The command locates the installed V3 source tree automatically and finishes with `cover=True, actor=True`. Linux builds use host-specific compiler optimization; macOS leaves architecture selection to its Python toolchain so universal2 builds remain valid. Run it again after changing Python versions or CPU architecture. Windows continues to use the Python fallback.
+
+### Development checks
+
+```bash
+python -m pip install -e '.[dev]'
+python -m pytest -q
+```
 
 ## Run the examples
 
