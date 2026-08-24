@@ -53,6 +53,18 @@ def test_repository_uses_compact_developer_layout() -> None:
     assert not any((ROOT / name).exists() for name in ("generations", "danks_repo", "tools", "docs"))
 
 
+def test_readme_visual_assets_are_versioned() -> None:
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    for relative in (
+        "assets/danks-v3-architecture.png",
+        "assets/structure-aware-delayed-outcomes.png",
+    ):
+        path = ROOT / relative
+        assert path.is_file()
+        assert path.stat().st_size > 0
+        assert relative in readme
+
+
 def test_each_version_has_installable_distribution_metadata() -> None:
     root_metadata = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     assert root_metadata["project"]["name"] == "danks-engine"

@@ -11,6 +11,19 @@ DanKS preserves the evolution of a four-player, partnership-based GuanDan agent:
 
 > This repository contains source code only. Model weights, datasets, evaluation records, private documents, credentials, and deployment automation are intentionally excluded.
 
+## Architecture
+
+![DanKS V3 pipeline from GuanDan state through structured candidate retrieval and actor-critic scoring to PPO self-play](assets/danks-v3-architecture.png)
+
+V3 turns a large, structured action space into a compact policy decision:
+
+1. **Encode the information state.** The policy receives the visible hand, public action history, legal actions, and seat-aware game context.
+2. **Retrieve structured candidates.** Budgeted decomposition search produces representative plays and summarizes their length, pairs, sequences, suits, gaps, and remaining-hand structure.
+3. **Score a bounded Top-K set.** A shared encoder combines state, candidate, and structural features; the actor ranks valid candidates while the critic estimates state value.
+4. **Learn from self-play.** Trajectories provide GAE advantages for clipped PPO updates, improving the selector without expanding the inference-time candidate budget.
+
+The diagram shows the complete V3 path. V1 and V2 are earlier, self-contained slices of the same progression: retrieval first, then learned selection, then memory-aware PPO.
+
 ## Why DanKS?
 
 - **Three readable generations** — compare complete implementations without mixing their feature or checkpoint contracts.
@@ -18,23 +31,6 @@ DanKS preserves the evolution of a four-player, partnership-based GuanDan agent:
 - **End-to-end V3 training** — PPO learner, rollout loading, optimizer state, persistent transport, recall, and team-belief modeling are included.
 - **Shared GuanDan engine** — legal moves, table lifecycle, tribute flow, and settlement live in one reusable package.
 - **Small public surface** — no duplicated archives, generated manifests, model binaries, or platform-specific evaluation code.
-
-## System at a glance
-
-```text
-GuanDan state
-     │
-     ▼
-structural retrieval ──► candidate ranking ──► top-k features
-                                                    │
-                                                    ▼
-                                       learned selector / PPO policy
-                                                    │
-                                                    ▼
-                                               chosen action
-
-shared foundation: 108-card rules · legal moves · table lifecycle
-```
 
 ## Generations
 
@@ -46,10 +42,24 @@ shared foundation: 108-card rules · legal moves · table lifecycle
 
 The versions are intentionally isolated. Select one version at a time; their feature schemas and checkpoints are not interchangeable.
 
+## Why delayed outcomes matter
+
+![Three candidate actions from the same GuanDan state leading to different delayed structural outcomes](assets/structure-aware-delayed-outcomes.png)
+
+A move that looks cheap now can destroy the only useful combination left in the hand; spending a powerful card can preserve structure and create a cleaner future exit. DanKS separates the responsibilities needed to learn that distinction:
+
+- **Retrieval** keeps a strategically varied candidate set instead of flattening the full combinatorial action space.
+- **Structure features** expose what each candidate consumes, preserves, or leaves behind.
+- **The actor** scores the legal candidates available in the current state.
+- **The critic and GAE** assign credit from later trajectory outcomes, allowing PPO to favor actions whose value appears several decisions later.
+
+The illustration is a conceptual credit-assignment example. At inference time, V3 scores the retrieved candidates directly; it does not explicitly simulate all three future branches shown in the figure.
+
 ## Repository layout
 
 ```text
 DanKS/
+├── assets/             # architecture and decision-making figures
 ├── versions/
 │   ├── v1/DanKS/       # retrieval + NumPy selector
 │   ├── v2/DanKS/       # retrieval + ONNX selector
