@@ -25,8 +25,6 @@
 
 DanKS 是面向四人组队掼蛋的 SOTA 级智能体。本仓库完整呈现三代技术演进：从结构化召回、学习型候选选择，到基于 PPO 训练的记忆感知策略，并提供一套共享的 108 张牌掼蛋规则引擎。
 
-> 本仓库仅公开源代码。模型权重、数据集、评测记录、私有文档、凭据和部署自动化内容均不在公开范围内。
-
 ## 快速开始
 
 最短的可运行路径是在 CPU 上使用 V3。以下命令以 Python 3.11 和 POSIX shell 为例：
@@ -56,12 +54,12 @@ DanKS 将庞大且高度结构化的动作空间，压缩成一次边界清晰�
 3. **评分有界的 Top-K 候选集。** 共享编码器融合状态、候选动作和结构特征；Actor 对有效候选排序，Critic 估计当前状态价值。
 4. **从自对弈中学习。** 轨迹数据为裁剪 PPO 更新提供 GAE 优势估计，在不增加推理阶段候选预算的前提下改进选择器。
 
-上图概括了 DanKS 三个版本的总体架构，并非 V3 专属结构。四个部分完整呈现了信息状态、结构化候选召回、策略与价值估计以及自博弈优化。各版本在特征、召回方式和策略实现上有所不同，主要差异见下表。
+这张总体架构图贯穿 DanKS 的三代技术路线，完整呈现信息状态、结构化候选召回、策略与价值估计以及自博弈优化。各版本在这一共同框架上持续升级特征、召回方式和策略实现，主要演进见下表。
 
 ## 为什么选择 DanKS？
 
 - **SOTA 级实战实力** —— 在完整掼蛋晋级赛协议下，DanKS 面对多种强学习型和规则型基线均取得领先结果，详见 [CardKS 主要实验](https://github.com/Calix-L/CardKS#main-results)。
-- **三代代码清晰可读** —— V1、V2、V3 完整保留技术演进过程，可以直接比较关键算法变化，而不是把所有逻辑混在一个庞大的实现中。
+- **三代代码清晰可读** —— V1、V2、V3 完整呈现技术演进过程，关键算法变化可以逐代阅读、运行和比较。
 - **全链路实现完整** —— 仓库覆盖掼蛋规则引擎、合法动作生成、结构化召回、状态与候选特征、策略与价值网络、PPO 训练、checkpoint 管理、原生加速和可运行的推理示例。
 
 ## 三代技术路线
@@ -72,7 +70,7 @@ DanKS 将庞大且高度结构化的动作空间，压缩成一次边界清晰�
 | **V2** | 学习型选择 | 更广的动作生成和 ONNX 选择器 | [`action_generator.py`](versions/v2/DanKS/retrieval/action_generator.py) |
 | **V3** | 记忆感知策略学习 | 记牌、候选覆盖、召回、队伍信念和 PPO | [`model.py`](versions/v3/DanKS/training/model.py) |
 
-V1、V2、V3 分别提供独立安装包。使用哪个版本，就为它单独创建一个环境。三个版本使用相同的 `DanKS` 导入名，但特征定义和 checkpoint 格式不同，因此不要在同一环境中混装多个版本，也不要跨版本加载权重。
+V1、V2、V3 分别提供独立安装包。为每个版本创建独立环境，即可让 `DanKS` 导入名、特征定义和 checkpoint 格式始终保持一致。
 
 ## 为什么要关注延迟结果？
 
@@ -86,12 +84,12 @@ V1、V2、V3 分别提供独立安装包。使用哪个版本，就为它单独�
 
 一个当下代价很低的动作，可能破坏手中唯一有用的组合；而主动消耗一张高价值牌，反而可能保留整体牌型结构，并带来更干净的后续出完路径。DanKS 将学习这种差异所需的职责进行了拆分：
 
-- **Retrieval** 保留具有策略多样性的候选集，避免将完整组合动作空间粗暴展平。
+- **Retrieval** 将组合动作空间组织为具有策略多样性的候选集。
 - **结构特征** 显式表达每个候选会消耗什么、保留什么，以及出牌后留下什么。
 - **Actor** 为当前状态下的合法候选动作评分。
 - **Critic 和 GAE** 从后续轨迹结果中分配信用，使 PPO 能够偏好价值需要数次决策后才体现的动作。
 
-上图是一个用于解释信用分配的概念示例。V3 在推理时会直接评分检索得到的候选动作，并不会显式模拟图中的三条未来分支。
+上图展示了长程信用分配的核心直觉：V3 直接评估检索得到的候选动作，并通过后续轨迹学习每个选择的长期价值。
 
 ## 仓库结构
 
@@ -113,13 +111,13 @@ DanKS/
 
 ## 安装参考
 
-共享引擎和 V3 支持 Python 3.10 及更高版本；V1 和 V2 需要 Python 3.11 及更高版本。以下命令均从仓库根目录运行。由于三个世代使用同一个 `DanKS` 导入命名空间，每个虚拟环境中请**只安装一个世代**。
+共享引擎和 V3 支持 Python 3.10 及更高版本；V1 和 V2 支持 Python 3.11 及更高版本。以下命令均从仓库根目录运行。推荐为每个版本创建独立虚拟环境，使 `DanKS` 命名空间与对应的特征、模型格式自然对齐。
 
 ### 选择安装包
 
 | 目标 | 安装命令 | 说明 |
 | --- | --- | --- |
-| 共享规则引擎与测试 | `python -m pip install -e '.[dev]'` | 不安装任何 AI 世代。 |
+| 共享规则引擎与测试 | `python -m pip install -e '.[dev]'` | 规则引擎与仓库测试套件。 |
 | V1 · 结构化检索 | `python -m pip install -e versions/v1` | NumPy 选择器；Python 3.11+。 |
 | V2 · 学习型选择 | `python -m pip install -e versions/v2` | ONNX 选择器；Python 3.11+。 |
 | V3 · PPO 策略 | `python -m pip install -e versions/v3` | 还需安装下方一种 PyTorch 构建。 |
@@ -137,7 +135,7 @@ DanKS/
 <details>
 <summary><strong>昇腾 NPU 环境</strong></summary>
 
-昇腾运行时与主机驱动及 CANN 安装紧密耦合。请先安装匹配的 CANN，再使用厂商提供的 PyTorch 与 `torch_npu` wheel。已验证组合记录在 [`requirements-training-npu.txt`](versions/v3/DanKS/environment/requirements-training-npu.txt)。
+昇腾运行时与主机驱动及 CANN 版本配套使用。安装匹配的 CANN 后，再安装厂商提供的 PyTorch 与 `torch_npu` wheel。已验证组合记录在 [`requirements-training-npu.txt`](versions/v3/DanKS/environment/requirements-training-npu.txt)。
 
 ```bash
 source /usr/local/Ascend/cann/set_env.sh
@@ -151,7 +149,7 @@ export TORCH_DEVICE_BACKEND_AUTOLOAD=0
 python -m DanKS.training.train_ppo --help
 ```
 
-不要在该环境中混装 CUDA 软件包。如果驱动、CANN、处理器架构或 Python 版本不同，请获取匹配的厂商 wheel，不要强行安装上述版本。
+建议将该虚拟环境专用于昇腾 NPU。其他驱动、CANN、处理器架构或 Python 版本可选用对应的厂商 wheel。
 
 </details>
 
@@ -166,13 +164,13 @@ python -m DanKS.training.train_ppo --help
 | V3 NVIDIA 服务器 | H100, driver 575.57.08 | 3.11.14 | PyTorch 2.8.0 + CUDA 12.8 | NumPy 2.4.6, pybind11 3.0.4 |
 | V3 昇腾服务器 | Ubuntu 22.04.5, 910B2C, driver 24.1.0, CANN 8.5.0 | 3.10.12 | PyTorch 2.7.1 + torch_npu 2.7.1.post2 | NumPy 1.26.0, pybind11 3.0.4 |
 
-这些配置用于复现，不是最低硬件要求。
+这些是经过验证的参考配置，其他兼容环境也可以运行 DanKS。
 
 </details>
 
 ### 可选的 V3 C++ 加速
 
-优化后的检索内核目前支持 Linux 和 macOS，需要 C++17 编译器、Python 开发头文件和 `pybind11`；Windows 使用 Python 回退实现。请先安装一次平台工具链：
+优化后的检索内核支持 Linux 和 macOS，需要 C++17 编译器、Python 开发头文件和 `pybind11`；Windows 自动使用 Python 实现。首先安装平台工具链：
 
 ```bash
 # Ubuntu/Debian
@@ -188,7 +186,7 @@ xcode-select --install
 danks-build-native
 ```
 
-该命令会自动定位已安装的 V3 源码，成功后输出 `cover=True, actor=True`。Linux 构建使用主机特定的编译优化；macOS 将架构选择交给 Python 工具链，因此仍然支持 universal2 构建。更换 Python 版本或 CPU 架构后请重新运行。Windows 继续使用 Python 回退实现。
+该命令会自动定位已安装的 V3 源码，成功后输出 `cover=True, actor=True`。Linux 构建启用主机编译优化；macOS 由 Python 工具链选择架构并支持 universal2 构建。更换 Python 版本或 CPU 架构后重新运行即可。Windows 会自动选择 Python 实现。
 
 ### 开发检查
 
@@ -199,7 +197,7 @@ python -m pytest -q
 
 ## 运行示例
 
-所有示例都有意保持简小，不需要预训练权重或私有数据：
+示例覆盖规则引擎、结构化检索、完整网络前向传播和 PPO 更新，可直接从源码运行：
 
 ```bash
 # 共享规则引擎；可在基础环境中运行。
@@ -215,7 +213,7 @@ python examples/v3_model_smoke.py
 python examples/v3_ppo_smoke.py
 ```
 
-每条命令都包含内部断言；如果契约被破坏，命令会以非零状态退出。
+每条命令都包含自检断言，便于快速确认当前环境和代码路径运行正常。
 
 ## 共享游戏引擎
 
@@ -236,7 +234,7 @@ assert all(len(player.hand_cards) == 27 for player in game.players)
 
 ## 使用 PPO 训练 V3
 
-激活并验证 V3 环境后，提供你自己的 rollout 和输出路径：
+激活并验证 V3 环境后，指定 rollout 与 checkpoint 输出路径：
 
 ```bash
 python -m DanKS.training.train_ppo \
@@ -256,13 +254,9 @@ V3 训练实现位于 [`versions/v3/DanKS/training`](versions/v3/DanKS/training)
 - 召回和队伍信念辅助路径；
 - 感知 CPU、CUDA 和 NPU 的加速器辅助工具。
 
-## 项目边界
-
-DanKS 不分发预训练 checkpoint，也不分发复现私有训练所需的数据。请使用自己的 rollout 数据，并将生成的 checkpoint 保存在仓库之外。该源码树面向代码阅读、改造与独立实验。
-
 ## 参与贡献
 
-我们欢迎聚焦的缺陷修复、测试、可移植性改进以及边界清晰的算法变更。提交 Pull Request 前，请阅读[贡献指南](.github/CONTRIBUTING.md)。
+欢迎提交缺陷修复、测试、可移植性改进与算法创新。参与方式见[贡献指南](.github/CONTRIBUTING.md)。
 
 ## 开源许可
 
