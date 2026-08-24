@@ -5,12 +5,12 @@
 <h1 align="center">DanKS</h1>
 
 <p align="center">
-  <strong>Three generations of GuanDan AI in one compact, code-first repository</strong>
+  <strong>State-of-the-art GuanDan AI with three complete generations of code</strong>
 </p>
 
 <p align="center">
   <a href="#quick-start">Quick start</a> ·
-  <a href="#architecture">Architecture</a> ·
+  <a href="#overall-architecture">Architecture</a> ·
   <a href="#generations">Generations</a> ·
   <a href="#train-v3-with-ppo">Training</a> ·
   <a href="https://github.com/Calix-L/CardKS">CardKS paper hub</a>
@@ -23,7 +23,7 @@
   <a href="LICENSE"><img alt="Apache-2.0 license" src="https://img.shields.io/badge/license-Apache--2.0-D22128"></a>
 </p>
 
-DanKS preserves the evolution of a four-player, partnership-based GuanDan agent: from structural retrieval, through a learned selector, to a memory-aware policy trained with PPO. Each generation is self-contained and uses the same `DanKS` Python namespace, while a shared 108-card rules engine provides the game foundation.
+DanKS is a state-of-the-art agent for four-player, partnership-based GuanDan. This repository presents three complete generations of its technical development—from structural retrieval, through learned candidate selection, to a memory-aware policy trained with PPO—together with a shared 108-card rules engine.
 
 > This repository contains source code only. Model weights, datasets, evaluation records, private documents, credentials, and deployment automation are intentionally excluded.
 
@@ -45,26 +45,24 @@ python examples/v3_model_smoke.py
 
 Use `.venv\Scripts\Activate.ps1` on Windows PowerShell. CUDA, Ascend NPU, V1/V2, native-kernel, and development setups are documented in [Installation reference](#installation-reference).
 
-## Architecture
+## Overall architecture
 
-![DanKS V3 pipeline from GuanDan state through structured candidate retrieval and actor-critic scoring to PPO self-play](assets/danks-v3-architecture.png)
+![Overall DanKS pipeline shared by the three versions, from GuanDan information state and structured candidate retrieval to actor-critic scoring and PPO self-play](assets/danks-overall-architecture.png)
 
-V3 turns a large, structured action space into a compact policy decision:
+DanKS turns a large, structured action space into a compact policy decision:
 
 1. **Encode the information state.** The policy receives the visible hand, public action history, legal actions, and seat-aware game context.
 2. **Retrieve structured candidates.** Budgeted decomposition search produces representative plays and summarizes their length, pairs, sequences, suits, gaps, and remaining-hand structure.
 3. **Score a bounded Top-K set.** A shared encoder combines state, candidate, and structural features; the actor ranks valid candidates while the critic estimates state value.
 4. **Learn from self-play.** Trajectories provide GAE advantages for clipped PPO updates, improving the selector without expanding the inference-time candidate budget.
 
-The diagram shows the complete V3 path. V1 and V2 are earlier, self-contained slices of the same progression: retrieval first, then learned selection, then memory-aware PPO.
+The diagram summarizes the overall architecture of all three DanKS versions; it is not specific to V3. Its four parts cover the complete path from information state and structured candidate retrieval to policy/value estimation and self-play optimization. The versions differ in their features, retrieval methods, and policy implementations, as summarized below.
 
 ## Why DanKS?
 
-- **Three readable generations** — compare complete implementations without mixing their feature or checkpoint contracts.
-- **Installable in isolation** — each generation has its own package metadata and dependency contract.
-- **End-to-end V3 training** — PPO learner, rollout loading, optimizer state, persistent transport, recall, and team-belief modeling are included.
-- **Shared GuanDan engine** — legal moves, table lifecycle, tribute flow, and settlement live in one reusable package.
-- **Small public surface** — no duplicated archives, generated manifests, model binaries, or platform-specific evaluation code.
+- **State-of-the-art playing strength** — DanKS achieves leading results against strong learning-based and rule-based GuanDan baselines under the complete promotion-match protocol; see the [CardKS main results](https://github.com/Calix-L/CardKS#main-results).
+- **A clear three-generation codebase** — V1, V2, and V3 make the technical progression easy to compare without hiding major algorithmic changes behind one monolithic implementation.
+- **The complete pipeline is included** — the repository covers the GuanDan rules engine, legal-action generation, structured retrieval, state and candidate features, policy/value models, PPO training, checkpoint handling, native acceleration, and runnable inference examples.
 
 ## Generations
 
@@ -74,7 +72,7 @@ The diagram shows the complete V3 path. V1 and V2 are earlier, self-contained sl
 | **V2** | Learned selection | Broader action generation and an ONNX selector | [`action_generator.py`](versions/v2/DanKS/retrieval/action_generator.py) |
 | **V3** | Memory-aware policy learning | Card memory, candidate coverage, recall, team belief, and PPO | [`model.py`](versions/v3/DanKS/training/model.py) |
 
-The versions are intentionally isolated. Select one version at a time; their feature schemas and checkpoints are not interchangeable.
+V1, V2, and V3 are distributed as separate packages. Create a separate environment for the version you want to use. They share the `DanKS` import name, but their feature schemas and checkpoint formats differ, so do not install multiple versions in one environment or load one version's checkpoint with another.
 
 ## Why delayed outcomes matter
 

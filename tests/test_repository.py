@@ -66,7 +66,7 @@ def test_readme_visual_assets_are_versioned() -> None:
     assert "README.zh-CN.md" in readmes["README.md"]
     assert 'href="README.md"' in readmes["README.zh-CN.md"]
     for relative in (
-        "assets/danks-v3-architecture.png",
+        "assets/danks-overall-architecture.png",
         "assets/structure-aware-delayed-outcomes.png",
     ):
         path = ROOT / relative
