@@ -79,6 +79,17 @@ def test_readme_visual_assets_are_versioned() -> None:
         assert "Kingsoft AI Product Center" in readme
         assert 'href="https://www.kingsoft.com/"' in readme
 
+    assert (
+        '<h1 align="center">DanKS: State-of-the-art GuanDan AI</h1>'
+        in readmes["README.md"]
+    )
+    assert "<strong>Three complete generations of code</strong>" in readmes["README.md"]
+    assert (
+        '<h1 align="center">DanKS：SOTA 级掼蛋智能体</h1>'
+        in readmes["README.zh-CN.md"]
+    )
+    assert "<strong>完整开放三代技术路线</strong>" in readmes["README.zh-CN.md"]
+
 
 def test_v3_native_build_uses_one_installed_command() -> None:
     script = ROOT / "versions" / "v3" / "DanKS" / "retrieval" / "native_cpp" / "build.py"

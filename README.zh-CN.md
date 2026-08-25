@@ -21,10 +21,10 @@
   <strong>Kingsoft AI Product Center</strong>
 </p>
 
-<h1 align="center">DanKS</h1>
+<h1 align="center">DanKS：SOTA 级掼蛋智能体</h1>
 
 <p align="center">
-  <strong>SOTA 级掼蛋智能体，完整开放三代技术路线</strong>
+  <strong>完整开放三代技术路线</strong>
 </p>
 
 <p align="center">

@@ -21,10 +21,10 @@
   <strong>Kingsoft AI Product Center</strong>
 </p>
 
-<h1 align="center">DanKS</h1>
+<h1 align="center">DanKS: State-of-the-art GuanDan AI</h1>
 
 <p align="center">
-  <strong>State-of-the-art GuanDan AI with three complete generations of code</strong>
+  <strong>Three complete generations of code</strong>
 </p>
 
 <p align="center">
