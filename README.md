@@ -15,7 +15,7 @@
 
 <p align="center">
   <a href="https://www.kingsoft.com/">
-    <img src="assets/kingsoft-logo.png" alt="Kingsoft" width="420">
+    <img src="assets/kingsoft-logo.png" alt="Kingsoft" width="320">
   </a>
   <br>
   <strong>Kingsoft AI Product Center</strong>
