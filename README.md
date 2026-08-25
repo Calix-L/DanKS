@@ -23,7 +23,7 @@
   <a href="LICENSE"><img alt="Apache-2.0 license" src="https://img.shields.io/badge/license-Apache--2.0-D22128"></a>
 </p>
 
-Meet DanKS—the state-of-the-art AI built to master four-player, partnership-based GuanDan. This single repository reveals its complete three-generation evolution: from structural retrieval and learned candidate selection to a memory-aware policy trained with PPO—all powered by a shared 108-card GuanDan rules engine.
+Meet DanKS—the state-of-the-art AI for four-player, partnership-based GuanDan. One repository. Three generations. A complete journey from structural retrieval and learned candidate selection to a memory-aware policy trained with PPO—all built on a shared 108-card GuanDan rules engine.
 
 ## Quick start
 
