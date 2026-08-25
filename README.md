@@ -2,6 +2,25 @@
   <strong>English</strong> | <a href="README.zh-CN.md">简体中文</a>
 </p>
 
+<p align="center">
+  👋 Hi, everyone! DanKS is a GuanDan AI project initiated by the <strong>Kingsoft AI Product Center</strong>.
+</p>
+
+<p align="center">
+  <a href="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/Calix-L/DanKS/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/Calix-L/DanKS"></a>
+  <a href="https://www.python.org/"><img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white"></a>
+  <a href="LICENSE"><img alt="Apache-2.0 license" src="https://img.shields.io/badge/license-Apache--2.0-D22128"></a>
+</p>
+
+<p align="center">
+  <a href="https://www.kingsoft.com/">
+    <img src="assets/kingsoft-logo.png" alt="Kingsoft" width="420">
+  </a>
+  <br>
+  <strong>Kingsoft AI Product Center</strong>
+</p>
+
 <h1 align="center">DanKS</h1>
 
 <p align="center">
@@ -14,13 +33,6 @@
   <a href="#generations">Generations</a> ·
   <a href="#train-v3-with-ppo">Training</a> ·
   <a href="https://github.com/Calix-L/CardKS">CardKS paper hub</a>
-</p>
-
-<p align="center">
-  <a href="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml/badge.svg"></a>
-  <a href="https://github.com/Calix-L/DanKS/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/Calix-L/DanKS"></a>
-  <a href="https://www.python.org/"><img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white"></a>
-  <a href="LICENSE"><img alt="Apache-2.0 license" src="https://img.shields.io/badge/license-Apache--2.0-D22128"></a>
 </p>
 
 Meet DanKS—the state-of-the-art AI for four-player, partnership-based GuanDan. One repository. Three generations. A complete journey from structural retrieval and learned candidate selection to a memory-aware policy trained with PPO—all built on a shared 108-card GuanDan rules engine.
@@ -95,7 +107,7 @@ The illustration captures the central idea behind long-horizon credit assignment
 
 ```text
 DanKS/
-├── assets/             # architecture and decision-making figures
+├── assets/             # brand, architecture, and decision-making figures
 ├── versions/
 │   ├── v1/DanKS/       # retrieval + NumPy selector
 │   ├── v2/DanKS/       # retrieval + ONNX selector

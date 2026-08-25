@@ -2,6 +2,25 @@
   <a href="README.md">English</a> | <strong>简体中文</strong>
 </p>
 
+<p align="center">
+  👋 大家好！DanKS 是由 <strong>Kingsoft AI Product Center</strong> 发起的掼蛋 AI 项目。
+</p>
+
+<p align="center">
+  <a href="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/Calix-L/DanKS/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/Calix-L/DanKS"></a>
+  <a href="https://www.python.org/"><img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white"></a>
+  <a href="LICENSE"><img alt="Apache-2.0 许可证" src="https://img.shields.io/badge/license-Apache--2.0-D22128"></a>
+</p>
+
+<p align="center">
+  <a href="https://www.kingsoft.com/">
+    <img src="assets/kingsoft-logo.png" alt="金山软件" width="420">
+  </a>
+  <br>
+  <strong>Kingsoft AI Product Center</strong>
+</p>
+
 <h1 align="center">DanKS</h1>
 
 <p align="center">
@@ -13,14 +32,7 @@
   <a href="#总体架构">总体架构</a> ·
   <a href="#三代技术路线">三代路线</a> ·
   <a href="#使用-ppo-训练-v3">训练</a> ·
-  <a href="https://github.com/Calix-L/CardKS">CardKS 论文主页</a>
-</p>
-
-<p align="center">
-  <a href="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml/badge.svg"></a>
-  <a href="https://github.com/Calix-L/DanKS/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/Calix-L/DanKS"></a>
-  <a href="https://www.python.org/"><img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white"></a>
-  <a href="LICENSE"><img alt="Apache-2.0 许可证" src="https://img.shields.io/badge/license-Apache--2.0-D22128"></a>
+  <a href="https://github.com/Calix-L/CardKS">CardKS 论文</a>
 </p>
 
 这就是 DanKS——面向四人组队掼蛋的 SOTA 级智能体。一个仓库，三代进化：从结构化召回、学习型候选选择，到基于 PPO 训练的记忆感知策略——全部构建于共享的 108 张牌掼蛋规则引擎之上。
@@ -95,7 +107,7 @@ V1、V2、V3 分别提供独立安装包。为每个版本创建独立环境，�
 
 ```text
 DanKS/
-├── assets/             # 架构图与决策示意图
+├── assets/             # 品牌标识、架构图与决策示意图
 ├── versions/
 │   ├── v1/DanKS/       # 结构化检索 + NumPy 选择器
 │   ├── v2/DanKS/       # 结构化检索 + ONNX 选择器

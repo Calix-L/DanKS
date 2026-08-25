@@ -66,6 +66,7 @@ def test_readme_visual_assets_are_versioned() -> None:
     assert "README.zh-CN.md" in readmes["README.md"]
     assert 'href="README.md"' in readmes["README.zh-CN.md"]
     for relative in (
+        "assets/kingsoft-logo.png",
         "assets/danks-overall-architecture.png",
         "assets/structure-aware-delayed-outcomes.png",
     ):
@@ -73,6 +74,10 @@ def test_readme_visual_assets_are_versioned() -> None:
         assert path.is_file()
         assert path.stat().st_size > 0
         assert all(relative in readme for readme in readmes.values())
+
+    for readme in readmes.values():
+        assert "Kingsoft AI Product Center" in readme
+        assert 'href="https://www.kingsoft.com/"' in readme
 
 
 def test_v3_native_build_uses_one_installed_command() -> None:
