@@ -67,6 +67,9 @@ def test_readme_visual_assets_are_versioned() -> None:
     assert 'href="README.md"' in readmes["README.zh-CN.md"]
     for relative in (
         "assets/kingsoft-logo.png",
+        "assets/danks-online-demo.png",
+        "assets/danks-online-demo.gif",
+        "assets/danks-social-preview.png",
         "assets/danks-overall-architecture.png",
         "assets/structure-aware-delayed-outcomes.png",
     ):
@@ -80,6 +83,10 @@ def test_readme_visual_assets_are_versioned() -> None:
         assert 'href="https://www.kingsoft.com/"' in readme
         assert 'src="assets/kingsoft-logo.png" alt=' in readme
         assert 'width="720"' in readme
+        assert 'href="https://calixlin.com/CardKS/"' in readme
+
+    assert "Online demo" in readmes["README.md"]
+    assert "在线体验" in readmes["README.zh-CN.md"]
 
     assert (
         '<h1 align="center">DanKS: State-of-the-art GuanDan AI</h1>'

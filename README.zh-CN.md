@@ -26,6 +26,7 @@
 </p>
 
 <p align="center">
+  <a href="https://calixlin.com/CardKS/">在线体验</a> ·
   <a href="#快速开始">快速开始</a> ·
   <a href="#总体架构">总体架构</a> ·
   <a href="#三代技术路线">三代路线</a> ·
@@ -34,6 +35,39 @@
 </p>
 
 这就是 DanKS——为攻克四人组队掼蛋而生的 SOTA 级智能体。一个仓库完整揭秘三代技术跃迁：从结构化召回、学习型候选选择，到基于 PPO 训练的记忆感知策略——全程由共享的 108 张牌掼蛋规则引擎驱动。
+
+## 在线体验
+
+<p align="center">
+  <a href="https://calixlin.com/CardKS/">
+    <img
+      src="assets/danks-online-demo.png"
+      alt="CardKS 在线掼蛋牌桌：一名人类玩家与三名 AI 玩家对局"
+      width="1100"
+    />
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://calixlin.com/CardKS/"><strong>▶ 在浏览器中挑战 DanKS</strong></a>
+  <br />
+  <sub>无需本地安装 · 1 个人类座位与 3 个 Bot 座位 · 支持中英文界面</sub>
+</p>
+
+<details>
+  <summary>查看简短对局预览</summary>
+  <p align="center">
+    <a href="https://calixlin.com/CardKS/">
+      <img
+        src="assets/danks-online-demo.gif"
+        alt="CardKS 在线掼蛋 Demo 的动态对局预览"
+        width="760"
+      />
+    </a>
+    <br />
+    <sub><a href="assets/danks-social-preview.png">下载 1280 × 640 社交分享图</a></sub>
+  </p>
+</details>
 
 ## 快速开始
 
@@ -105,7 +139,7 @@ V1、V2、V3 分别提供独立安装包。为每个版本创建独立环境，�
 
 ```text
 DanKS/
-├── assets/             # 品牌标识、架构图与决策示意图
+├── assets/             # 品牌标识、在线 Demo、架构图与决策示意图
 ├── versions/
 │   ├── v1/DanKS/       # 结构化检索 + NumPy 选择器
 │   ├── v2/DanKS/       # 结构化检索 + ONNX 选择器

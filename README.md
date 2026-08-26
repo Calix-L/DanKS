@@ -26,6 +26,7 @@
 </p>
 
 <p align="center">
+  <a href="https://calixlin.com/CardKS/">Play online</a> ·
   <a href="#quick-start">Quick start</a> ·
   <a href="#overall-architecture">Architecture</a> ·
   <a href="#generations">Generations</a> ·
@@ -34,6 +35,39 @@
 </p>
 
 Meet DanKS—the state-of-the-art AI built to master four-player, partnership-based GuanDan. This single repository reveals its complete three-generation evolution: from structural retrieval and learned candidate selection to a memory-aware policy trained with PPO—all powered by a shared 108-card GuanDan rules engine.
+
+## Online demo
+
+<p align="center">
+  <a href="https://calixlin.com/CardKS/">
+    <img
+      src="assets/danks-online-demo.png"
+      alt="CardKS online GuanDan table with one human player and three AI players"
+      width="1100"
+    />
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://calixlin.com/CardKS/"><strong>▶ Challenge DanKS in your browser</strong></a>
+  <br />
+  <sub>No local setup · one human seat and three bot seats · Chinese and English interface</sub>
+</p>
+
+<details>
+  <summary>Watch a short gameplay preview</summary>
+  <p align="center">
+    <a href="https://calixlin.com/CardKS/">
+      <img
+        src="assets/danks-online-demo.gif"
+        alt="Short animated preview of the CardKS online GuanDan demo"
+        width="760"
+      />
+    </a>
+    <br />
+    <sub><a href="assets/danks-social-preview.png">Download the 1280 × 640 social preview</a></sub>
+  </p>
+</details>
 
 ## Quick start
 
@@ -105,7 +139,7 @@ The illustration captures the central idea behind long-horizon credit assignment
 
 ```text
 DanKS/
-├── assets/             # brand, architecture, and decision-making figures
+├── assets/             # brand, online demo, architecture, and decision figures
 ├── versions/
 │   ├── v1/DanKS/       # retrieval + NumPy selector
 │   ├── v2/DanKS/       # retrieval + ONNX selector
