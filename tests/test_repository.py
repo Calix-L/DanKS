@@ -69,6 +69,7 @@ def test_readme_visual_assets_are_versioned() -> None:
         "assets/kingsoft-logo.png",
         "assets/danks-online-demo.png",
         "assets/danks-online-demo.gif",
+        "assets/danks-promotional-hero-v2.png",
         "assets/danks-social-preview.png",
         "assets/danks-overall-architecture.png",
         "assets/structure-aware-delayed-outcomes.png",
