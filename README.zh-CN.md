@@ -15,10 +15,8 @@
 
 <p align="center">
   <a href="https://www.kingsoft.com/">
-    <img src="assets/kingsoft-logo.png" alt="金山软件" width="320">
+    <img src="assets/kingsoft-logo.png" alt="金山 AI Product Center" width="720">
   </a>
-  <br>
-  <strong>Kingsoft AI Product Center</strong>
 </p>
 
 <h1 align="center">DanKS：SOTA 级掼蛋智能体</h1>

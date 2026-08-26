@@ -15,10 +15,8 @@
 
 <p align="center">
   <a href="https://www.kingsoft.com/">
-    <img src="assets/kingsoft-logo.png" alt="Kingsoft" width="320">
+    <img src="assets/kingsoft-logo.png" alt="Kingsoft AI Product Center" width="720">
   </a>
-  <br>
-  <strong>Kingsoft AI Product Center</strong>
 </p>
 
 <h1 align="center">DanKS: State-of-the-art GuanDan AI</h1>
