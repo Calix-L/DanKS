@@ -79,7 +79,7 @@ def test_readme_visual_assets_are_versioned() -> None:
         assert "Kingsoft AI Product Center" in readme
         assert 'href="https://www.kingsoft.com/"' in readme
         assert 'src="assets/kingsoft-logo.png" alt=' in readme
-        assert 'width="320"' in readme
+        assert 'width="720"' in readme
 
     assert (
         '<h1 align="center">DanKS: State-of-the-art GuanDan AI</h1>'
