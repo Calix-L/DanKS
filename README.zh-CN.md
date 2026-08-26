@@ -54,23 +54,22 @@
   <sub>无需本地安装 · 1 个人类座位与 3 个 Bot 座位 · 支持中英文界面</sub>
 </p>
 
-<details>
-  <summary>查看简短对局预览</summary>
-  <p align="center">
-    <a href="https://calixlin.com/CardKS/">
-      <img
-        src="assets/danks-online-demo.gif"
-        alt="CardKS 在线掼蛋 Demo 的动态对局预览"
-        width="760"
-      />
-    </a>
-    <br />
-    <sub>
-      <a href="assets/danks-online-demo.png">查看高清真实牌桌</a> ·
-      <a href="assets/danks-social-preview.png">下载 1280 × 640 社交分享图</a>
-    </sub>
-  </p>
-</details>
+<p align="center"><strong>观看简短对局预览</strong></p>
+
+<p align="center">
+  <a href="https://calixlin.com/CardKS/">
+    <img
+      src="assets/danks-online-demo.gif"
+      alt="CardKS 在线掼蛋 Demo 的动态对局预览"
+      width="760"
+    />
+  </a>
+  <br />
+  <sub>
+    <a href="assets/danks-online-demo.png">查看高清真实牌桌</a> ·
+    <a href="assets/danks-social-preview.png">下载 1280 × 640 社交分享图</a>
+  </sub>
+</p>
 
 ## 快速开始
 

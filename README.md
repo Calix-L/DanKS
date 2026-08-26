@@ -54,23 +54,22 @@ Meet DanKS—the state-of-the-art AI built to master four-player, partnership-ba
   <sub>No local setup · one human seat and three bot seats · Chinese and English interface</sub>
 </p>
 
-<details>
-  <summary>Watch a short gameplay preview</summary>
-  <p align="center">
-    <a href="https://calixlin.com/CardKS/">
-      <img
-        src="assets/danks-online-demo.gif"
-        alt="Short animated preview of the CardKS online GuanDan demo"
-        width="760"
-      />
-    </a>
-    <br />
-    <sub>
-      <a href="assets/danks-online-demo.png">View the full-resolution live table</a> ·
-      <a href="assets/danks-social-preview.png">Download the 1280 × 640 social preview</a>
-    </sub>
-  </p>
-</details>
+<p align="center"><strong>Watch a short gameplay preview</strong></p>
+
+<p align="center">
+  <a href="https://calixlin.com/CardKS/">
+    <img
+      src="assets/danks-online-demo.gif"
+      alt="Short animated preview of the CardKS online GuanDan demo"
+      width="760"
+    />
+  </a>
+  <br />
+  <sub>
+    <a href="assets/danks-online-demo.png">View the full-resolution live table</a> ·
+    <a href="assets/danks-social-preview.png">Download the 1280 × 640 social preview</a>
+  </sub>
+</p>
 
 ## Quick start
 
