@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  🇨🇳 Mainland China mirror: <a href="https://atomgit.com/Calix_Lin/DanKS">DanKS is hosted on AtomGit</a> for faster access, cloning, and release downloads.
+  Repositories: <a href="https://github.com/Calix-L/DanKS">GitHub (primary)</a> · <a href="https://atomgit.com/Calix_Lin/DanKS">AtomGit (mainland China mirror)</a>
 </p>
 
 <p align="center">

@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  🇨🇳 国内镜像：<a href="https://atomgit.com/Calix_Lin/DanKS">DanKS 由 AtomGit 托管</a>，方便国内用户访问、克隆与下载 Release。
+  项目仓库：<a href="https://github.com/Calix-L/DanKS">GitHub 主仓</a> · <a href="https://atomgit.com/Calix_Lin/DanKS">AtomGit 国内镜像</a>
 </p>
 
 <p align="center">
