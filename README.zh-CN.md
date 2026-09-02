@@ -9,9 +9,12 @@
 <p align="center">
   <a href="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml/badge.svg"></a>
   <a href="https://github.com/Calix-L/DanKS/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/Calix-L/DanKS"></a>
-  <a href="https://atomgit.com/Calix_Lin/DanKS"><img alt="AtomGit" src="https://img.shields.io/badge/AtomGit-DanKS-C71D23?logo=git&logoColor=white"></a>
   <a href="https://www.python.org/"><img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white"></a>
   <a href="LICENSE"><img alt="Apache-2.0 许可证" src="https://img.shields.io/badge/license-Apache--2.0-D22128"></a>
+</p>
+
+<p align="center">
+  🇨🇳 国内镜像：<a href="https://atomgit.com/Calix_Lin/DanKS">DanKS 由 AtomGit 托管</a>，方便国内用户访问、克隆与下载 Release。
 </p>
 
 <p align="center">
