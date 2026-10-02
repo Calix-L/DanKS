@@ -353,7 +353,7 @@ V3 训练实现位于 [`versions/v3/DanKS/training`](versions/v3/DanKS/training)
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date&theme=dark" />
       <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date" />
-      <img alt="DanKS Star 增长趋势图" src="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date" width="800" />
+      <img alt="DanKS Star 增长趋势图" src="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date" width="640" />
     </picture>
   </a>
 </p>
