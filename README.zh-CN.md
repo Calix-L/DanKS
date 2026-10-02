@@ -346,6 +346,18 @@ V3 训练实现位于 [`versions/v3/DanKS/training`](versions/v3/DanKS/training)
 - 召回和队伍信念辅助路径；
 - 感知 CPU、CUDA 和 NPU 的加速器辅助工具。
 
+## Star 增长趋势
+
+<p align="center">
+  <a href="https://www.star-history.com/#Calix-L/DanKS&Date">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date&theme=dark" />
+      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date" />
+      <img alt="DanKS Star 增长趋势图" src="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date" width="800" />
+    </picture>
+  </a>
+</p>
+
 ## 参与贡献
 
 欢迎提交缺陷修复、测试、可移植性改进与算法创新。参与方式见[贡献指南](.github/CONTRIBUTING.md)。

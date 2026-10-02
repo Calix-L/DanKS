@@ -346,6 +346,18 @@ The V3 training implementation lives in [`versions/v3/DanKS/training`](versions/
 - recall and team-belief auxiliary paths;
 - CPU, CUDA, and NPU-aware accelerator helpers.
 
+## Star history
+
+<p align="center">
+  <a href="https://www.star-history.com/#Calix-L/DanKS&Date">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date&theme=dark" />
+      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date" />
+      <img alt="DanKS star history chart" src="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date" width="800" />
+    </picture>
+  </a>
+</p>
+
 ## Contributing
 
 Bug fixes, tests, portability improvements, and algorithmic advances are welcome. See the [contribution guide](.github/CONTRIBUTING.md) to get started.
