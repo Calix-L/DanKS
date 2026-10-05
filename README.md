@@ -3,365 +3,196 @@
 </p>
 
 <p align="center">
-  👋 Hi, everyone! DanKS is a GuanDan AI project initiated by the <strong>Kingsoft AI Product Center</strong>.
-</p>
-
-<p align="center">
-  <a href="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml/badge.svg"></a>
-  <a href="https://github.com/Calix-L/DanKS/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/Calix-L/DanKS"></a>
-  <a href="https://www.python.org/"><img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white"></a>
-  <a href="LICENSE"><img alt="Apache-2.0 license" src="https://img.shields.io/badge/license-Apache--2.0-D22128"></a>
-</p>
-
-<p align="center">
-  Repositories: <a href="https://github.com/Calix-L/DanKS">GitHub (primary)</a> · <a href="https://atomgit.com/Calix_Lin/DanKS">AtomGit (mainland China mirror)</a>
-</p>
-
-<p align="center">
   <a href="https://www.kingsoft.com/">
-    <img src="assets/kingsoft-logo.png" alt="Kingsoft AI Product Center" width="720">
+    <img src="assets/kingsoft-logo.png" alt="Kingsoft AI Product Center" width="420">
   </a>
 </p>
 
 <h1 align="center">DanKS: State-of-the-art GuanDan AI</h1>
 
 <p align="center">
-  <strong>Three complete generations of code</strong>
+  <strong>Three complete generations of code</strong><br>
+  PPO learning · V3Pro decision refinement · Two generations of KSPlay GuanDan Service
 </p>
 
 <p align="center">
-  <a href="https://calixlin.com/CardKS/">Play online</a> ·
-  <a href="#quick-start">Quick start</a> ·
-  <a href="#overall-architecture">Architecture</a> ·
-  <a href="#generations">Generations</a> ·
-  <a href="#train-v3-with-ppo">Training</a> ·
-  <a href="https://github.com/Calix-L/CardKS">CardKS paper hub</a>
+  <a href="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/Calix-L/DanKS/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/Calix-L/DanKS?style=flat"></a>
+  <a href="LICENSE"><img alt="Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-D22128"></a>
 </p>
 
-Meet DanKS—the state-of-the-art AI built to master four-player, partnership-based GuanDan. This single repository reveals its complete three-generation evolution: from structural retrieval and learned candidate selection to a memory-aware policy trained with PPO—all powered by a shared 108-card GuanDan rules engine.
+<p align="center">
+  <a href="https://calixlin.com/CardKS/"><strong>Play online ↗</strong></a> ·
+  <a href="#how-danks-thinks">Architecture</a> ·
+  <a href="#ksplay-guandan-service">Web services</a> ·
+  <a href="#human-guandan-data">Dataset</a> ·
+  <a href="#get-started">Get started</a> ·
+  <a href="https://github.com/Calix-L/CardKS">Research</a>
+</p>
 
-## Online demo
+<p align="center"><strong>Not just a stronger move. A better plan for the rest of the hand.</strong></p>
+
+GuanDan is a game of partnership, hidden information, and long-term control. The cheapest card to play now may break your best combination; a pass may give your teammate the lead.
+
+**DanKS learns to choose with the rest of the hand in mind.** Developed by the **Kingsoft AI Product Center**, it brings structure-aware retrieval and PPO policy learning together—and now pairs the AI codebase with two generations of an open-source web game service. Study the agent, train a policy, build your own table, or simply sit down and play.
 
 <p align="center">
   <a href="https://calixlin.com/CardKS/">
-    <img
-      src="assets/danks-promotional-hero-v2.png"
-      alt="DanKS promotional hero with the Kingsoft AI Product Center logo and online GuanDan table"
-      width="1100"
-    />
+    <img src="assets/danks-promotional-hero-v2.png" alt="DanKS: GuanDan AI from research to a playable browser table" width="1000">
   </a>
 </p>
 
-<p align="center">
-  <a href="https://calixlin.com/CardKS/"><strong>▶ Challenge DanKS in your browser</strong></a>
-  <br />
-  <sub>No local setup · one human seat and three bot seats · Chinese and English interface</sub>
-</p>
+## Online demo
+
+**Take your seat. Challenge DanKS. No installation required.**
+
+[Open the online table →](https://calixlin.com/CardKS/)
+
+One human player, one AI teammate, and two AI opponents. Play through your browser with a Chinese or English interface.
 
 <p align="center"><strong>Watch a short gameplay preview</strong></p>
 
 <p align="center">
   <a href="https://calixlin.com/CardKS/">
-    <img
-      src="assets/danks-online-demo.gif"
-      alt="Short animated preview of the CardKS online GuanDan demo"
-      width="760"
-    />
-  </a>
-  <br />
-  <sub>
-    <a href="assets/danks-online-demo.png">View the full-resolution live table</a> ·
-    <a href="assets/danks-social-preview.png">Download the 1280 × 640 social preview</a>
-  </sub>
+    <img src="assets/danks-online-demo.gif" alt="Animated gameplay preview of the GuanDan online demo" width="760">
+  </a><br>
+  <sub><a href="assets/danks-online-demo.png">Full-size table preview</a> · <a href="assets/danks-social-preview.png">Social preview</a></sub>
 </p>
 
-## Quick start
+## How DanKS thinks
 
-The shortest runnable path uses V3 on CPU. Commands below assume Python 3.11 and a POSIX shell:
+**Preserve useful options. Learn when to use them.**
+
+![Information state, structured candidate retrieval, Actor-Critic selection, and PPO self-play](assets/danks-overall-architecture.png)
+
+1. **Understand the position.** Encode the visible hand, public history, legal actions, and team context.
+2. **Look beyond the current play.** Apply candidate actions and examine the combinations left in the residual hand.
+3. **Choose from a compact, meaningful set.** Rank structured candidates with a state- and candidate-conditioned Actor-Critic.
+4. **Learn from what happens next.** PPO and GAE connect a decision to its later consequences.
+
+Retrieval identifies useful options; the learned policy decides which option fits the moment.
+
+<p align="center">
+  <a href="assets/structure-aware-delayed-outcomes.png">
+    <img src="assets/structure-aware-delayed-outcomes.png" alt="Playing a low card, playing a joker, and passing preserve different future options" width="300">
+  </a><br>
+  <sub>Same hand. Three choices. Different futures. Click to explore the decision example.</sub>
+</p>
+
+## Three generations. One evolving idea.
+
+| AI generation | Focus | Explore |
+| --- | --- | --- |
+| **V1** | Structural retrieval and a NumPy candidate selector | [Retrieval ranker](versions/v1/DanKS/retrieval/ranker.py) |
+| **V2** | Expanded candidate generation and an ONNX selector | [Action generator](versions/v2/DanKS/retrieval/action_generator.py) |
+| **V3** | Memory-aware neural selection, team-belief features, and PPO learning | [Policy network](versions/v3/DanKS/training/model.py) · [PPO training](versions/v3/DanKS/training) |
+| **V3Pro** | V3 inference refinement: asset protection, equivalent-play rules, and verified endgame search | [Policy](versions/v3pro/DanKSPro/policy.py) · [Integration guide](versions/v3pro/USAGE.md) |
+
+V3Pro extends V3 as the separate `DanKSPro` package. It refines inference without replacing the network or retraining it. Endgame refinement covers admitted positions with at most 16 remaining cards across the table; for 11–16 cards, hidden-card allocations are additionally capped at 128.
+
+## KSPlay GuanDan Service
+
+**The AI is only half the experience. Now the table is open source, too.**
+
+Both Service generations include the browser frontend, room backend, GuanDan referee, full source-built hand arrangement, and a standard external AI interface.
+
+- **Service V1 — the original table.** A compact starting point with the classic CardKS experience.
+- **Service V2 — the redesigned table.** A fixed-aspect desktop and mobile-landscape layout, modular interactions, and improved session recovery.
+
+[Explore Service V1 →](services/v1/README.md) · [Explore Service V2 →](services/v2/README.md)
+
+The service versions describe the **web platform**, independently of the AI generations. Both run locally with example rule-based bots; connect your own model through the [HTTP AI interface](services/v2/docs/AI_INTERFACE.md). Trained weights and private AI serving infrastructure are not included.
+
+### Build on it
+
+| Your idea | Start here |
+| --- | --- |
+| Redesign the table or card interactions | [V2 frontend](services/v2/web) |
+| Extend rooms, game flow, or realtime updates | [V2 backend](services/v2/backend) |
+| Customize hand arrangement | [Go arranger](services/v2/arranger) |
+| Connect a new AI | [AI request/response contract](services/v2/docs/AI_INTERFACE.md) |
+| Find the right module to change | [Service development guide](services/v2/docs/DEVELOPMENT.md) |
+
+## Human GuanDan data
+
+**Study complete matches, not just isolated moves.**
+
+The public [KSCB GuanDan dataset](https://github.com/Calix-L/CardKS/blob/main/KSCB/data/guandan_matches.jsonl.gz), maintained in CardKS, contains **899 complete promotion matches**, **10,218 rounds**, and **840,194 decision points**. Ordered round events make it useful for studying human decisions, partnership play, and hand structure over time.
+
+[Explore the data →](datasets/README.md) · [Source format →](https://github.com/Calix-L/CardKS/blob/main/KSCB/README.md)
+
+The `datasets/` directory links to the original release and provides download and reading examples. Data stays in CardKS; DanKS does not duplicate it. These are match records, not precomputed PPO inputs.
+
+## Get started
+
+### Play your own local table
+
+Use **Python 3.12 and Go 1.23+**. From a POSIX shell:
 
 ```bash
 git clone https://github.com/Calix-L/DanKS.git
-cd DanKS
-python3.11 -m venv .venv
+cd DanKS/services/v2
+python3.12 -m venv .venv
 source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e versions/v3
-python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
-python examples/retrieval_quickstart.py --version v3
-python examples/v3_model_smoke.py
+python -m pip install -r requirements.txt
+python scripts/build_arranger.py
+python run.py
 ```
 
-Use `.venv\Scripts\Activate.ps1` on Windows PowerShell. CUDA, Ascend NPU, V1/V2, native-kernel, and development setups are documented in [Installation reference](#installation-reference).
+Open **http://127.0.0.1:8000/solo**, create a table, and click Ready. Three example bots fill the other seats. Ctrl+C stops the service.
 
-## Overall architecture
+On Windows PowerShell, create the environment with `py -3.12 -m venv .venv` and activate it with `.venv\Scripts\Activate.ps1`. To use the original table, choose `services/v1` instead.
 
-![Overall DanKS pipeline shared by the three versions, from GuanDan information state and structured candidate retrieval to actor-critic scoring and PPO self-play](assets/danks-overall-architecture.png)
+### Explore the AI
 
-DanKS turns a large, structured action space into a compact policy decision:
-
-1. **Encode the information state.** The policy receives the visible hand, public action history, legal actions, and seat-aware game context.
-2. **Retrieve structured candidates.** Budgeted decomposition search produces representative plays and summarizes their length, pairs, sequences, suits, gaps, and remaining-hand structure.
-3. **Score a bounded Top-K set.** A shared encoder combines state, candidate, and structural features; the actor ranks valid candidates while the critic estimates state value.
-4. **Learn from self-play.** Trajectories provide GAE advantages for clipped PPO updates, improving the selector without expanding the inference-time candidate budget.
-
-This shared architecture spans all three generations of DanKS, covering the complete path from information state and structured candidate retrieval to policy/value estimation and self-play optimization. Each generation advances the features, retrieval strategy, and policy implementation within this framework.
-
-## Why DanKS?
-
-- **State-of-the-art playing strength** — DanKS achieves leading results against strong learning-based and rule-based GuanDan baselines under the complete promotion-match protocol; see the [CardKS main results](https://github.com/Calix-L/CardKS#main-results).
-- **A clear three-generation codebase** — V1, V2, and V3 expose the full technical progression, making each major algorithmic advance easy to read, run, and compare.
-- **The complete pipeline is included** — the repository covers the GuanDan rules engine, legal-action generation, structured retrieval, state and candidate features, policy/value models, PPO training, checkpoint handling, native acceleration, and runnable inference examples.
-
-## Generations
-
-| Version | Main idea | What it adds | Entry point |
-| --- | --- | --- | --- |
-| **V1** | Structural retrieval | Candidate scoring and a NumPy selector | [`ranker.py`](versions/v1/DanKS/retrieval/ranker.py) |
-| **V2** | Learned selection | Broader action generation and an ONNX selector | [`action_generator.py`](versions/v2/DanKS/retrieval/action_generator.py) |
-| **V3** | Memory-aware policy learning | Card memory, candidate coverage, recall, team belief, and PPO | [`model.py`](versions/v3/DanKS/training/model.py) |
-| **V3Pro** | Inference-time refinement of V3 | Asset Safe Gate, equivalent-play rules, and verified endgame search | [`policy.py`](versions/v3pro/DanKSPro/policy.py) |
-
-V1, V2, and V3 are available as separate packages. Give each generation its own environment to keep the `DanKS` import, feature schema, and checkpoint format aligned.
-
-## V3Pro · refine decisions without retraining
-
-V3Pro is an optional **source-only extension of V3**, not a fourth network or a replacement training pipeline. It installs alongside V3 as `DanKSPro`; the original V3 model, features and PPO implementation remain in `DanKS`.
-
-**Decision order:** retrieval → asset mask → frozen V3 → equivalent-play rules → verified endgame refinement.
-
-| Component | What it does | Deliberate limits |
-| --- | --- | --- |
-| [Asset Safe Gate](versions/v3pro/DanKSPro/safety.py) | Masks ordinary candidates when a same-type, same-strength alternative spends fewer wildcards or breaks fewer natural bombs, without worsening the guarded metrics. | Not a wildcard ban. Preserves the original mask for immediate finishes or opponents holding 1–2 cards; it does not blanket-ban matching singles/pairs. |
-| [Equivalent-play rules](versions/v3pro/DanKSPro/rules.py) | Keeps the physical triple and swaps in a smaller pair only when the residual partition is equivalent; conservatively selects a smaller sufficient follow-bomb. | No arbitrary triple replacement, lead-bomb substitution or structural sacrifice. |
-| [Endgame search](versions/v3pro/DanKSPro/endgame/runtime.py) | Combines public hidden-card enumeration, frozen-policy continuation, exact minimax, complete-proof tie handling and isolated candidate recovery. | At most 16 total remaining cards; 11–16 requires at most 128 hidden allocations. Incomplete verification keeps the base action. |
-
-### Try V3Pro
-
-Use Python 3.11+ and a V3 environment with PyTorch installed as above:
+In a separate **Python 3.11+** environment, run from the repository root:
 
 ```bash
+python3.11 -m venv .venv-ai
+source .venv-ai/bin/activate
 python -m pip install -e . -e versions/v3 -e versions/v3pro
+python -m pip install torch==2.8.0
+python examples/retrieval_quickstart.py --version v3
+python examples/v3_model_smoke.py
 python examples/v3pro_smoke.py
 ```
 
-The smoke example uses a **randomly initialized model and synthetic position** to demonstrate wiring and reversible search, not playing strength. Trained main/expert weights, private datasets and internal evaluation reports are **not distributed**.
+The examples exercise retrieval, network inference, and V3Pro integration using synthetic inputs; model smoke runs use random initialization. For CPU/CUDA/NPU setup, V1/V2 installation, and PPO learner commands, follow the [developer guide](.github/guides/DEVELOPMENT.md). For optional Linux/macOS C++ retrieval acceleration, run `danks-build-native` in your V3 environment.
 
-```python
-from DanKSPro import ProPolicy
-
-policy = ProPolicy.from_checkpoints(
-    "checkpoints/main.pt",
-    specialist="checkpoints/endgame.pt",
-    extended_specialist="checkpoints/endgame_extended.pt",
-)
-action_id, record = policy.act(hand, context, legal_actions, history=public_history)
-```
-
-The checkpoint names above are caller-owned paths, not included files. Experts must identify the supplied main checkpoint by SHA-256. For legacy checkpoints requiring Python pickle, pass `trusted=True` **only for files you trust**. Without experts, ordinary gate/rule-enhanced inference remains available, but learned endgame refinement explicitly abstains.
-
-For search, call `policy.refine_endgame(...)` with the record, a reconstructed public root, the actor's hand, all played cards and absolute-seat remaining counts; see the [executable example](examples/v3pro_smoke.py). Ordinary retrieval context counts are **relative to the actor**, while history seats and search counts are **absolute**. Supply the complete public round history: it drives both card-memory and sequence features and is copied into the record. The adapter validates the decision context, played-card history and legal-action identity before translating IDs to engine positions. Search may examine non-retrieved legal alternatives, but never resurrects an explicitly masked action.
-
-The search port follows the r13 algorithm: full legal coverage within admitted routes, strict verification, complete exact-tie/continuation checks for 11–16 cards, and isolated recovery after an incomplete joint proof. It does **not** include the later r14 experiment. Enumerated-world minimax is not a strategy-fusion-free imperfect-information solution. Budgets are node limits, **not a wall-clock deadline**; this source release is not a qualified low-latency serving package and does not claim private evaluation results apply to a deployment.
-
-## Why delayed outcomes matter
-
-<p align="center">
-  <img
-    src="assets/structure-aware-delayed-outcomes.png"
-    alt="Three candidate actions from the same GuanDan state leading to different delayed structural outcomes"
-    width="620"
-  />
-</p>
-
-A move that looks cheap now can destroy the only useful combination left in the hand; spending a powerful card can preserve structure and create a cleaner future exit. DanKS separates the responsibilities needed to learn that distinction:
-
-- **Retrieval** organizes the combinatorial action space into a strategically varied candidate set.
-- **Structure features** expose what each candidate consumes, preserves, or leaves behind.
-- **The actor** scores the legal candidates available in the current state.
-- **The critic and GAE** assign credit from later trajectory outcomes, allowing PPO to favor actions whose value appears several decisions later.
-
-The illustration captures the central idea behind long-horizon credit assignment: V3 scores retrieved candidates directly and learns their long-term value from subsequent trajectories.
-
-## Repository layout
+## Inside the repository
 
 ```text
 DanKS/
-├── assets/             # brand, online demo, architecture, and decision figures
-├── versions/
-│   ├── v1/DanKS/       # retrieval + NumPy selector
-│   ├── v2/DanKS/       # retrieval + ONNX selector
-│   ├── v3/DanKS/       # retrieval + neural policy + PPO
-│   └── v3pro/DanKSPro/ # optional inference gate, rules and endgame search
-├── guandan/engine/     # shared Python rules engine
-├── examples/           # executable engine, retrieval, and model smoke runs
-├── tests/              # repository and engine checks
-├── README.zh-CN.md     # complete Simplified Chinese guide
-├── pyproject.toml
-├── LICENSE
-└── NOTICE
+├── versions/           # AI: V1, V2, V3, and the V3Pro extension
+├── services/
+│   ├── v1/             # KSPlay GuanDan Service · original table
+│   └── v2/             # KSPlay GuanDan Service · redesigned table
+├── guandan/engine/     # Shared AI-side GuanDan rules engine
+├── examples/           # Executable engine, retrieval, model, and PPO examples
+├── datasets/           # Public GuanDan data links and reading guide
+├── assets/             # Brand, gameplay preview, and architecture illustrations
+└── .github/            # Contribution and developer guides, CI
 ```
 
-## Installation reference
+Each Service is independently runnable and keeps its own rules and hand-arrangement modules. The AI generations remain separate packages; use a dedicated environment for each generation.
 
-The shared engine and V3 support Python 3.10 and newer; V1 and V2 support Python 3.11 and newer. All commands below run from the repository root. A dedicated virtual environment for each generation keeps the `DanKS` namespace aligned with its features and model format.
+## Join the project
 
-### Choose a package
+Build a new agent. Create a better table. Explore a new idea in partnership play.
 
-| Goal | Install command | Notes |
-| --- | --- | --- |
-| Shared rules engine and tests | `python -m pip install -e '.[dev]'` | Rules engine and repository test suite. |
-| V1 · structural retrieval | `python -m pip install -e versions/v1` | NumPy selector; Python 3.11+. |
-| V2 · learned selection | `python -m pip install -e versions/v2` | ONNX selector; Python 3.11+. |
-| V3 · PPO policy | `python -m pip install -e versions/v3` | Install one PyTorch build below. |
+Contributions to algorithms, UI, portability, and documentation are welcome. Start with the [contribution guide](.github/CONTRIBUTING.md) or [open an issue](https://github.com/Calix-L/DanKS/issues).
 
-### Select one V3 PyTorch build
+**Repositories:** [GitHub](https://github.com/Calix-L/DanKS) · [AtomGit mirror](https://atomgit.com/Calix_Lin/DanKS)<br>
+**Research:** [CardKS](https://github.com/Calix-L/CardKS)<br>
+**License:** [Apache-2.0](LICENSE) · [Notices](NOTICE)
 
-| Target | Command |
-| --- | --- |
-| Linux / Windows CPU | `python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu` |
-| NVIDIA CUDA 12.8 | `python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128` |
-| macOS CPU | `python -m pip install torch==2.8.0` |
-
-Use the [official PyTorch installation matrix](https://pytorch.org/get-started/previous-versions/) when your platform requires a different wheel. Check the resulting installation with `python examples/v3_model_smoke.py` and inspect all learner options with `python -m DanKS.training.train_ppo --help`.
-
-<details>
-<summary><strong>Ascend NPU setup</strong></summary>
-
-The Ascend runtime works with matching host drivers and CANN releases. Install the matching CANN release, followed by the vendor-provided PyTorch and `torch_npu` wheels. A validated combination is recorded in [`requirements-training-npu.txt`](versions/v3/DanKS/environment/requirements-training-npu.txt).
-
-```bash
-source /usr/local/Ascend/cann/set_env.sh
-python3.10 -m venv --system-site-packages .venv-v3-npu
-source .venv-v3-npu/bin/activate
-python -m pip install -e versions/v3
-python -m pip install --no-deps \
-  /path/to/torch-2.7.1+cpu-cp310-cp310-manylinux_2_28_x86_64.whl \
-  /path/to/torch_npu-2.7.1.post2-cp310-cp310-manylinux_2_28_x86_64.whl
-export TORCH_DEVICE_BACKEND_AUTOLOAD=0
-python -m DanKS.training.train_ppo --help
-```
-
-Keep this virtual environment dedicated to Ascend NPU. For other driver, CANN, architecture, or Python combinations, select the corresponding vendor wheels.
-
-</details>
-
-<details>
-<summary><strong>Validated configurations</strong></summary>
-
-| Target | System | Python | Framework | Key packages |
-| --- | --- | --- | --- | --- |
-| CI and shared engine | Linux | 3.10, 3.12 | — | pytest 7+ |
-| V1 | CPU | 3.11+ | NumPy selector | NumPy 2.4.6 |
-| V2 | CPU | 3.11+ | ONNX selector | NumPy 2.4.6, ONNX Runtime 1.27.0 |
-| V3 NVIDIA server | H100, driver 575.57.08 | 3.11.14 | PyTorch 2.8.0 + CUDA 12.8 | NumPy 2.4.6, pybind11 3.0.4 |
-| V3 Ascend server | Ubuntu 22.04.5, 910B2C, driver 24.1.0, CANN 8.5.0 | 3.10.12 | PyTorch 2.7.1 + torch_npu 2.7.1.post2 | NumPy 1.26.0, pybind11 3.0.4 |
-
-These are known-good reference configurations; DanKS also runs on other compatible environments.
-
-</details>
-
-### Optional V3 C++ acceleration
-
-The optimized retrieval kernels support Linux and macOS with a C++17 compiler, Python development headers, and `pybind11`; Windows automatically selects the Python implementation. Install the platform toolchain once:
-
-```bash
-# Ubuntu/Debian
-sudo apt-get update && sudo apt-get install -y build-essential python3-dev
-
-# macOS (run once)
-xcode-select --install
-```
-
-Then build and verify both kernels with one command in the active V3 environment:
-
-```bash
-danks-build-native
-```
-
-The command locates the installed V3 source tree automatically and finishes with `cover=True, actor=True`. Linux builds enable host-specific compiler optimization; macOS delegates architecture selection to the Python toolchain and supports universal2 builds. Run it again after changing Python versions or CPU architecture. Windows automatically selects the Python implementation.
-
-### Development checks
-
-```bash
-python -m pip install -e '.[dev]'
-python -m pytest -q
-```
-
-## Run the examples
-
-The examples cover the rules engine, structural retrieval, a full network forward pass, and a PPO update, all directly runnable from source:
-
-```bash
-# Shared rules engine; available from the base environment.
-python examples/engine_quickstart.py
-
-# Structural retrieval; run inside a matching V1, V2, or V3 environment.
-python examples/retrieval_quickstart.py --version v3
-
-# Full V3 network forward pass; run inside a V3 environment with PyTorch.
-python examples/v3_model_smoke.py
-
-# One synthetic optimizer update through the V3 PPO learner.
-python examples/v3_ppo_smoke.py
-```
-
-Each command includes self-checking assertions for a quick confirmation that the environment and code path are working.
-
-## Shared game engine
-
-The engine can be used independently of the AI generations:
-
-```python
-from guandan import Environment
-
-game = Environment(first_player=0)
-for seat in range(4):
-    game.add_player(f"player-{seat}", seat)
-
-messages = game.start()
-assert all(len(player.hand_cards) == 27 for player in game.players)
-```
-
-The public API also exports `Move` and `Moves` for move representation and legal-action generation.
-
-## Train V3 with PPO
-
-After activating and verifying a V3 environment, select the rollout and checkpoint output paths:
-
-```bash
-python -m DanKS.training.train_ppo \
-  --rollout /path/to/rollout.npz \
-  --output /path/to/checkpoint.pt \
-  --device auto
-```
-
-The learner expects rollout arrays for state, candidates, masks, history, actions, behavior log-probabilities, advantages, and returns. Run the entry point with `--help` for optimization, evaluation, accelerator, and initialization options.
-
-The V3 training implementation lives in [`versions/v3/DanKS/training`](versions/v3/DanKS/training) and includes:
-
-- model and feature definitions;
-- PPO objectives and tactical resampling;
-- checkpoint and optimizer-state handling;
-- persistent learner transport;
-- recall and team-belief auxiliary paths;
-- CPU, CUDA, and NPU-aware accelerator helpers.
-
-## Star history
+### Star history
 
 <p align="center">
   <a href="https://www.star-history.com/#Calix-L/DanKS&Date">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date&theme=dark" />
-      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date" />
-      <img alt="DanKS star history chart" src="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date" width="640" />
+      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date&theme=dark">
+      <img alt="DanKS star history" src="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date" width="560">
     </picture>
   </a>
 </p>
-
-## Contributing
-
-Bug fixes, tests, portability improvements, and algorithmic advances are welcome. See the [contribution guide](.github/CONTRIBUTING.md) to get started.
-
-## License
-
-DanKS is available under the [Apache License 2.0](LICENSE). Third-party dependencies retain their respective licenses; see [NOTICE](NOTICE).

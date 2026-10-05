@@ -1,0 +1,20 @@
+KSPlay GuanDan Service · V1
+Copyright 2026 KSPlay Contributors
+
+The project owner explicitly confirmed that the supplied project source code and
+artwork belong to them and authorized their inclusion for this release.
+Project code is supplied under Apache License 2.0. Dependencies are not bundled;
+third-party dependencies retain their own rights and license conditions.
+
+The pure GuanDan rule/referee and full source-based hand arranger are included.
+Neural policies, model weights, retrieval pipelines, feature implementations and
+their runtime are not included. This public adaptation is not a claim of identical
+private production inference.
+
+Kingsoft and the Kingsoft logo are company trademarks. Inclusion of the existing
+logo identifies the project and does not grant separate trademark rights.
+
+Previous candidate source/asset-permission caveats are superseded for the supplied
+project source and artwork by the owner's explicit ownership confirmation above.
+No production source-location paths, deployment topology or credentials are
+disclosed by this package.

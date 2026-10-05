@@ -3,365 +3,196 @@
 </p>
 
 <p align="center">
-  👋 大家好！DanKS 是由 <strong>Kingsoft AI Product Center</strong> 发起的掼蛋 AI 项目。
-</p>
-
-<p align="center">
-  <a href="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml/badge.svg"></a>
-  <a href="https://github.com/Calix-L/DanKS/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/Calix-L/DanKS"></a>
-  <a href="https://www.python.org/"><img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white"></a>
-  <a href="LICENSE"><img alt="Apache-2.0 许可证" src="https://img.shields.io/badge/license-Apache--2.0-D22128"></a>
-</p>
-
-<p align="center">
-  项目仓库：<a href="https://github.com/Calix-L/DanKS">GitHub 主仓</a> · <a href="https://atomgit.com/Calix_Lin/DanKS">AtomGit 国内镜像</a>
-</p>
-
-<p align="center">
   <a href="https://www.kingsoft.com/">
-    <img src="assets/kingsoft-logo.png" alt="金山 AI Product Center" width="720">
+    <img src="assets/kingsoft-logo.png" alt="Kingsoft AI Product Center" width="420">
   </a>
 </p>
 
 <h1 align="center">DanKS：SOTA 级掼蛋智能体</h1>
 
 <p align="center">
-  <strong>完整开放三代技术路线</strong>
+  <strong>完整开放三代技术路线</strong><br>
+  PPO 策略学习 · V3Pro 决策增强 · 两代 KSPlay GuanDan Service
 </p>
 
 <p align="center">
-  <a href="https://calixlin.com/CardKS/">在线体验</a> ·
-  <a href="#快速开始">快速开始</a> ·
-  <a href="#总体架构">总体架构</a> ·
-  <a href="#三代技术路线">三代路线</a> ·
-  <a href="#使用-ppo-训练-v3">训练</a> ·
-  <a href="https://github.com/Calix-L/CardKS">CardKS 论文</a>
+  <a href="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Calix-L/DanKS/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/Calix-L/DanKS/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/Calix-L/DanKS?style=flat"></a>
+  <a href="LICENSE"><img alt="Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-D22128"></a>
 </p>
 
-这就是 DanKS——为攻克四人组队掼蛋而生的 SOTA 级智能体。一个仓库完整揭秘三代技术跃迁：从结构化召回、学习型候选选择，到基于 PPO 训练的记忆感知策略——全程由共享的 108 张牌掼蛋规则引擎驱动。
+<p align="center">
+  <a href="https://calixlin.com/CardKS/"><strong>在线体验 ↗</strong></a> ·
+  <a href="#danks-如何思考">技术架构</a> ·
+  <a href="#ksplay-guandan-service">网页服务</a> ·
+  <a href="#人类掼蛋数据">数据集</a> ·
+  <a href="#快速开始">快速开始</a> ·
+  <a href="https://github.com/Calix-L/CardKS">研究主页</a>
+</p>
 
-## 在线体验
+<p align="center"><strong>不只选好这一手，更为后续每一步布局。</strong></p>
+
+掼蛋不只是比牌大小。你需要与队友配合，在看不见其他人手牌的情况下争夺牌权，并为后续出牌保留空间。现在最省的一张牌，可能拆掉最有价值的组合；一次不出，也可能把主动权交给队友。
+
+**DanKS 让决策关注整副手牌的未来。** 由 **Kingsoft AI Product Center（金山 AI 产品中心）** 发起，DanKS 将结构化召回与 PPO 策略学习结合，并把两代开源网页对战服务带进同一个仓库。你可以研究智能体、训练自己的策略、打造自己的牌桌，也可以直接坐下来，和它打一局。
 
 <p align="center">
   <a href="https://calixlin.com/CardKS/">
-    <img
-      src="assets/danks-promotional-hero-v2.png"
-      alt="带有 Kingsoft AI Product Center 标识与在线掼蛋牌桌的 DanKS 宣传页"
-      width="1100"
-    />
+    <img src="assets/danks-promotional-hero-v2.png" alt="DanKS：从掼蛋 AI 研究到可直接体验的网页牌桌" width="1000">
   </a>
 </p>
 
-<p align="center">
-  <a href="https://calixlin.com/CardKS/"><strong>▶ 在浏览器中挑战 DanKS</strong></a>
-  <br />
-  <sub>无需本地安装 · 1 个人类座位与 3 个 Bot 座位 · 支持中英文界面</sub>
-</p>
+## 在线体验
+
+**坐下，出牌，挑战 DanKS。无需安装。**
+
+[打开在线牌桌 →](https://calixlin.com/CardKS/)
+
+你与一位 AI 队友合作，迎战两位 AI 对手。浏览器即可游玩，支持中文与英文界面。
 
 <p align="center"><strong>观看简短对局预览</strong></p>
 
 <p align="center">
   <a href="https://calixlin.com/CardKS/">
-    <img
-      src="assets/danks-online-demo.gif"
-      alt="CardKS 在线掼蛋 Demo 的动态对局预览"
-      width="760"
-    />
-  </a>
-  <br />
-  <sub>
-    <a href="assets/danks-online-demo.png">查看高清真实牌桌</a> ·
-    <a href="assets/danks-social-preview.png">下载 1280 × 640 社交分享图</a>
-  </sub>
+    <img src="assets/danks-online-demo.gif" alt="掼蛋在线体验版的动态对局预览" width="760">
+  </a><br>
+  <sub><a href="assets/danks-online-demo.png">高清牌桌预览</a> · <a href="assets/danks-social-preview.png">社交分享图</a></sub>
 </p>
+
+## DanKS 如何思考
+
+**保留有价值的选择，再学习什么时候使用它。**
+
+![信息状态、结构化候选召回、Actor-Critic 选择与 PPO 自博弈流程](assets/danks-overall-architecture.png)
+
+1. **理解当前局面。** 编码自己的手牌、公开出牌历史、合法动作和队伍上下文。
+2. **看到出牌之后。** 对候选动作分析剩余手牌，判断它保留了哪些组合与后续机会。
+3. **从少而精的候选中决策。** Actor-Critic 联合评估状态、候选动作与剩牌结构。
+4. **从后续结果中学习。** PPO 与 GAE 将当前选择和之后的得失联系起来。
+
+召回负责找到有价值的选项，策略网络负责判断哪个选项适合当下。
+
+<p align="center">
+  <a href="assets/structure-aware-delayed-outcomes.png">
+    <img src="assets/structure-aware-delayed-outcomes.png" alt="出小牌、出王与不出会保留不同的后续出牌空间" width="300">
+  </a><br>
+  <sub>同一副牌，三个选择，不同的未来。点击查看完整决策示例。</sub>
+</p>
+
+## 三代演进，一条主线
+
+| AI 版本 | 核心能力 | 阅读入口 |
+| --- | --- | --- |
+| **V1** | 结构化召回与 NumPy 候选选择器 | [召回排序](versions/v1/DanKS/retrieval/ranker.py) |
+| **V2** | 扩展候选生成与 ONNX 选择器 | [动作生成](versions/v2/DanKS/retrieval/action_generator.py) |
+| **V3** | 记忆感知神经策略、队伍信念特征与 PPO 学习 | [策略网络](versions/v3/DanKS/training/model.py) · [PPO 训练](versions/v3/DanKS/training) |
+| **V3Pro** | V3 推理增强：配牌保护、等价出牌规则与验证式残局搜索 | [策略入口](versions/v3pro/DanKSPro/policy.py) · [接入指南](versions/v3pro/USAGE.zh-CN.md) |
+
+V3Pro 以独立的 `DanKSPro` 包扩展 V3，不替换原网络，也不要求重新训练。残局增强覆盖通过准入检查、全桌总剩牌不超过 16 张的局面；11–16 张时还要求暗牌分配数不超过 128。
+
+## KSPlay GuanDan Service
+
+**有了 AI，还要有一张好用的牌桌。现在，牌桌也开源了。**
+
+两代 Service 均包含浏览器前端、房间后端、掼蛋裁判、完整源码理牌模块，以及标准外部 AI 接口。
+
+- **Service V1 —— 经典牌桌。** 保留原版 CardKS 体验，提供简洁的开发起点。
+- **Service V2 —— 全新牌桌。** 固定比例的桌面与手机横屏布局、模块化交互，以及改进的会话恢复。
+
+[查看 Service V1 →](services/v1/README.zh-CN.md) · [查看 Service V2 →](services/v2/README.zh-CN.md)
+
+Service 的 V1、V2 指**网页平台版本**，与 AI 网络代数独立。两代服务均可通过示例规则机器人本地运行，也可以按 [HTTP AI 接口](services/v2/docs/AI_INTERFACE.md)接入自己的模型。训练权重与私有 AI 部署环境不随仓库分发。
+
+### 从这里开始二开
+
+| 你想做什么 | 从哪里开始 |
+| --- | --- |
+| 改牌桌布局或选牌交互 | [V2 前端](services/v2/web) |
+| 扩展房间、牌局流程或实时消息 | [V2 后端](services/v2/backend) |
+| 调整理牌算法 | [Go 理牌源码](services/v2/arranger) |
+| 接入新 AI | [AI 请求与返回协议](services/v2/docs/AI_INTERFACE.md) |
+| 找到对应的修改模块 | [Service 二开指南](services/v2/docs/DEVELOPMENT.md) |
+
+## 人类掼蛋数据
+
+**从完整牌局中研究决策，而不只是孤立的一手牌。**
+
+CardKS 维护的公开 [KSCB 掼蛋数据集](https://github.com/Calix-L/CardKS/blob/main/KSCB/data/guandan_matches.jsonl.gz)包含 **899 场完整升级赛、10,218 个小局、840,194 个决策点**。每个小局保留按顺序排列的事件，便于研究人类决策、队友配合与手牌结构的变化。
+
+[查看数据入口 →](datasets/README.zh-CN.md) · [原始格式说明 →](https://github.com/Calix-L/CardKS/blob/main/KSCB/README.zh-CN.md)
+
+`datasets/` 提供原始数据链接、下载方法与读取示例，数据继续由 CardKS 维护，不在 DanKS 重复存放。这些是牌局记录，而非预先编码好的 PPO 输入。
 
 ## 快速开始
 
-最短的可运行路径是在 CPU 上使用 V3。以下命令以 Python 3.11 和 POSIX shell 为例：
+### 跑起自己的网页牌桌
+
+准备 **Python 3.12 与 Go 1.23+**。以下以 POSIX shell 为例：
 
 ```bash
 git clone https://github.com/Calix-L/DanKS.git
-cd DanKS
-python3.11 -m venv .venv
+cd DanKS/services/v2
+python3.12 -m venv .venv
 source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e versions/v3
-python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
-python examples/retrieval_quickstart.py --version v3
-python examples/v3_model_smoke.py
+python -m pip install -r requirements.txt
+python scripts/build_arranger.py
+python run.py
 ```
 
-Windows PowerShell 请使用 `.venv\Scripts\Activate.ps1`。CUDA、昇腾 NPU、V1/V2、原生内核与开发环境请参阅[安装参考](#安装参考)。
+打开 **http://127.0.0.1:8000/solo**，创建牌桌并点击准备。其余座位由三个示例机器人填充；按 Ctrl+C 停止服务。
 
-## 总体架构
+Windows PowerShell 使用 `py -3.12 -m venv .venv` 创建环境、`.venv\Scripts\Activate.ps1` 激活。要体验经典牌桌，将目录换成 `services/v1` 即可。
 
-![DanKS 三个版本共同对应的总体流程：从掼蛋信息状态和结构化候选召回到 Actor-Critic 评分与 PPO 自博弈](assets/danks-overall-architecture.png)
+### 跑通 AI 代码
 
-DanKS 将庞大且高度结构化的动作空间，压缩成一次边界清晰的策略决策：
-
-1. **编码信息状态。** 策略网络接收可见手牌、公开出牌历史、合法动作和座位相关的对局上下文。
-2. **检索结构化候选。** 有预算的拆牌搜索生成具有代表性的出牌方案，并概括牌数、对子、序列、花色、缺口以及剩余手牌结构。
-3. **评分有界的 Top-K 候选集。** 共享编码器融合状态、候选动作和结构特征；Actor 对有效候选排序，Critic 估计当前状态价值。
-4. **从自对弈中学习。** 轨迹数据为裁剪 PPO 更新提供 GAE 优势估计，在不增加推理阶段候选预算的前提下改进选择器。
-
-这张总体架构图贯穿 DanKS 的三代技术路线，完整呈现信息状态、结构化候选召回、策略与价值估计以及自博弈优化。各版本在这一共同框架上持续升级特征、召回方式和策略实现，主要演进见下表。
-
-## 为什么选择 DanKS？
-
-- **SOTA 级实战实力** —— 在完整掼蛋晋级赛协议下，DanKS 面对多种强学习型和规则型基线均取得领先结果，详见 [CardKS 主要实验](https://github.com/Calix-L/CardKS#main-results)。
-- **三代代码清晰可读** —— V1、V2、V3 完整呈现技术演进过程，关键算法变化可以逐代阅读、运行和比较。
-- **全链路实现完整** —— 仓库覆盖掼蛋规则引擎、合法动作生成、结构化召回、状态与候选特征、策略与价值网络、PPO 训练、checkpoint 管理、原生加速和可运行的推理示例。
-
-## 三代技术路线
-
-| 版本 | 核心思路 | 主要增量 | 入口 |
-| --- | --- | --- | --- |
-| **V1** | 结构化检索 | 候选评分和 NumPy 选择器 | [`ranker.py`](versions/v1/DanKS/retrieval/ranker.py) |
-| **V2** | 学习型选择 | 更广的动作生成和 ONNX 选择器 | [`action_generator.py`](versions/v2/DanKS/retrieval/action_generator.py) |
-| **V3** | 记忆感知策略学习 | 记牌、候选覆盖、召回、队伍信念和 PPO | [`model.py`](versions/v3/DanKS/training/model.py) |
-| **V3Pro** | V3 推理增强 | 配牌 Safe Gate、等价理牌规则、验证式残局搜索 | [`policy.py`](versions/v3pro/DanKSPro/policy.py) |
-
-V1、V2、V3 分别提供独立安装包。为每个版本创建独立环境，即可让 `DanKS` 导入名、特征定义和 checkpoint 格式始终保持一致。
-
-## V3Pro · 无需重训的决策增强
-
-V3Pro 是 V3 的可选**纯源码增强包**，不是第四套网络，也不替换训练流程。它以 `DanKSPro` 与 V3 共存；原网络、特征和 PPO 训练实现仍由 `DanKS` 提供，不复制整套代码。
-
-**出牌顺序：** Retrieval → 配牌 mask → 冻结 V3 → 等价理牌 → 残局验证。
-
-| 组件 | 作用 | 明确边界 |
-| --- | --- | --- |
-| [配牌 Safe Gate](versions/v3pro/DanKSPro/safety.py) | 存在同牌型、同强度且保护指标不变差的替代出法时，屏蔽多花配牌或多拆天然炸弹的普通候选。 | 不是禁止配牌。可一手出完或对手剩 1–2 张时保留原 mask；不一刀切禁止送单、送双。 |
-| [等价理牌规则](versions/v3pro/DanKSPro/rules.py) | 三带二保留原来的三张，仅在剩余拆分等价时换小对子；跟牌时保守选择足够压制的小炸弹。 | 不任意换三张、不改主动出炸弹，也不为换小牌破坏剩牌结构。 |
-| [残局搜索](versions/v3pro/DanKSPro/endgame/runtime.py) | 公开暗牌枚举、冻结策略续局、精确 Minimax、完整证据下的平局处理，以及独立候选恢复。 | 全桌总剩牌 ≤16；11–16 张还要求暗牌分配数 ≤128。验证不完整就保留基础动作。 |
-
-### 使用 V3Pro
-
-使用 Python 3.11+，并按前面的说明安装 V3 所需 PyTorch：
+在独立的 **Python 3.11+** 环境中，从仓库根目录运行：
 
 ```bash
+python3.11 -m venv .venv-ai
+source .venv-ai/bin/activate
 python -m pip install -e . -e versions/v3 -e versions/v3pro
+python -m pip install torch==2.8.0
+python examples/retrieval_quickstart.py --version v3
+python examples/v3_model_smoke.py
 python examples/v3pro_smoke.py
 ```
 
-示例使用**随机初始化模型与合成残局**，验证接入和可恢复搜索，不代表模型棋力。训练好的主模型／专家权重、私有数据集及内部评测报告**不随仓库分发**。
-
-```python
-from DanKSPro import ProPolicy
-
-policy = ProPolicy.from_checkpoints(
-    "checkpoints/main.pt",
-    specialist="checkpoints/endgame.pt",
-    extended_specialist="checkpoints/endgame_extended.pt",
-)
-action_id, record = policy.act(hand, context, legal_actions, history=public_history)
-```
-
-上述路径由调用方自行提供，并非仓库附带文件。专家元数据中的父模型 SHA-256 必须与主权重一致。旧 checkpoint 如需 Python pickle 加载，只有**确认文件可信**时才能设置 `trusted=True`。没有专家权重时仍可运行前两个增强组件，学习型残局模块会明确放弃接管。
-
-需要搜索时，将 record、公开信息重建的引擎状态、自家手牌、全部已出牌和四家绝对座位剩牌数传给 `policy.refine_endgame(...)`，完整调用见[可运行示例](examples/v3pro_smoke.py)。注意：Retrieval 的剩牌数按**自己、下家、队友、上家**排列；历史座位和搜索剩牌数使用**绝对座位**。请提供本小局完整公开历史，它同时用于记牌与序列特征，并独立复制到 record。适配器核对决策上下文、已出牌历史和合法动作后才转换候选编号与引擎位置。搜索可以检查召回之外的合法动作，但不能重新启用被 Safe Gate 明确屏蔽的动作。
-
-残局移植沿用 r13 方法：准入范围内补齐合法动作、严格验证、11–16 张完整精确平局与策略续局验证、联合搜索不完整后的独立候选恢复，**不包含后续 r14 实验**。暗牌枚举下的 Minimax 仍存在不完全信息博弈的策略融合局限。预算是节点上限，**不是出牌墙钟期限**；本次为源码发布，不等于已验收的低延迟服务，也不把内部评测收益直接当作部署胜率。
-
-## 为什么要关注延迟结果？
-
-<p align="center">
-  <img
-    src="assets/structure-aware-delayed-outcomes.png"
-    alt="同一掼蛋状态下的三个候选动作导向不同的延迟结构结果"
-    width="620"
-  />
-</p>
-
-一个当下代价很低的动作，可能破坏手中唯一有用的组合；而主动消耗一张高价值牌，反而可能保留整体牌型结构，并带来更干净的后续出完路径。DanKS 将学习这种差异所需的职责进行了拆分：
-
-- **Retrieval** 将组合动作空间组织为具有策略多样性的候选集。
-- **结构特征** 显式表达每个候选会消耗什么、保留什么，以及出牌后留下什么。
-- **Actor** 为当前状态下的合法候选动作评分。
-- **Critic 和 GAE** 从后续轨迹结果中分配信用，使 PPO 能够偏好价值需要数次决策后才体现的动作。
-
-上图展示了长程信用分配的核心直觉：V3 直接评估检索得到的候选动作，并通过后续轨迹学习每个选择的长期价值。
+示例使用合成输入验证召回、网络推理与 V3Pro 接入，模型冒烟示例使用随机初始化权重。CPU/CUDA/NPU 环境、V1/V2 安装和 PPO learner 命令见[开发指南](.github/guides/DEVELOPMENT.zh-CN.md)。Linux/macOS 可在 V3 环境运行 `danks-build-native`，启用可选 C++ 召回加速。
 
 ## 仓库结构
 
 ```text
 DanKS/
-├── assets/             # 品牌标识、在线 Demo、架构图与决策示意图
-├── versions/
-│   ├── v1/DanKS/       # 结构化检索 + NumPy 选择器
-│   ├── v2/DanKS/       # 结构化检索 + ONNX 选择器
-│   ├── v3/DanKS/       # 结构化检索 + 神经策略 + PPO
-│   └── v3pro/DanKSPro/ # 可选推理增强：Gate、理牌与残局搜索
-├── guandan/engine/     # 共享 Python 规则引擎
-├── examples/           # 可执行的引擎、检索和模型冒烟示例
-├── tests/              # 仓库与引擎检查
-├── README.zh-CN.md     # 完整的简体中文指南
-├── pyproject.toml
-├── LICENSE
-└── NOTICE
+├── versions/           # AI：V1、V2、V3 与 V3Pro 扩展
+├── services/
+│   ├── v1/             # KSPlay GuanDan Service · 经典牌桌
+│   └── v2/             # KSPlay GuanDan Service · 全新牌桌
+├── guandan/engine/     # AI 侧共享掼蛋规则引擎
+├── examples/           # 引擎、召回、网络与 PPO 可运行示例
+├── datasets/           # 公开掼蛋数据入口与读取指南
+├── assets/             # 品牌、对局预览与架构插图
+└── .github/            # 贡献指南、开发指南与 CI
 ```
 
-## 安装参考
+两代 Service 均可独立运行，各自保留规则与理牌模块。AI 各代仍为独立安装包，请为不同代数分别创建环境。
 
-共享引擎和 V3 支持 Python 3.10 及更高版本；V1 和 V2 支持 Python 3.11 及更高版本。以下命令均从仓库根目录运行。推荐为每个版本创建独立虚拟环境，使 `DanKS` 命名空间与对应的特征、模型格式自然对齐。
+## 一起把它做得更好
 
-### 选择安装包
+训练一个新智能体，打造一张更好的牌桌，探索组队博弈的下一个想法。
 
-| 目标 | 安装命令 | 说明 |
-| --- | --- | --- |
-| 共享规则引擎与测试 | `python -m pip install -e '.[dev]'` | 规则引擎与仓库测试套件。 |
-| V1 · 结构化检索 | `python -m pip install -e versions/v1` | NumPy 选择器；Python 3.11+。 |
-| V2 · 学习型选择 | `python -m pip install -e versions/v2` | ONNX 选择器；Python 3.11+。 |
-| V3 · PPO 策略 | `python -m pip install -e versions/v3` | 还需安装下方一种 PyTorch 构建。 |
+欢迎算法、UI、跨平台适配与文档方面的贡献。参与方式见[贡献指南](.github/CONTRIBUTING.md)，也可以直接[提交 Issue](https://github.com/Calix-L/DanKS/issues)。
 
-### 为 V3 选择一种 PyTorch 构建
+**项目仓库：** [GitHub](https://github.com/Calix-L/DanKS) · [AtomGit 国内镜像](https://atomgit.com/Calix_Lin/DanKS)<br>
+**研究主页：** [CardKS](https://github.com/Calix-L/CardKS)<br>
+**开源许可：** [Apache-2.0](LICENSE) · [许可与商标说明](NOTICE)
 
-| 目标 | 命令 |
-| --- | --- |
-| Linux / Windows CPU | `python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu` |
-| NVIDIA CUDA 12.8 | `python -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128` |
-| macOS CPU | `python -m pip install torch==2.8.0` |
-
-如果平台需要不同 wheel，请参考 [PyTorch 官方安装矩阵](https://pytorch.org/get-started/previous-versions/)。使用 `python examples/v3_model_smoke.py` 检查安装，使用 `python -m DanKS.training.train_ppo --help` 查看 learner 的全部参数。
-
-<details>
-<summary><strong>昇腾 NPU 环境</strong></summary>
-
-昇腾运行时与主机驱动及 CANN 版本配套使用。安装匹配的 CANN 后，再安装厂商提供的 PyTorch 与 `torch_npu` wheel。已验证组合记录在 [`requirements-training-npu.txt`](versions/v3/DanKS/environment/requirements-training-npu.txt)。
-
-```bash
-source /usr/local/Ascend/cann/set_env.sh
-python3.10 -m venv --system-site-packages .venv-v3-npu
-source .venv-v3-npu/bin/activate
-python -m pip install -e versions/v3
-python -m pip install --no-deps \
-  /path/to/torch-2.7.1+cpu-cp310-cp310-manylinux_2_28_x86_64.whl \
-  /path/to/torch_npu-2.7.1.post2-cp310-cp310-manylinux_2_28_x86_64.whl
-export TORCH_DEVICE_BACKEND_AUTOLOAD=0
-python -m DanKS.training.train_ppo --help
-```
-
-建议将该虚拟环境专用于昇腾 NPU。其他驱动、CANN、处理器架构或 Python 版本可选用对应的厂商 wheel。
-
-</details>
-
-<details>
-<summary><strong>已验证配置</strong></summary>
-
-| 目标 | 系统 | Python | 框架 | 关键软件包 |
-| --- | --- | --- | --- | --- |
-| CI 与共享引擎 | Linux | 3.10, 3.12 | — | pytest 7+ |
-| V1 | CPU | 3.11+ | NumPy 选择器 | NumPy 2.4.6 |
-| V2 | CPU | 3.11+ | ONNX 选择器 | NumPy 2.4.6, ONNX Runtime 1.27.0 |
-| V3 NVIDIA 服务器 | H100, driver 575.57.08 | 3.11.14 | PyTorch 2.8.0 + CUDA 12.8 | NumPy 2.4.6, pybind11 3.0.4 |
-| V3 昇腾服务器 | Ubuntu 22.04.5, 910B2C, driver 24.1.0, CANN 8.5.0 | 3.10.12 | PyTorch 2.7.1 + torch_npu 2.7.1.post2 | NumPy 1.26.0, pybind11 3.0.4 |
-
-这些是经过验证的参考配置，其他兼容环境也可以运行 DanKS。
-
-</details>
-
-### 可选的 V3 C++ 加速
-
-优化后的检索内核支持 Linux 和 macOS，需要 C++17 编译器、Python 开发头文件和 `pybind11`；Windows 自动使用 Python 实现。首先安装平台工具链：
-
-```bash
-# Ubuntu/Debian
-sudo apt-get update && sudo apt-get install -y build-essential python3-dev
-
-# macOS（仅需执行一次）
-xcode-select --install
-```
-
-然后在已激活的 V3 环境中，用一条命令完成两个内核的构建与验证：
-
-```bash
-danks-build-native
-```
-
-该命令会自动定位已安装的 V3 源码，成功后输出 `cover=True, actor=True`。Linux 构建启用主机编译优化；macOS 由 Python 工具链选择架构并支持 universal2 构建。更换 Python 版本或 CPU 架构后重新运行即可。Windows 会自动选择 Python 实现。
-
-### 开发检查
-
-```bash
-python -m pip install -e '.[dev]'
-python -m pytest -q
-```
-
-## 运行示例
-
-示例覆盖规则引擎、结构化检索、完整网络前向传播和 PPO 更新，可直接从源码运行：
-
-```bash
-# 共享规则引擎；可在基础环境中运行。
-python examples/engine_quickstart.py
-
-# 结构化检索；请在匹配的 V1、V2 或 V3 环境中运行。
-python examples/retrieval_quickstart.py --version v3
-
-# 完整 V3 网络前向传播；请在已安装 PyTorch 的 V3 环境中运行。
-python examples/v3_model_smoke.py
-
-# 通过 V3 PPO learner 执行一次合成优化器更新。
-python examples/v3_ppo_smoke.py
-```
-
-每条命令都包含自检断言，便于快速确认当前环境和代码路径运行正常。
-
-## 共享游戏引擎
-
-规则引擎可以独立于三代 AI 使用：
-
-```python
-from guandan import Environment
-
-game = Environment(first_player=0)
-for seat in range(4):
-    game.add_player(f"player-{seat}", seat)
-
-messages = game.start()
-assert all(len(player.hand_cards) == 27 for player in game.players)
-```
-
-公开 API 还导出了 `Move` 和 `Moves`，用于表示出牌动作与生成合法动作。
-
-## 使用 PPO 训练 V3
-
-激活并验证 V3 环境后，指定 rollout 与 checkpoint 输出路径：
-
-```bash
-python -m DanKS.training.train_ppo \
-  --rollout /path/to/rollout.npz \
-  --output /path/to/checkpoint.pt \
-  --device auto
-```
-
-Learner 期望 rollout 中包含状态、候选动作、mask、历史、动作、行为策略对数概率、优势和回报数组。使用 `--help` 查看优化、评估、加速器和初始化选项。
-
-V3 训练实现位于 [`versions/v3/DanKS/training`](versions/v3/DanKS/training)，包含：
-
-- 模型与特征定义；
-- PPO 目标与战术重采样；
-- checkpoint 与优化器状态处理；
-- 持久化 learner 传输；
-- 召回和队伍信念辅助路径；
-- 感知 CPU、CUDA 和 NPU 的加速器辅助工具。
-
-## Star 增长趋势
+### Star 增长趋势
 
 <p align="center">
   <a href="https://www.star-history.com/#Calix-L/DanKS&Date">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date&theme=dark" />
-      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date" />
-      <img alt="DanKS Star 增长趋势图" src="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date" width="640" />
+      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date&theme=dark">
+      <img alt="DanKS Star 增长趋势" src="https://api.star-history.com/svg?repos=Calix-L/DanKS&type=Date" width="560">
     </picture>
   </a>
 </p>
-
-## 参与贡献
-
-欢迎提交缺陷修复、测试、可移植性改进与算法创新。参与方式见[贡献指南](.github/CONTRIBUTING.md)。
-
-## 开源许可
-
-DanKS 基于 [Apache License 2.0](LICENSE) 开源。第三方依赖仍适用各自的许可证；详见 [NOTICE](NOTICE)。

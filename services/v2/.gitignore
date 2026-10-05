@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+data/
+*.log
+models/
+runtime/
+*.pt
+*.pth
+*.npz
+*.onnx
+*.pem
+*.key

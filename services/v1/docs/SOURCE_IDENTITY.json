@@ -1,0 +1,37 @@
+{
+  "generation": 1,
+  "description": "Captured old deployed CardKS browser, adapted captured service and worker; not private inference parity",
+  "exact_files": {
+    "web/frontend/adapters.mjs": "b13b4631fd8edf9b56a6610c3913753edd0e3e3792aeae1e16fdeb2bfd60587e",
+    "web/frontend/base-path.mjs": "48c478e2d36d83608da06681b64a37d7652ac2395f1bda8868c2da9cf7ea503f",
+    "web/frontend/card-ui.mjs": "80d09a607e86e029f56e0c43749e394bff966067963d892c274e72cbc4ad1bde",
+    "web/frontend/hand-layout.mjs": "418890251c3b84266bcca98743a50f372bf8be653556888beed7fa9124860d24",
+    "web/frontend/human-turn-visuals.mjs": "d6570089b103056332181095c68ffc2d466915ab22d562edad3299342ecea3d5",
+    "web/frontend/navigation.mjs": "2be5ae07e8e74a1c25744db30d560fc9874065a11f6d0316b4a3fb1784265be0",
+    "web/frontend/room-api.mjs": "677e33295a09eef31a7e2d4b69db1ada4f870f492c8e6dfb8e9d1a892a7ee680",
+    "web/frontend/room-state.mjs": "ec57089dd0ea2fae5feab8c865eae924b023b87dde5e9bc10c136ebed3d277f0",
+    "web/frontend/solo-english.mjs": "8e99a59f771588907346d951f1623d16fb193a91590c0a3069e6e7ec536c01e1",
+    "web/frontend/solo-session.mjs": "32e3197f22887fc9a86ed62786706f048d0e8146cfeb477f27d45f4d515c4928",
+    "web/kingsoft-ai-product-center-dark.svg": "7d2aa76a1c9f433900b689b8c0c2a8534de2b7b1380d6e2360aa21200172e533",
+    "web/play.css": "7a1bf31d5a97357d63d6c87a43ddacce6cc8b89bd7dbb80fd34dbd7f9e938692",
+    "web/play.html": "b8b09fc6ecd41e50b6723a048a262251581a09829a5d894eafc2fd3512e873d8",
+    "web/play.js": "4c41797b92ebf73e6e62ea68d16a1233fec9842f77a69ed6c08508c61429c6b7",
+    "web/styles.css": "0addbd737bffd9a0824da2936afc3369b0b2c8ebb8960c24be6da909c259833e",
+    "backend/human_table_models.py": "161e53817ccfeb79d4cd222d4e58ee12f2def601a633560a3cef5c8e4244c4ac",
+    "backend/models.py": "e90646473bf960eb2bf8247ce6d7dfd7b18b8a8ced5bece47329c02ec036c091",
+    "backend/storage.py": "e69bd2778f9f6294fee20120564b4c5ca4349e154364cea56eb47eefe50d0e20",
+    "backend/__init__.py": "6133697e5a16d5823ffc85bffd5fd4646629bd67177b5996deb061433f9c7a07"
+  },
+  "adapted_source_sha256": {
+    "backend/solo_app.py": "b045638821dcccbb8d6429da34d1679bf7132b527ad0e531cc60b06afc431fef",
+    "backend/human_tables.py": "9c647f1c3fc72f5cc939bbd229344fbedf46df39f560601f2e1e1958971133cc",
+    "workers/human_platform_worker.py": "cd613abfca687eeab0337ed40250b23a7491fb1dd30a56d8afcdd7114a94a3d3"
+  },
+  "public_replacements": [
+    "backend/settings.py",
+    "rules/engine",
+    "integrations/ai.py",
+    "workers/http_policy.py"
+  ],
+  "full_arranger": "Full source-based hand arranger restored separately; no runtime binary is included"
+}

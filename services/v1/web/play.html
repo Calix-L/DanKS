@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#063d2d" />
+    <title>CardKS</title>
+    <link rel="icon" href="./kingsoft-ai-product-center-dark.svg?v=20260826-1" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css?v=20260825-2" />
+    <link rel="stylesheet" href="./play.css?v=20260829-1" />
+  </head>
+  <body data-arena-mode="solo" class="human-fixed-viewport solo-player-arena">
+    <main class="human-play-app" id="humanPlayApp">
+      <section class="table-stage human-table-stage" id="humanTableStage" data-game="guandan" data-seats="4" aria-label="人类对局桌面">
+        <div class="felt-texture" aria-hidden="true"></div>
+        <div class="table-rail" aria-hidden="true"></div>
+
+        <div class="table-status-zone">
+        <header class="human-topbar">
+          <nav class="human-topbar-actions" aria-label="平台页面">
+            <a class="back-to-spectator" hidden href="./index.html" aria-label="返回全手牌观战平台">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+              <span>观战平台</span>
+            </a>
+            <a class="topbar-review-link" hidden id="roomReviewLink" href="./review.html" target="_blank" rel="noopener" aria-label="打开人工评测">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5" /></svg>
+              <span>人工评测</span>
+            </a>
+            <div class="table-brand-lockup">
+              <img src="./kingsoft-ai-product-center-dark.svg?v=20260826-1" alt="金山 AI Product Center" />
+            </div>
+          </nav>
+          <div class="room-identity" id="roomIdentity" hidden>
+            <span class="game-chip" id="roomGameChip">GD</span>
+            <div><strong id="roomTitle">桌号 —</strong><small id="roomMeta">等待加入</small></div>
+          </div>
+          <div class="connection-chip" id="connectionChip" data-state="idle">
+            <i aria-hidden="true"></i><span id="connectionText">未连接</span>
+          </div>
+        </header>
+
+        <div class="room-status-strip" id="roomStatusStrip" hidden>
+          <span id="phaseText">大厅</span>
+          <b id="viewerBadge">玩家</b>
+          <span id="roundLevelMeta">第 1 局</span>
+          <span id="spectatorText">0 人观战</span>
+          <a class="latest-replay-link" id="latestReplayLink" href="./index.html" target="_blank" rel="noopener" hidden>最近回放</a>
+          <button id="rulesButton" type="button" aria-haspopup="dialog" aria-controls="rulesDialog">规则说明</button>
+          <button id="copyTableBtn" type="button">复制桌号
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h11v11H8zM5 16H4V5h11v1" /></svg>
+          </button>
+        </div>
+
+        <div class="rule-badge-strip" id="ruleBadgeStrip" aria-label="本桌固定规则" hidden>
+          <span>不进贡</span><span>随机发牌</span><span>不托管</span><span id="spectatorRuleBadge">观战开</span>
+          <span>理牌开</span><span>段位关</span><span>双方独立升级</span><span>局数无限</span>
+        </div>
+
+        <section class="guandan-level-hud" id="guandanLevelHud" aria-label="双方级数和当前级牌" hidden>
+          <strong id="currentLevelText">当前级牌：我方 2</strong>
+          <div>
+            <span id="ourLevelCard">我方 <b id="ourLevelValue">2</b></span>
+            <span id="opponentLevelCard">对方 <b id="opponentLevelValue">2</b></span>
+          </div>
+        </section>
+
+        <div class="connection-freeze" id="connectionFreeze" role="status" hidden>
+          连接中断，桌面操作已冻结；恢复连接后可继续操作。
+        </div>
+        </div>
+
+        <div class="table-battle-zone">
+        <div class="human-seat-layer" id="humanSeatLayer"></div>
+
+        <div class="table-center human-table-center" aria-hidden="true">
+          <span class="center-game-mark" id="humanGameMark">掼蛋</span>
+          <small class="center-game-code" id="humanGameCode">HUMAN TABLE</small>
+        </div>
+
+        <section class="lobby-help" id="lobbyHelp" hidden>
+          <strong>等待准备</strong>
+          <span id="lobbyHelpText">可点击空位或人机座位换座；每位人类玩家都须准备，全员准备后发牌并确定本局级牌。</span>
+          <section class="human-room-controls" id="humanRoomControls" hidden aria-label="玩家准备">
+            <button class="ready-button" id="readyButton" type="button">
+              <span class="ready-icon" aria-hidden="true">✓</span>
+              <span id="readyButtonText">点击准备</span>
+            </button>
+          </section>
+        </section>
+        </div>
+
+        <div class="table-hand-zone">
+        <section class="own-hand-panel" id="ownHandPanel" hidden aria-label="我的手牌">
+          <div class="own-hand-copy">
+            <div class="own-seat-identity" aria-label="我的玩家信息">
+              <span class="seat-number" id="ownSeatNumber">—</span>
+              <div class="own-seat-copy">
+                <strong id="ownSeatName">玩家</strong>
+                <small id="ownSeatRole">人类玩家</small>
+              </div>
+              <span class="turn-countdown human-turn-countdown own-turn-countdown" id="ownTurnCountdown" hidden role="timer" aria-label="我的本回合剩余秒数">
+                <span class="turn-clock-face"><b class="turn-countdown-value">20</b></span>
+              </span>
+              <span class="own-finish-badge" id="ownFinishBadge" hidden></span>
+            </div>
+            <span class="own-hand-remaining" id="ownHandRemaining">0 张手牌</span>
+            <b id="selectedCount">0 张已选</b>
+          </div>
+          <div class="own-hand-workspace" id="ownHandWorkspace">
+            <div class="arrange-toolbar" id="arrangeToolbar" hidden>
+              <button class="arrange-menu-button" id="arrangeMenuButton" type="button" aria-expanded="false" aria-controls="guandanArrangeControls" aria-haspopup="true">
+                <span id="arrangeLabel">理牌</span>
+                <b id="arrangeCurrentMode">炸弹优先</b>
+                <i aria-hidden="true"></i>
+              </button>
+              <div id="guandanArrangeControls" role="group" aria-label="掼蛋理牌方式" hidden>
+                <button type="button" data-arrange-mode="1" aria-pressed="false">炸弹优先</button>
+                <button type="button" data-arrange-mode="2" aria-pressed="false">同花顺优先</button>
+                <button type="button" data-arrange-mode="3" aria-pressed="false">整牌优先</button>
+                <button type="button" data-arrange-mode="4" aria-pressed="false">简单理牌</button>
+              </div>
+              <small id="arrangeHint">只调整显示分组，不改变规则手牌或合法出牌。</small>
+            </div>
+            <div class="own-hand-scroll" id="ownHandViewport">
+              <div class="own-hand-list" id="ownHand" aria-label="按理牌分组显示的我的手牌"></div>
+            </div>
+            <span class="hand-scroll-hint" id="handScrollHint" hidden>左右滑动查看手牌</span>
+          </div>
+          <div class="action-dock" id="actionDock">
+            <span class="turn-hint" id="turnHint">等待其他玩家</span>
+            <div class="play-action-buttons" id="playActionButtons">
+              <button class="pass-button" id="passButton" type="button" disabled>不出</button>
+              <button class="play-button" id="playButton" type="button" disabled>出牌</button>
+            </div>
+          </div>
+        </section>
+        </div>
+
+        <section class="result-banner" id="resultBanner" hidden aria-live="polite">
+          <small id="resultEyebrow">本局结果</small>
+          <div class="result-headline">
+            <strong id="resultText">对局已结束</strong>
+            <span id="resultWinningSide" hidden></span>
+          </div>
+          <div class="result-round-meta" id="resultRoundMeta" hidden>
+            <strong id="resultRoundDelta">+3</strong>
+            <span id="resultLevelChange">我方 2 → 5</span>
+            <span id="resultOpponentLevel">对方 2</span>
+            <small id="resultNextLevel">下局级牌 5</small>
+          </div>
+          <div class="result-detail-grid">
+            <section id="resultOrderSection" hidden aria-labelledby="resultOrderTitle">
+              <h2 id="resultOrderTitle">完赛名次</h2>
+              <ol class="result-finish-order" id="resultFinishOrder"></ol>
+            </section>
+          </div>
+          <a class="result-replay-link" id="resultReplayLink" href="./index.html" target="_blank" rel="noopener" hidden>查看本局回放</a>
+          <button class="result-ready-button" id="resultReadyButton" type="button" hidden>准备下一局</button>
+        </section>
+
+        <section class="series-result-overlay" id="seriesResultOverlay" hidden aria-live="assertive" aria-labelledby="seriesResultTitle">
+          <div class="series-result-shell">
+            <header class="series-result-header">
+              <small id="seriesResultEyebrow">掼蛋整场结算</small>
+              <h1 id="seriesResultTitle">某队获胜</h1>
+              <p id="seriesResultSubtitle">过 A 成功</p>
+              <div class="series-last-round-meta" id="seriesLastRoundMeta" hidden>
+                <strong id="seriesLastRoundDelta">我方双上 · +3</strong>
+                <span id="seriesLastRoundLevels">我方 J → A · 对方 9 → 9</span>
+                <small id="seriesLastRoundNext">下局级牌 A</small>
+              </div>
+            </header>
+            <div class="series-team-grid">
+              <section class="series-team-card winner" id="seriesWinnerTeam">
+                <div class="series-team-heading">
+                  <span>获胜队伍</span>
+                  <strong id="seriesWinnerLevel">打 A · 过 A 成功</strong>
+                </div>
+                <div class="series-player-grid" id="seriesWinnerPlayers"></div>
+              </section>
+              <div class="series-versus" aria-hidden="true">VS</div>
+              <section class="series-team-card loser" id="seriesLoserTeam">
+                <div class="series-team-heading">
+                  <span>对方队伍</span>
+                  <strong id="seriesLoserLevel">最终打到 2</strong>
+                </div>
+                <div class="series-player-grid" id="seriesLoserPlayers"></div>
+              </section>
+            </div>
+            <p class="series-result-meta" id="seriesResultMeta"></p>
+            <nav class="series-result-actions" aria-label="整场结算操作">
+              <button id="seriesReplayButton" type="button">整场回放</button>
+              <button id="seriesCopyButton" type="button">复制战绩</button>
+              <button class="primary" id="seriesRematchButton" type="button">再来一场</button>
+            </nav>
+            <div class="series-replay-list" id="seriesReplayList" hidden aria-label="本场全部分局回放"></div>
+          </div>
+        </section>
+
+        <section class="entry-panel" id="entryPanel" aria-labelledby="entryTitle">
+          <div class="entry-brand">
+            <span class="brand-cards" aria-hidden="true"><i></i><i></i><i></i></span>
+            <div><small>CARDKS · DANKS</small><h1 id="entryTitle">单人挑战 DanKS</h1></div>
+          </div>
+          <p>创建单人桌，或输入原桌号继续未完成的大局。</p>
+
+          <section class="recent-table-card" id="recentTableCard" hidden aria-label="继续上次对局">
+            <div>
+              <small>上次对局</small>
+              <strong id="recentTableTitle">桌号 —</strong>
+              <span id="recentTableMeta">返回原座位继续</span>
+            </div>
+            <button id="resumeRecentTableButton" type="button">继续对局</button>
+          </section>
+
+          <div class="entry-tabs" id="entryTabs" role="tablist" aria-label="其他加入方式">
+            <button id="createTab" type="button" role="tab" aria-selected="true" aria-controls="createForm" tabindex="0">创建单人桌</button>
+            <button id="joinTab" type="button" role="tab" aria-selected="false" aria-controls="joinForm" tabindex="-1">桌号继续</button>
+          </div>
+
+          <form class="entry-form" id="createForm" role="tabpanel" aria-labelledby="createTab">
+            <div class="fixed-game-identity" aria-label="DanKS，CardKS 的 GuanDan（掼蛋）AI，4 人对局">
+              <div class="fixed-game-brand">
+                <span class="fixed-game-origin">CARDKS AI</span>
+                <strong class="fixed-game-model">DanKS</strong>
+              </div>
+              <span class="fixed-game-divider" aria-hidden="true"></span>
+              <div class="fixed-game-title">
+                <strong class="fixed-game-name">GuanDan</strong>
+                <span class="fixed-game-native" data-l10n-ignore>掼蛋</span>
+              </div>
+              <span class="fixed-game-seats">4 人对局</span>
+            </div>
+            <fieldset class="human-slot-switch">
+              <legend>人类玩家位</legend>
+              <div id="humanSlotOptions"></div>
+            </fieldset>
+            <label class="entry-field"><span>昵称</span>
+              <input id="createNickname" type="text" maxlength="32" autocomplete="nickname" required placeholder="例如：北京牌友" />
+            </label>
+            <button class="entry-submit" id="createTableButton" type="submit">创建并入座
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+            </button>
+          </form>
+
+          <form class="entry-form" id="joinForm" role="tabpanel" aria-labelledby="joinTab" hidden>
+            <label class="entry-field"><span>桌号</span>
+              <input id="joinTableNo" type="text" maxlength="24" inputmode="numeric" required placeholder="输入桌号" />
+            </label>
+            <label class="entry-field"><span>昵称</span>
+              <input id="joinNickname" type="text" maxlength="32" autocomplete="nickname" required placeholder="例如：南京牌友" />
+            </label>
+            <button class="entry-submit" id="joinTableButton" type="submit">继续此桌
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+            </button>
+            <p class="join-note">此设备会记住你的座位，返回原桌即可继续。</p>
+          </form>
+        </section>
+      </section>
+
+      <dialog class="action-dialog" id="actionDialog" aria-labelledby="actionDialogTitle">
+        <form method="dialog" aria-labelledby="actionDialogTitle">
+          <header><div><small>同一组牌有多种合法语义</small><strong id="actionDialogTitle">请选择本次出牌</strong></div>
+            <button value="cancel" aria-label="取消" type="submit">×</button>
+          </header>
+          <div class="action-choice-list" id="actionChoiceList"></div>
+          <button class="dialog-cancel" value="cancel" type="submit">取消</button>
+        </form>
+      </dialog>
+
+      <dialog class="action-dialog rules-dialog" id="rulesDialog" aria-labelledby="rulesDialogTitle">
+        <form method="dialog" aria-labelledby="rulesDialogTitle">
+          <header><div><small id="rulesDialogKicker">本平台掼蛋桌固定配置</small><strong id="rulesDialogTitle">掼蛋玩法与客户端说明</strong></div>
+            <button value="cancel" aria-label="关闭规则说明" type="submit">×</button>
+          </header>
+          <div class="rules-dialog-body" id="guandanRulesBody">
+            <section><h2>对局流程</h2><p>使用两副牌，共 108 张，每人 27 张；对家为同队。全员准备后随机发牌，首局从 2 开始并随机先手，后续由上一局头游先手，出牌按逆时针进行。每轮先手必须出牌，不能选择“不出”；同队两人均出完即结束本局，随后全员重新准备下一局。</p></section>
+            <section><h2>基本牌型</h2><p>单张、对子、三连对、三张、钢板、顺子、三带二，以及炸弹。红桃级牌是百搭牌，但不能代替大小王。</p></section>
+            <section><h2>炸弹大小</h2><p>天王炸 ＞ 六张及以上普通炸弹 ＞ 同花顺 ＞ 五张炸弹 ＞ 四张炸弹；同类炸弹再按张数与点数比较。</p></section>
+            <section><h2>跨局升级</h2><p>我方和对方分别保存自己的级数。头游搭档为二游、三游、末游时，头游方分别从自己的级数升 3、2、1 级，另一方级数不变；下一局当前级牌等于头游方升级后的级数。级数不会跳过 A，A 级头游与末游同队时仍停留在 A。</p></section>
+            <p class="rules-note">“理牌”只改变本地展示分组，不会改变规则引擎中的手牌、出牌权或合法动作。</p>
+          </div>
+          <button class="dialog-cancel" value="cancel" type="submit">知道了</button>
+        </form>
+      </dialog>
+
+      <div class="toast-stack human-toast-stack" id="humanToastStack" aria-live="polite"></div>
+    </main>
+
+    <script type="module" src="./play.js?v=20260829-1"></script>
+  </body>
+</html>

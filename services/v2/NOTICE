@@ -1,0 +1,16 @@
+KSPlay GuanDan Service · V2
+Copyright 2026 KSPlay Contributors
+
+Project code is supplied under Apache License 2.0. Third-party components retain
+their original rights and license conditions. Dependencies are not bundled.
+
+The maintainer has confirmed ownership of the supplied rule/referee code,
+hand-arrangement source and presentation artwork. Pure game logic and the UI
+hand arranger are included; private neural policies and their runtime are not.
+
+Kingsoft and the Kingsoft logo are company trademarks. The logo is included to
+identify the project and is not licensed under Apache-2.0.
+
+Supplied card and avatar artwork is covered by the project license on the basis
+of that ownership confirmation. The company logo remains a trademark and is not
+covered by the Apache-2.0 grant. Third-party dependencies retain their licenses.

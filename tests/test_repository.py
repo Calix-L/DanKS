@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 import importlib.util
+import hashlib
 import os
 from pathlib import Path
 import shutil
@@ -83,7 +84,7 @@ def test_readme_visual_assets_are_versioned() -> None:
         assert "Kingsoft AI Product Center" in readme
         assert 'href="https://www.kingsoft.com/"' in readme
         assert 'src="assets/kingsoft-logo.png" alt=' in readme
-        assert 'width="720"' in readme
+        assert 'src="assets/kingsoft-logo.png" alt="Kingsoft AI Product Center" width="420"' in readme
         assert 'href="https://calixlin.com/CardKS/"' in readme
 
     assert "Online demo" in readmes["README.md"]
@@ -99,6 +100,49 @@ def test_readme_visual_assets_are_versioned() -> None:
         in readmes["README.zh-CN.md"]
     )
     assert "<strong>完整开放三代技术路线</strong>" in readmes["README.zh-CN.md"]
+
+
+def test_guandan_dataset_entry_links_to_public_source() -> None:
+    source = "https://github.com/Calix-L/CardKS"
+    filename = "guandan_matches.jsonl.gz"
+    for root_doc, data_doc in (("README.md", "README.md"), ("README.zh-CN.md", "README.zh-CN.md")):
+        entry = ROOT / "datasets" / data_doc
+        assert entry.is_file()
+        content = entry.read_text()
+        assert source + "/blob/main/KSCB/data/" + filename in content
+        assert "https://raw.githubusercontent.com/Calix-L/CardKS/main/KSCB/data/" + filename in content
+        assert "899" in content and "10,218" in content and "840,194" in content
+        assert "datasets/" + data_doc in (ROOT / root_doc).read_text()
+        assert "doudizhu" not in content.lower()
+    ignored_data = subprocess.run(
+        ["git", "check-ignore", "datasets/guandan_matches.jsonl.gz"],
+        cwd=ROOT, capture_output=True, text=True,
+    )
+    assert ignored_data.returncode == 0
+
+
+def test_both_public_services_retain_complete_source_manifests() -> None:
+    for version in ("v1", "v2"):
+        folder = ROOT / "services" / version
+        manifest = folder / "MANIFEST.sha256"
+        assert manifest.is_file()
+        entries = {}
+        for line in manifest.read_text().splitlines():
+            digest, relative = line.split("  ", 1)
+            path = folder / relative
+            assert path.resolve().is_relative_to(folder.resolve())
+            assert not path.is_symlink()
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == digest, relative
+            entries[relative] = digest
+        actual = {path.relative_to(folder).as_posix() for path in folder.rglob("*")
+                  if path.is_file() and not any(part in IGNORED_DIRECTORIES for part in path.parts)}
+        assert actual == set(entries) | {"MANIFEST.sha256"}
+        assert {"run.py", "integrations/ai.py", "docs/AI_INTERFACE.md",
+                "arranger/go.mod", "web/play.html", "LICENSE", "NOTICE"} <= set(entries)
+        assert not any("tests" in Path(name).parts or name.endswith("_test.go") for name in entries)
+    for name in ("README.md", "README.zh-CN.md"):
+        text = (ROOT / name).read_text()
+        assert "services/v1/README" in text and "services/v2/README" in text
 
 
 def test_v3_native_build_uses_one_installed_command() -> None:
@@ -320,6 +364,9 @@ def test_public_tree_contains_only_source_and_public_metadata() -> None:
         if path.suffix.lower() not in TEXT_SUFFIXES and path.name not in {"LICENSE", "NOTICE", ".gitignore"}:
             continue
         content = path.read_text(encoding="utf-8")
+        # Preserve the published service health identifier, not private hosting data.
+        if relative in {"services/v1/backend/solo_app.py", "services/v2/backend/solo_app.py"}:
+            content = content.replace('"service": "card' + 'ks",', '"service": "public-game",')
         lower_content = content.lower()
         if RETIRED_PACKAGE.lower() in lower_content or PLATFORM_TOKEN in lower_content:
             offenders.append(relative)

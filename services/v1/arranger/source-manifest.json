@@ -1,0 +1,22 @@
+{
+  "identity_notes": {
+    "algorithm_source_sha": "Historical frozen online algorithm lineage, retained for output parity. Original hand.go identity used LF; the other six original core identities used CRLF. This is not the checksum of current public files.",
+    "files": "SHA-256 of current public runtime Go source and go.mod, with CRLF normalized to LF. Public module imports and the generic meld shim differ from the original packaging; algorithms are unchanged in this release.",
+    "source_fingerprint": "SHA-256 over sorted path + NUL + per-file digest + newline entries. Explicit --refresh-manifest records reviewed secondary-development edits; only this fingerprint identifies current edited bytes."
+  },
+  "files": {
+    "cmd/hand-arranger/main.go": "048ef2b099e6390b38ecdcea81e6d8d3ca57487bd5fa9133b55b4cbaa33bcaac",
+    "common/hand.go": "83393f9747907f22891bc518992b00990ec4eb4b7a4cacb895cce3b7b024c052",
+    "common/pattern.go": "a6ac5828a51ce9e8517d58a799ced3589c91d639ad788bbce88be66f1642c07c",
+    "common/splitter.go": "86f9f47957bcdca95c4641cc87decc0c945c39c6300d44b5e6bee4ff9b1a04f0",
+    "common/splitter1.go": "486e4365ea674b7645d180fdb1f203649e74560567de468dde597a5ba814e860",
+    "common/splitter2.go": "96b18bd51500ffe4911f0cf07e3fd40396ef1c6c59ca06761af5f20192188847",
+    "common/splitter3.go": "b2ea53dc4aba469558244bdfc5013df1c523b84385fd4d6342e5fd0273310d6c",
+    "common/splitter4.go": "553b4427d0251372285d1162f314ae6e0d923643848cc3aecd0cf5c83df768be",
+    "go.mod": "45c6172ab6f73408fca1bb54f793032b52dc34054757ffe3aa30e82b4616612a",
+    "meld/meld.go": "c6fb03cc0b39a9fd32e536a8968b375b4abab4705ab0e61d29d4b10f2b58c46c",
+    "util/util.go": "2c52005c3de9c15e65905be90c2f9d1bbf95770b97fb003176fb21c130b27ddc"
+  },
+  "source_fingerprint": "cd021e600d61cc0d5c2b81462d7b90347940638587c064e690a26e1d59d3964e",
+  "algorithm_source_sha": "hand:b91ce83760ef3c60d076e79b6afc6a1a5ed50349ee8c17b97ccc86ef27b6e36b;pattern:2a712692b3e2ab984bba927cb1e2674adb1767fdfba75bf9d257b8c01376aa21;splitter:778438601e6811775a70268292a51c3f5925123ee2682ee95dcd005020f2c325;splitter1:3c8a0d25aa84b3ffc8206b1a72dd08f2bbd6daf16207530eab9d541a58bc6f6a;splitter2:7f751f1ba0b70af30e42e3f2d3b2f0200e0ef9a3bde0e692f56a634fa9506c4b;splitter3:92e64551f258689830c167bec7c23b973df52f40acc0581a7fa16856588c4983;splitter4:3996c711b22352d7554f78786b4a08a282e80d5fc1c96273dd950d24a45f3c68"
+}

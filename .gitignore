@@ -9,6 +9,7 @@ htmlcov/
 
 # Environments
 .venv/
+.venv*/
 venv/
 
 # Build artifacts
@@ -30,8 +31,10 @@ build/
 .env
 
 # Data and local tooling
+runtime/
 data/
-datasets/
+/datasets/*.jsonl
+/datasets/*.jsonl.gz
 checkpoints/
 models/
 runs/

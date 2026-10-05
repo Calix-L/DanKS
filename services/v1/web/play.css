@@ -1,0 +1,5518 @@
+.human-play-app {
+  width: 100%;
+  min-height: 100vh;
+  overflow: auto;
+}
+
+.human-table-stage {
+  --own-hand-panel-bottom: 22px;
+  --bottom-seat-gap: 20px;
+  --bottom-seat-baseline: 220px;
+  /* A twelve-card committed play is 274px wide (54 + 11 * 20).  These
+     anchors keep the four play lanes in separate table quadrants without
+     pushing the side lanes through the centre of the table. */
+  --human-opposed-play-offset: clamp(148px, 11vw, 160px);
+  --human-side-play-inset: clamp(168px, 13vw, 188px);
+  min-height: max(760px, calc(546px + var(--own-hand-panel-height, 0px)));
+  background:
+    radial-gradient(ellipse at 50% 43%, rgba(50, 186, 122, 0.5), transparent 46%),
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.045), transparent 30%),
+    linear-gradient(150deg, #08734a, #034830 72%, #033c2d);
+}
+
+.table-status-zone,
+.table-battle-zone,
+.table-hand-zone {
+  display: contents;
+}
+
+.human-topbar {
+  min-height: 62px;
+  position: absolute;
+  z-index: 45;
+  top: 14px;
+  right: 24px;
+  left: 24px;
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) auto minmax(160px, 1fr);
+  align-items: center;
+  pointer-events: none;
+}
+
+.human-topbar > * {
+  pointer-events: auto;
+}
+
+.human-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.table-brand-lockup {
+  width: 330px;
+  height: 44px;
+  margin: 34px 0 0 20px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+}
+
+.table-brand-lockup img {
+  width: 100%;
+  height: auto;
+  display: block;
+  opacity: 0.94;
+  filter: drop-shadow(0 2px 5px rgba(0, 25, 17, 0.24));
+}
+
+.back-to-spectator,
+.topbar-review-link {
+  width: max-content;
+  height: 44px;
+  padding: 0 15px 0 11px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  color: var(--cream);
+  background: rgba(2, 43, 30, 0.78);
+  box-shadow: 0 8px 24px rgba(0, 23, 16, 0.26);
+  backdrop-filter: blur(12px);
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.back-to-spectator[hidden],
+.topbar-review-link[hidden] {
+  display: none;
+}
+
+.back-to-spectator:hover,
+.topbar-review-link:hover {
+  border-color: rgba(141, 240, 189, 0.5);
+  color: var(--mint);
+}
+
+.topbar-review-link {
+  padding-left: 13px;
+  border-color: rgba(230, 199, 125, 0.36);
+  color: var(--gold);
+}
+
+.human-topbar-actions svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+}
+
+.room-identity {
+  min-width: 350px;
+  height: 52px;
+  padding: 7px 20px 7px 8px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  border-radius: 999px;
+  background: rgba(2, 47, 33, 0.74);
+  box-shadow: 0 10px 30px rgba(0, 23, 16, 0.24);
+  backdrop-filter: blur(12px);
+}
+
+.room-identity > div {
+  min-width: 0;
+}
+
+.room-identity strong,
+.room-identity small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.room-identity strong {
+  font-size: 15px;
+}
+
+.room-identity small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10px;
+}
+
+.connection-chip {
+  width: max-content;
+  height: 36px;
+  margin-left: auto;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  color: var(--muted);
+  background: rgba(2, 43, 30, 0.78);
+  font-size: 11px;
+}
+
+.connection-chip i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #70847b;
+}
+
+.connection-chip[data-state="online"] {
+  color: var(--mint);
+}
+
+.connection-chip[data-state="online"] i {
+  background: var(--mint);
+  box-shadow: 0 0 9px rgba(141, 240, 189, 0.78);
+}
+
+.connection-chip[data-state="reconnecting"] {
+  color: var(--gold);
+}
+
+.connection-chip[data-state="reconnecting"] i {
+  background: var(--gold);
+}
+
+.connection-chip[data-state="offline"] {
+  color: #ff98a3;
+}
+
+.connection-chip[data-state="offline"] i {
+  background: #ff7180;
+}
+
+.room-status-strip {
+  height: 36px;
+  position: absolute;
+  z-index: 36;
+  top: 77px;
+  left: 50%;
+  padding: 0 8px 0 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 999px;
+  color: var(--muted);
+  background: rgba(2, 42, 29, 0.72);
+  backdrop-filter: blur(10px);
+  font-size: 11px;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.room-status-strip > b {
+  height: 22px;
+  padding: 0 8px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #063829;
+  background: var(--mint);
+  font-size: 10px;
+}
+
+.room-status-strip > button,
+.room-status-strip > a {
+  height: 26px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 999px;
+  color: var(--cream);
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 10px;
+  text-decoration: none;
+}
+
+.room-status-strip > button:hover,
+.room-status-strip > a:hover {
+  background: rgba(141, 240, 189, 0.1);
+}
+
+.room-status-strip > .latest-replay-link {
+  border: 1px solid rgba(141, 240, 189, 0.34);
+  color: var(--mint);
+}
+
+.room-status-strip > .latest-replay-link[hidden] {
+  display: none;
+}
+
+.room-status-strip svg {
+  width: 14px;
+  height: 14px;
+}
+
+.rule-badge-strip {
+  width: 246px;
+  position: absolute;
+  z-index: 34;
+  top: 210px;
+  left: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  pointer-events: none;
+}
+
+.guandan-level-hud {
+  min-width: 210px;
+  position: absolute;
+  z-index: 35;
+  top: 124px;
+  left: 30px;
+  padding: 9px 10px;
+  border: 1px solid rgba(230, 199, 125, 0.34);
+  border-radius: 14px;
+  color: var(--cream);
+  background: rgba(2, 42, 29, 0.82);
+  box-shadow: 0 8px 24px rgba(0, 22, 15, 0.22);
+  backdrop-filter: blur(10px);
+}
+
+.guandan-level-hud > strong {
+  display: block;
+  color: var(--gold);
+  font-size: 12px;
+  letter-spacing: 0.03em;
+}
+
+.guandan-level-hud > div {
+  margin-top: 7px;
+  display: flex;
+  gap: 6px;
+}
+
+.guandan-level-hud span {
+  min-width: 82px;
+  height: 29px;
+  padding: 0 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  color: #87a99a;
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 10px;
+}
+
+.guandan-level-hud span b {
+  color: #a4bbb0;
+  font-family: var(--mono);
+  font-size: 15px;
+}
+
+.guandan-level-hud span.active {
+  border-color: rgba(141, 240, 189, 0.54);
+  color: #073b2c;
+  background: var(--mint);
+}
+
+.guandan-level-hud span.active b {
+  color: #073b2c;
+}
+
+.rule-badge-strip span {
+  min-height: 23px;
+  padding: 0 8px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(230, 199, 125, 0.25);
+  border-radius: 999px;
+  color: #e9dba8;
+  background: rgba(3, 48, 34, 0.72);
+  box-shadow: 0 4px 12px rgba(0, 23, 16, 0.16);
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.doudizhu-status-panel {
+  width: min(720px, calc(100vw - 64px));
+  position: absolute;
+  z-index: 34;
+  top: 120px;
+  left: 50%;
+  box-sizing: border-box;
+  padding: 8px 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) auto;
+  column-gap: 12px;
+  row-gap: 6px;
+  border: 1px solid rgba(230, 199, 125, 0.28);
+  border-radius: 15px;
+  color: var(--muted);
+  background: rgba(2, 43, 30, 0.82);
+  box-shadow: 0 10px 28px rgba(0, 23, 16, 0.22);
+  backdrop-filter: blur(10px);
+  transform: translateX(-50%);
+}
+
+.doudizhu-status-panel[hidden],
+.doudizhu-bottom-row[hidden] {
+  display: none;
+}
+
+.doudizhu-status-grid {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1.35fr repeat(3, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.doudizhu-status-grid span {
+  min-width: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 7px;
+  font-size: 9px;
+}
+
+.doudizhu-status-grid b {
+  overflow: hidden;
+  color: var(--cream);
+  font-family: var(--mono);
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.doudizhu-status-panel > p {
+  min-width: 0;
+  margin: 0;
+  padding-top: 6px;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: #91b6a5;
+  font-size: 9px;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.doudizhu-status-panel > .doudizhu-multiplier-trail {
+  color: var(--mint);
+}
+
+.doudizhu-bottom-row {
+  margin: 0;
+  padding-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.doudizhu-bottom-row > span {
+  color: var(--gold);
+  font-size: 9px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.doudizhu-bottom-cards {
+  display: flex;
+  gap: 4px;
+}
+
+.doudizhu-bottom-cards .playing-card.table {
+  width: 34px;
+  height: 47px;
+  border-radius: 4px;
+}
+
+.doudizhu-bottom-cards .playing-card.table .card-corner {
+  top: 2px;
+  left: 2px;
+}
+
+.doudizhu-bottom-cards .playing-card.table .card-corner b {
+  font-size: 11px;
+}
+
+.doudizhu-bottom-cards .playing-card.table .card-corner i {
+  font-size: 8px;
+}
+
+.doudizhu-bottom-cards .playing-card.table em {
+  right: 2px;
+  bottom: 2px;
+  font-size: 17px;
+}
+
+.connection-freeze {
+  position: absolute;
+  z-index: 60;
+  top: 122px;
+  left: 50%;
+  padding: 9px 15px;
+  border: 1px solid rgba(255, 152, 163, 0.5);
+  border-radius: 999px;
+  color: #ffd8dc;
+  background: rgba(91, 23, 32, 0.92);
+  box-shadow: 0 9px 28px rgba(31, 4, 8, 0.34);
+  font-size: 11px;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.connection-frozen .own-hand-panel,
+.connection-frozen .human-room-controls {
+  filter: saturate(0.55);
+}
+
+.human-seat-layer {
+  position: absolute;
+  z-index: 8;
+  inset: 0;
+  pointer-events: none;
+}
+
+.human-seat {
+  width: 330px;
+  height: 152px;
+  position: absolute;
+  z-index: 9;
+  pointer-events: none;
+}
+
+/* The shared spectator stylesheet also owns .seat-* geometry. Keep the
+   interactive table's compact seat boxes authoritative at the higher scope. */
+.human-table-stage[data-game] .human-seat {
+  width: 330px;
+  height: 152px;
+}
+
+.human-seat .player-tag,
+.human-seat .seat-target {
+  pointer-events: auto;
+}
+
+.human-seat .player-tag {
+  width: 112px;
+  min-width: 0;
+  height: 90px;
+  padding: 4px 5px 6px;
+  position: absolute;
+  inset: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
+  border-color: transparent;
+  border-radius: 12px;
+  background: rgba(2, 45, 32, 0.72);
+  box-shadow: none;
+  transform: none;
+}
+
+.human-seat .seat-number {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  font-size: 17px;
+}
+
+.human-seat .player-tag > div {
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+}
+
+.human-seat .player-name {
+  display: block;
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.human-seat .player-role {
+  display: block;
+  margin-top: 0;
+  overflow: hidden;
+  color: #a8c8ba;
+  font-size: 8px;
+  line-height: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.human-seat .hand-count {
+  font-size: 13px;
+}
+
+.human-seat.viewer-seat .player-tag {
+  border-color: rgba(141, 240, 189, 0.65);
+  box-shadow:
+    0 0 0 3px rgba(141, 240, 189, 0.08),
+    0 8px 24px rgba(0, 22, 15, 0.3);
+}
+
+.human-seat.current-actor .player-tag {
+  border-color: rgba(255, 213, 103, 0.82);
+  box-shadow:
+    0 0 0 4px rgba(255, 207, 86, 0.08),
+    0 0 26px rgba(255, 207, 86, 0.14);
+}
+
+.human-seat.kind-open .player-tag {
+  border-style: dashed;
+  color: #d8eadf;
+  background: rgba(2, 42, 29, 0.58);
+}
+
+.seat-target {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  border-radius: inherit;
+  background: transparent;
+}
+
+.seat-target:not(:disabled):hover {
+  background: rgba(141, 240, 189, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(141, 240, 189, 0.36);
+}
+
+.seat-target:disabled {
+  pointer-events: none;
+}
+
+.ready-mark {
+  min-width: 34px;
+  height: 19px;
+  position: absolute;
+  top: 5px;
+  right: 1px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.ready-mark.ready {
+  border-color: rgba(141, 240, 189, 0.45);
+  color: var(--mint);
+}
+
+.ready-mark.finish-place {
+  min-width: 40px;
+  padding: 0 7px;
+  border-color: rgba(230, 199, 125, 0.72);
+  color: #4d3506;
+  background: #f1d68f;
+  font-size: 9px;
+}
+
+.opponent-hand {
+  width: 166px;
+  height: 68px;
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-left: 39px;
+  opacity: 0.82;
+  overflow: hidden;
+}
+
+.opponent-hand .card-back {
+  width: 48px;
+  height: 68px;
+  margin-left: -39px;
+  border-width: 1px;
+}
+
+.opponent-hand-count {
+  position: absolute;
+  z-index: 3;
+  right: 3px;
+  bottom: 4px;
+  padding: 3px 6px;
+  border-radius: 999px;
+  color: var(--cream);
+  background: rgba(1, 27, 19, 0.88);
+  font-family: var(--mono);
+  font-size: 9px;
+}
+
+/* Spectators use the replay hand renderer. The outer hand-zone only positions
+   the hand; the inner .hand-layout/.meld-stack rules come from styles.css so
+   all four seats share the same arranged-card geometry as replay. */
+.spectator-hand {
+  position: absolute;
+  z-index: 2;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.spectator-hand .hand-layout {
+  pointer-events: none;
+}
+
+.human-seat .seat-play-area {
+  min-width: 174px;
+  min-height: 94px;
+  position: absolute;
+  z-index: 2;
+  inset: auto;
+  padding: 0;
+  transform: none;
+}
+
+.human-seat .play-cards {
+  --played-card-width: 54px;
+  --played-card-height: 76px;
+  --played-card-reveal: 20px;
+  min-height: var(--played-card-height);
+  margin: 0;
+  padding-left: 0;
+}
+
+.human-seat .play-cards > * {
+  margin-left: calc(var(--played-card-reveal) - var(--played-card-width));
+}
+
+.human-seat .play-cards > :first-child {
+  margin-left: 0;
+}
+
+.human-seat .play-cards .playing-card.table {
+  width: var(--played-card-width);
+  height: var(--played-card-height);
+  border-radius: 5px;
+}
+
+.human-seat .play-cards .playing-card.table .card-corner {
+  top: 3px;
+  left: 3px;
+}
+
+.human-seat .play-cards .playing-card.table .card-corner b {
+  font-size: 17px;
+}
+
+.human-seat .play-cards .playing-card.table .card-corner i {
+  font-size: 13px;
+}
+
+.human-seat .play-cards .playing-card.table em {
+  right: 3px;
+  bottom: 3px;
+  font-size: 27px;
+}
+
+.human-seat .play-cards .playing-card.table.joker .card-corner b {
+  font-size: 12px;
+}
+
+.human-seat .play-label {
+  display: none;
+  font-size: 34px;
+}
+
+.human-seat.passed .play-label {
+  display: block;
+}
+
+.human-table-stage[data-game] .human-seat.seat-bottom {
+  bottom: max(
+    var(--bottom-seat-baseline),
+    calc(var(--own-hand-panel-height, 0px) + var(--own-hand-panel-bottom) + var(--bottom-seat-gap))
+  );
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.human-seat.seat-bottom .player-tag {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.human-table-stage.own-hand-visible:not(.spectator-view) .human-seat.seat-bottom .player-tag {
+  display: none;
+}
+
+.human-seat.seat-bottom .opponent-hand {
+  display: none;
+}
+
+.human-seat.seat-bottom .spectator-hand {
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.human-table-stage[data-game] .human-seat.seat-bottom .seat-play-area {
+  bottom: 64px;
+  left: calc(50% + var(--human-opposed-play-offset));
+  transform: translateX(-50%);
+}
+
+.human-table-stage[data-game] .human-seat.seat-top {
+  top: 122px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.human-seat.seat-top .player-tag {
+  top: 57px;
+  left: calc(50% + 150px);
+  transform: none;
+}
+
+.human-seat.seat-top .opponent-hand {
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.human-seat.seat-top .spectator-hand {
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.human-table-stage[data-game] .human-seat.seat-top .seat-play-area {
+  top: 135px;
+  left: calc(50% - var(--human-opposed-play-offset));
+  transform: translateX(-50%);
+}
+
+.human-table-stage[data-game] .human-seat.seat-left {
+  top: 46%;
+  left: 26px;
+  transform: translateY(-50%);
+}
+
+.human-seat.seat-left .player-tag {
+  top: 0;
+  left: 0;
+}
+
+.human-seat.seat-left .opponent-hand {
+  top: 96px;
+  left: 0;
+}
+
+.human-seat.seat-left .spectator-hand {
+  top: 96px;
+  left: 0;
+}
+
+.human-seat.seat-left .seat-play-area {
+  top: 158px;
+  left: var(--human-side-play-inset);
+}
+
+.human-table-stage[data-game] .human-seat.seat-right {
+  top: 46%;
+  right: 26px;
+  transform: translateY(-50%);
+}
+
+.human-seat.seat-right .player-tag {
+  top: 0;
+  right: 0;
+}
+
+.human-seat.seat-right .opponent-hand {
+  top: 96px;
+  right: 0;
+}
+
+.human-seat.seat-right .spectator-hand {
+  top: 96px;
+  right: 0;
+}
+
+.human-seat.seat-right .seat-play-area {
+  top: -100px;
+  right: var(--human-side-play-inset);
+}
+
+.human-turn-countdown {
+  width: 62px;
+  height: 62px;
+  position: absolute;
+  z-index: 11;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: inherit;
+}
+
+.human-turn-countdown[hidden] {
+  display: none;
+}
+
+/* The replay clock is intentionally large. Live play uses the same visual
+   language at identity-badge scale so the timer cannot cover a hand or the
+   committed-action lane. */
+.human-turn-countdown::before,
+.human-turn-countdown::after {
+  width: 20px;
+  height: 14px;
+  top: 0;
+  border-width: 3px;
+  border-bottom-width: 2px;
+}
+
+.human-turn-countdown::before {
+  left: 4px;
+}
+
+.human-turn-countdown::after {
+  right: 4px;
+}
+
+.human-turn-countdown .turn-clock-face {
+  width: 54px;
+  height: 54px;
+  box-sizing: border-box;
+  border-width: 5px;
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.9),
+    inset 0 -5px 8px rgba(142, 62, 34, 0.12),
+    0 0 0 2px rgba(125, 38, 24, 0.2),
+    0 4px 7px rgba(46, 14, 6, 0.3);
+}
+
+.human-turn-countdown .turn-clock-face::before,
+.human-turn-countdown .turn-clock-face::after {
+  width: 10px;
+  height: 6px;
+  bottom: -9px;
+}
+
+.human-turn-countdown .turn-clock-face::before {
+  left: 4px;
+}
+
+.human-turn-countdown .turn-clock-face::after {
+  right: 4px;
+}
+
+.human-turn-countdown .turn-countdown-value {
+  color: #321008;
+  font-size: 28px;
+  font-weight: 950;
+  -webkit-text-stroke: 0.8px #321008;
+  text-shadow: 0 1px 1px rgba(44, 9, 4, 0.28);
+}
+
+.human-turn-countdown.elapsed {
+  opacity: 1;
+  filter: drop-shadow(0 4px 6px rgba(28, 12, 2, 0.28));
+}
+
+.human-turn-countdown.frozen {
+  filter: grayscale(0.8) saturate(0.4);
+}
+
+.human-seat .player-tag > .human-turn-countdown {
+  top: 14px;
+  right: -70px;
+  bottom: auto;
+  left: auto;
+}
+
+.human-seat.seat-right .player-tag > .human-turn-countdown {
+  right: auto;
+  left: -70px;
+}
+
+.human-table-center {
+  top: 45%;
+}
+
+.lobby-help {
+  width: min(430px, calc(100vw - 32px));
+  position: absolute;
+  z-index: 20;
+  top: 46%;
+  left: 50%;
+  box-sizing: border-box;
+  padding: 18px 22px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  color: var(--muted);
+  background: rgba(2, 45, 31, 0.5);
+  text-align: center;
+  backdrop-filter: blur(6px);
+  transform: translate(-50%, -50%);
+}
+
+.lobby-help strong,
+.lobby-help span {
+  display: block;
+}
+
+.lobby-help strong {
+  margin-bottom: 7px;
+  color: var(--cream);
+  font-size: 19px;
+}
+
+.lobby-help span {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.human-room-controls {
+  position: static;
+  z-index: 1;
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+.ready-button {
+  min-width: 164px;
+  height: 52px;
+  padding: 0 18px 0 9px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(141, 240, 189, 0.52);
+  border-radius: 999px;
+  color: #063829;
+  background: var(--mint);
+  box-shadow: 0 9px 25px rgba(0, 28, 19, 0.34);
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.ready-button:hover:not(:disabled) {
+  background: #b0fbd7;
+}
+
+.ready-button.ready {
+  border-color: rgba(230, 199, 125, 0.62);
+  color: #4d3506;
+  background: #f1d68f;
+}
+
+.ready-icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--mint);
+  background: #073a2b;
+  font-size: 20px;
+}
+
+.ready-button.ready .ready-icon {
+  color: var(--gold);
+  background: #4d3506;
+}
+
+.own-hand-panel {
+  width: var(--own-hand-panel-width, 760px);
+  min-width: min(760px, calc(100vw - 48px));
+  max-width: calc(100vw - 48px);
+  min-height: 214px;
+  position: absolute;
+  z-index: 28;
+  bottom: var(--own-hand-panel-bottom);
+  left: 50%;
+  padding: 12px 13px 12px 16px;
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr) 196px;
+  align-items: stretch;
+  gap: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  border-radius: 20px;
+  background:
+    linear-gradient(120deg, rgba(141, 240, 189, 0.04), transparent 30%),
+    rgba(2, 39, 28, 0.92);
+  box-shadow: 0 16px 44px rgba(0, 20, 14, 0.38);
+  backdrop-filter: blur(13px);
+  transform: translateX(-50%);
+}
+
+.own-hand-workspace {
+  min-width: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.hand-scroll-hint {
+  display: none;
+}
+
+.arrange-toolbar {
+  min-height: 37px;
+  padding: 0 8px 5px 4px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.arrange-toolbar > span {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.arrange-toolbar > div {
+  display: flex;
+  gap: 4px;
+}
+
+.arrange-toolbar button {
+  min-height: 26px;
+  padding: 0 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.arrange-toolbar button[aria-pressed="true"] {
+  border-color: rgba(141, 240, 189, 0.52);
+  color: #063829;
+  background: var(--mint);
+}
+
+.arrange-toolbar button[aria-pressed="true"][data-variant-count]::after {
+  min-width: 26px;
+  margin-left: 6px;
+  padding: 2px 5px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #dffdeb;
+  background: rgba(4, 62, 44, 0.78);
+  font-family: var(--mono);
+  font-size: 0.82em;
+  font-weight: 800;
+  line-height: 1;
+  content: attr(data-variant-count);
+}
+
+.arrange-toolbar > .arrange-fixed-mode {
+  min-height: 26px;
+  padding: 0 10px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(141, 240, 189, 0.48);
+  border-radius: 999px;
+  color: #063829;
+  background: var(--mint);
+  font-size: 9px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.arrange-toolbar > small {
+  min-width: 0;
+  margin-left: auto;
+  overflow: hidden;
+  color: #77998a;
+  font-size: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.own-hand-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: 5px 10px 5px 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.own-seat-identity {
+  display: grid;
+  grid-template-columns: 42px minmax(88px, 1fr) 62px;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.own-seat-copy {
+  min-width: 88px;
+}
+
+.own-seat-identity .own-turn-countdown {
+  grid-column: 3;
+  grid-row: 1;
+  position: relative;
+  inset: auto;
+  justify-self: end;
+}
+
+.own-finish-badge {
+  min-width: 40px;
+  min-height: 22px;
+  padding: 0 8px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(230, 199, 125, 0.72);
+  border-radius: 999px;
+  color: #4d3506;
+  background: #f1d68f;
+  font-size: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+}
+
+.own-finish-badge[hidden] {
+  display: none;
+}
+
+.own-seat-identity .seat-number {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #173b30;
+  background: var(--cream);
+  font-family: var(--display);
+  font-size: 16px;
+}
+
+.own-seat-identity strong,
+.own-seat-identity small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.own-seat-identity strong {
+  color: var(--cream);
+  font-size: 13px;
+}
+
+.own-seat-identity small {
+  margin-top: 3px;
+  color: #a8c8ba;
+  font-size: 9px;
+}
+
+.own-hand-copy > .own-hand-remaining {
+  color: var(--cream);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.own-hand-copy b {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 500;
+}
+
+.own-hand-scroll {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: visible;
+}
+
+.own-hand-list {
+  --own-hand-natural-step: 75px;
+  --own-hand-card-width: 74px;
+  --own-hand-card-height: 108px;
+  --own-hand-rank-reveal: 28px;
+  --own-hand-min-step: 26px;
+  --own-hand-group-step: var(--own-hand-natural-step);
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 164px;
+  padding: 18px 12px 4px 20px;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 3px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.own-meld-stack {
+  width: var(--own-hand-group-step);
+  min-width: var(--own-hand-group-step);
+  position: relative;
+  display: flex;
+  flex: 0 0 var(--own-hand-group-step);
+  flex-direction: column;
+  align-items: flex-start;
+  filter: drop-shadow(0 4px 5px rgba(0, 20, 14, 0.22));
+}
+
+.own-meld-stack:last-child {
+  width: var(--own-hand-card-width);
+  min-width: var(--own-hand-card-width);
+  flex-basis: var(--own-hand-card-width);
+}
+
+.own-hand-list.wrapped-layout .own-meld-stack.row-end {
+  width: var(--own-hand-card-width);
+  min-width: var(--own-hand-card-width);
+  flex-basis: var(--own-hand-card-width);
+}
+
+.own-meld-stack .hand-card-button,
+.own-meld-stack .hand-card-button:last-child {
+  width: 74px;
+  height: var(--own-hand-card-height);
+  flex: 0 0 var(--own-hand-card-height);
+}
+
+.own-meld-stack .hand-card-button + .hand-card-button {
+  margin-top: calc(var(--own-hand-rank-reveal) - var(--own-hand-card-height));
+}
+
+.own-hand-list.fallback-layout {
+  --own-hand-natural-step: 42px;
+  gap: 0;
+}
+
+.own-hand-list.fallback-layout .own-meld-stack {
+  width: var(--own-hand-group-step);
+  min-width: var(--own-hand-group-step);
+  flex-basis: var(--own-hand-group-step);
+}
+
+.own-hand-list.fallback-layout .own-meld-stack:last-child {
+  width: var(--own-hand-card-width);
+  min-width: var(--own-hand-card-width);
+  flex-basis: var(--own-hand-card-width);
+}
+
+.own-hand-list.wrapped-layout {
+  width: 100%;
+  height: auto;
+  min-height: 164px;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  row-gap: 14px;
+}
+
+.hand-card-button {
+  width: 42px;
+  height: var(--own-hand-card-height);
+  flex: 0 0 42px;
+  position: relative;
+  overflow: visible;
+  padding: 0;
+  border-radius: 6px;
+  background: transparent;
+  transition: filter 130ms ease;
+}
+
+.hand-card-button:last-child {
+  width: 74px;
+  flex-basis: 74px;
+}
+
+.hand-card-button:hover:not(:disabled) {
+  z-index: auto;
+  filter: brightness(1.08) drop-shadow(0 0 5px rgba(141, 240, 189, 0.42));
+  transform: none;
+}
+
+.hand-card-button.selected {
+  z-index: auto;
+  filter: drop-shadow(0 0 8px rgba(141, 240, 189, 0.7));
+  transform: none;
+}
+
+.own-hand-list.sweep-selecting .hand-card-button:hover:not(:disabled),
+.own-hand-list.sweep-selecting .hand-card-button.selected {
+  z-index: auto;
+  transform: none;
+  transition: none;
+}
+
+.hand-card-button.selected::after {
+  content: "\2713";
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  z-index: 5;
+  top: 3px;
+  right: 3px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #e9fff4;
+  border-radius: 50%;
+  color: #063a2a;
+  background: var(--mint);
+  box-shadow: 0 3px 8px rgba(0, 26, 18, 0.36);
+  font-size: 13px;
+  font-weight: 900;
+  pointer-events: none;
+}
+
+.hand-card-button:disabled {
+  opacity: 0.9;
+}
+
+.hand-card-button .playing-card.hand {
+  width: 74px;
+  height: var(--own-hand-card-height);
+  display: block;
+  pointer-events: none;
+}
+
+.hand-card-button .playing-card.hand .card-corner b {
+  font-size: 21px;
+}
+
+.hand-card-button .playing-card.hand .card-corner i {
+  font-size: 16px;
+}
+
+.hand-card-button .playing-card.hand em {
+  font-size: 38px;
+}
+
+.hand-card-button .playing-card.hand.joker .card-corner b {
+  font-size: 14px;
+}
+
+.hand-card-button .card-level-mark {
+  width: 20px;
+  height: 20px;
+  top: 4px;
+  right: 4px;
+  bottom: auto;
+  left: auto;
+  font-size: 13px;
+}
+
+.human-seat .playing-card.table .card-level-mark {
+  width: 20px;
+  height: 20px;
+  top: auto;
+  right: 4px;
+  bottom: 4px;
+  left: auto;
+  font-size: 13px;
+}
+
+.action-dock {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 11px;
+  padding-left: 13px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.turn-hint {
+  min-height: 30px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.action-dock > .play-action-buttons {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 7px;
+}
+
+.phase-action-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.phase-action-buttons button {
+  min-height: 43px;
+  padding: 0 8px;
+  border-radius: 11px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.phase-action-secondary {
+  border: 1px solid rgba(230, 199, 125, 0.42);
+  color: var(--gold);
+  background: rgba(230, 199, 125, 0.06);
+}
+
+.phase-action-primary {
+  border: 1px solid rgba(141, 240, 189, 0.45);
+  color: #063829;
+  background: var(--mint);
+}
+
+.phase-action-primary:hover:not(:disabled) {
+  background: #b0fbd7;
+}
+
+.pass-button,
+.play-button {
+  height: 48px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.pass-button {
+  border: 1px solid rgba(230, 199, 125, 0.42);
+  color: var(--gold);
+  background: rgba(230, 199, 125, 0.06);
+  font-family: var(--serif);
+}
+
+.play-button {
+  color: #063829;
+  background: var(--mint);
+}
+
+.play-button:hover:not(:disabled) {
+  background: #b0fbd7;
+}
+
+.action-dock.pending .turn-hint {
+  color: var(--gold);
+}
+
+.result-banner {
+  width: min(760px, calc(100vw - 40px));
+  max-height: calc(100vh - 48px);
+  position: absolute;
+  z-index: 41;
+  top: 45%;
+  left: 50%;
+  overflow-y: auto;
+  padding: 20px 26px;
+  border: 1px solid rgba(230, 199, 125, 0.5);
+  border-radius: 20px;
+  color: var(--gold);
+  background: rgba(3, 40, 29, 0.94);
+  box-shadow: 0 20px 65px rgba(0, 20, 13, 0.46);
+  backdrop-filter: blur(14px);
+  text-align: center;
+  transform: translate(-50%, -50%);
+}
+
+.result-banner > small,
+.result-headline > strong,
+.result-headline > span {
+  display: block;
+}
+
+.result-headline > strong {
+  margin-top: 7px;
+  font-family: var(--serif);
+  font-size: 23px;
+}
+
+.result-headline > span {
+  width: max-content;
+  margin: 9px auto 0;
+  padding: 5px 11px;
+  border: 1px solid rgba(141, 240, 189, 0.34);
+  border-radius: 999px;
+  color: var(--mint);
+  background: rgba(141, 240, 189, 0.07);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.result-round-meta {
+  width: max-content;
+  max-width: 100%;
+  margin: 10px auto 0;
+  color: #a9cbbd;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.result-detail-grid {
+  margin-top: 17px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+  text-align: left;
+}
+
+.result-detail-grid > section {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(0, 24, 17, 0.32);
+}
+
+.result-detail-grid h2 {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.result-finish-order,
+.result-seat-scores {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 5px;
+  list-style: none;
+}
+
+.result-finish-order li,
+.result-seat-scores li {
+  min-width: 0;
+  min-height: 31px;
+  padding: 5px 8px;
+  display: grid;
+  align-items: center;
+  gap: 7px;
+  border-radius: 9px;
+  color: var(--cream);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.result-finish-order li {
+  grid-template-columns: 42px 54px minmax(0, 1fr);
+}
+
+.result-finish-order li > span {
+  color: var(--gold);
+  font-family: var(--serif);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.result-finish-order li > b,
+.result-seat-scores li > b {
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.result-finish-order li > small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.result-seat-scores li {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.result-seat-scores li > span {
+  overflow: hidden;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.result-seat-scores li.positive > b {
+  color: var(--mint);
+}
+
+.result-seat-scores li.negative > b {
+  color: #ff98a3;
+}
+
+.result-ready-button {
+  min-width: 170px;
+  height: 44px;
+  margin: 16px auto 0;
+  padding: 0 18px;
+  border: 1px solid rgba(141, 240, 189, 0.52);
+  border-radius: 999px;
+  color: #063829;
+  background: var(--mint);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.result-replay-link {
+  width: max-content;
+  min-height: 40px;
+  margin: 16px auto 0;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(141, 240, 189, 0.48);
+  border-radius: 999px;
+  color: var(--mint);
+  background: rgba(141, 240, 189, 0.08);
+  font-size: 12px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.result-replay-link:hover {
+  background: rgba(141, 240, 189, 0.16);
+}
+
+.result-replay-link[hidden] {
+  display: none;
+}
+
+.result-replay-link:not([hidden]) + .result-ready-button {
+  margin-top: 8px;
+}
+
+.result-ready-button.ready {
+  border-color: rgba(230, 199, 125, 0.52);
+  color: #4d3506;
+  background: #f1d68f;
+}
+
+.series-result-overlay {
+  position: absolute;
+  z-index: 82;
+  inset: 0;
+  padding: 82px 116px 54px;
+  display: grid;
+  place-items: center;
+  color: var(--cream);
+  background:
+    radial-gradient(circle at 50% 12%, rgba(255, 204, 91, 0.24), transparent 32%),
+    linear-gradient(135deg, rgba(52, 7, 8, 0.96), rgba(4, 37, 29, 0.98) 48%, rgba(4, 25, 39, 0.98));
+  backdrop-filter: blur(10px);
+}
+
+.series-result-overlay[hidden] {
+  display: none;
+}
+
+.series-result-shell {
+  width: min(1280px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 28px 34px 24px;
+  border: 1px solid rgba(245, 211, 126, 0.54);
+  border-radius: 28px;
+  background: rgba(4, 28, 22, 0.78);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.48);
+  scrollbar-width: thin;
+}
+
+.series-result-header {
+  text-align: center;
+}
+
+.series-result-header small {
+  color: #f7d88c;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+}
+
+.series-result-header h1 {
+  margin: 5px 0 2px;
+  color: #fff2bf;
+  font-family: var(--serif);
+  font-size: 54px;
+  line-height: 1;
+  text-shadow: 0 5px 22px rgba(246, 174, 45, 0.42);
+}
+
+.series-result-header p,
+.series-result-meta {
+  margin: 8px 0 0;
+  color: #dcbf7b;
+  font-weight: 750;
+}
+
+.series-last-round-meta {
+  width: min(620px, 100%);
+  margin: 14px auto 0;
+  padding: 10px 14px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(245, 211, 126, 0.28);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.series-last-round-meta[hidden] {
+  display: none;
+}
+
+.series-last-round-meta > strong {
+  color: var(--mint);
+  font-size: 15px;
+}
+
+.series-last-round-meta.lost > strong {
+  color: #f2b2a9;
+}
+
+.series-last-round-meta > span {
+  color: var(--cream);
+  font-size: 12px;
+}
+
+.series-last-round-meta > small {
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.series-team-grid {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 52px minmax(0, 1fr);
+  align-items: stretch;
+  gap: 14px;
+}
+
+.series-versus {
+  display: grid;
+  place-items: center;
+  color: rgba(255, 241, 193, 0.68);
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.series-team-card {
+  min-width: 0;
+  padding: 18px;
+  border-radius: 22px;
+}
+
+.series-team-card.winner {
+  border: 1px solid rgba(255, 204, 91, 0.72);
+  background: linear-gradient(145deg, rgba(173, 39, 35, 0.9), rgba(93, 20, 19, 0.88));
+  box-shadow: inset 0 0 32px rgba(255, 192, 75, 0.16);
+}
+
+.series-team-card.loser {
+  border: 1px solid rgba(114, 173, 218, 0.54);
+  background: linear-gradient(145deg, rgba(31, 87, 134, 0.84), rgba(18, 48, 78, 0.88));
+}
+
+.series-team-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.series-team-heading span {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+}
+
+.series-team-heading strong {
+  color: #fff1b0;
+  font-size: 16px;
+}
+
+.series-player-grid {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.series-player-card {
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  background: rgba(0, 12, 10, 0.22);
+}
+
+.series-player-card > div span,
+.series-player-card > div strong {
+  display: block;
+}
+
+.series-player-card > div span {
+  color: rgba(255, 255, 255, 0.65);
+  font-family: var(--mono);
+  font-size: 10px;
+}
+
+.series-player-card > div strong {
+  overflow: hidden;
+  margin-top: 4px;
+  font-size: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.series-player-card dl {
+  margin: 12px 0 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 5px 10px;
+  font-size: 11px;
+}
+
+.series-player-card dt {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.series-player-card dd {
+  margin: 0;
+  color: #fff3bd;
+  font-family: var(--mono);
+  font-weight: 900;
+}
+
+.series-result-meta {
+  text-align: center;
+  font-size: 12px;
+}
+
+.series-result-actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.series-result-actions button {
+  min-width: 150px;
+  height: 44px;
+  border: 1px solid rgba(230, 199, 125, 0.48);
+  border-radius: 999px;
+  color: #f6d989;
+  background: rgba(230, 199, 125, 0.08);
+  font-weight: 800;
+}
+
+.series-result-actions button.primary {
+  color: #4b3103;
+  background: linear-gradient(180deg, #ffe5a2, #e9b94f);
+}
+
+.series-result-actions button.ready {
+  color: #063829;
+  background: var(--mint);
+}
+
+.series-replay-list {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 7px;
+}
+
+.series-replay-list[hidden] {
+  display: none;
+}
+
+.series-replay-list a {
+  padding: 7px 11px;
+  border: 1px solid rgba(141, 240, 189, 0.3);
+  border-radius: 999px;
+  color: var(--mint);
+  background: rgba(141, 240, 189, 0.06);
+  font-size: 10px;
+  text-decoration: none;
+}
+
+@media (max-aspect-ratio: 4 / 3) {
+  .series-result-overlay {
+    padding-inline: 54px;
+  }
+}
+
+.result-banner > small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.entry-panel {
+  width: min(510px, calc(100vw - 32px));
+  max-height: calc(100vh - 44px);
+  position: fixed;
+  z-index: 70;
+  top: 50%;
+  left: 50%;
+  overflow-y: auto;
+  padding: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 24px;
+  background:
+    linear-gradient(150deg, rgba(141, 240, 189, 0.06), transparent 27%),
+    #071d16;
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.54);
+  scrollbar-color: rgba(141, 240, 189, 0.22) transparent;
+  scrollbar-width: thin;
+  transform: translate(-50%, -50%);
+}
+
+.entry-brand {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.entry-brand h1,
+.entry-brand small {
+  margin: 0;
+  display: block;
+}
+
+.entry-brand small {
+  margin-bottom: 5px;
+  color: var(--gold);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+}
+
+.entry-brand h1 {
+  font-family: var(--serif);
+  font-size: 23px;
+  line-height: 1.2;
+}
+
+.entry-panel > p {
+  margin: 17px 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.recent-table-card {
+  min-height: 72px;
+  margin: 0 0 14px;
+  padding: 11px 12px 11px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid rgba(230, 199, 125, 0.34);
+  border-radius: 15px;
+  background: linear-gradient(135deg, rgba(230, 199, 125, 0.11), rgba(141, 240, 189, 0.06));
+}
+
+.recent-table-card[hidden] {
+  display: none;
+}
+
+.recent-table-card > div {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.recent-table-card small {
+  color: var(--gold);
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+}
+
+.recent-table-card strong {
+  color: var(--cream);
+  font-size: 17px;
+}
+
+.recent-table-card span {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recent-table-card button {
+  min-width: 112px;
+  min-height: 46px;
+  padding-inline: 16px;
+  border-radius: 12px;
+  color: #063829;
+  background: var(--mint);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.entry-tabs {
+  padding: 4px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.entry-tabs button {
+  height: 40px;
+  border-radius: 9px;
+  color: var(--muted);
+  background: transparent;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.entry-tabs button[aria-selected="true"] {
+  color: #063829;
+  background: var(--mint);
+}
+
+.entry-form {
+  margin-top: 18px;
+}
+
+.fixed-game-identity {
+  margin: 0 0 15px;
+  padding: 13px 2px;
+  display: grid;
+  grid-template-columns: auto 1px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 15px;
+  border-block: 1px solid rgba(141, 240, 189, 0.18);
+}
+
+.fixed-game-brand {
+  min-width: 86px;
+}
+
+.fixed-game-origin,
+.fixed-game-model {
+  display: block;
+}
+
+.fixed-game-origin {
+  color: var(--gold);
+  font-family: var(--mono);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.fixed-game-model {
+  margin-top: 2px;
+  color: var(--cream);
+  font-family: var(--serif);
+  font-size: 20px;
+  line-height: 1.05;
+}
+
+.fixed-game-divider {
+  width: 1px;
+  height: 34px;
+  background: rgba(230, 199, 125, 0.28);
+}
+
+.fixed-game-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.fixed-game-name {
+  color: var(--cream);
+  font-size: 14px;
+  letter-spacing: 0.01em;
+}
+
+.fixed-game-native {
+  color: var(--mint);
+  font-size: 11px;
+}
+
+.fixed-game-seats {
+  padding: 5px 9px;
+  border: 1px solid rgba(141, 240, 189, 0.2);
+  border-radius: 999px;
+  color: var(--mint);
+  background: rgba(141, 240, 189, 0.06);
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.human-game-switch,
+.human-slot-switch {
+  margin: 0 0 15px;
+  padding: 0;
+  border: 0;
+}
+
+.human-game-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.human-game-switch legend,
+.human-slot-switch legend,
+.entry-field > span {
+  margin-bottom: 8px;
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.human-game-switch legend {
+  grid-column: 1 / -1;
+}
+
+.human-game-switch input,
+.human-slot-switch input {
+  position: absolute;
+  opacity: 0;
+}
+
+.human-game-switch label {
+  height: 58px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 11px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.human-game-switch label strong {
+  color: var(--cream);
+  font-size: 14px;
+}
+
+.human-game-switch label small {
+  font-size: 10px;
+}
+
+.human-game-switch input:checked + label,
+.human-slot-switch input:checked + label {
+  border-color: rgba(141, 240, 189, 0.48);
+  color: var(--mint);
+  background: rgba(141, 240, 189, 0.065);
+}
+
+.human-slot-switch > div {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+
+.human-slot-switch label {
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 10px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.018);
+  font-size: 12px;
+}
+
+.entry-field {
+  margin-top: 13px;
+  display: block;
+}
+
+.entry-field > span small {
+  color: #708f81;
+}
+
+.entry-field input {
+  width: 100%;
+  height: 48px;
+  padding: 0 13px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 11px;
+  color: var(--cream);
+  background: #0a291f;
+  font-size: 14px;
+}
+
+.entry-field input::placeholder {
+  color: #708b7f;
+}
+
+.entry-submit {
+  width: 100%;
+  height: 52px;
+  margin-top: 18px;
+  padding: 0 17px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 11px;
+  color: #063829;
+  background: var(--mint);
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.entry-submit:hover:not(:disabled) {
+  background: #b0fbd7;
+}
+
+.join-note {
+  margin: 12px 1px 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.action-dialog {
+  width: min(540px, calc(100vw - 32px));
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 22px;
+  color: var(--white);
+  background: #071d16;
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.56);
+}
+
+.action-dialog::backdrop {
+  background: rgba(0, 17, 11, 0.66);
+  backdrop-filter: blur(4px);
+}
+
+.action-dialog > form {
+  padding: 20px;
+}
+
+.action-dialog header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.action-dialog header small,
+.action-dialog header strong {
+  display: block;
+}
+
+.action-dialog header small {
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.action-dialog header strong {
+  font-size: 18px;
+}
+
+.action-dialog header > button {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.055);
+  font-size: 23px;
+}
+
+.action-choice-list {
+  margin-top: 17px;
+  display: grid;
+  gap: 8px;
+}
+
+.action-choice-list button {
+  min-height: 54px;
+  padding: 9px 13px;
+  border: 1px solid rgba(141, 240, 189, 0.22);
+  border-radius: 11px;
+  color: var(--cream);
+  background: rgba(141, 240, 189, 0.04);
+  font-size: 12px;
+  line-height: 1.45;
+  text-align: left;
+}
+
+.action-choice-list button:hover {
+  border-color: rgba(141, 240, 189, 0.55);
+  background: rgba(141, 240, 189, 0.1);
+}
+
+.dialog-cancel {
+  width: 100%;
+  height: 42px;
+  margin-top: 13px;
+  border-radius: 10px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.045);
+  font-size: 12px;
+}
+
+.rules-dialog {
+  width: min(700px, calc(100vw - 32px));
+}
+
+.rules-dialog-body {
+  max-height: min(60vh, 520px);
+  margin-top: 18px;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  scrollbar-color: rgba(141, 240, 189, 0.24) transparent;
+  scrollbar-width: thin;
+}
+
+.rules-dialog-body section {
+  padding: 13px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.rules-dialog-body h2,
+.rules-dialog-body p {
+  margin: 0;
+}
+
+.rules-dialog-body h2 {
+  color: var(--gold);
+  font-size: 13px;
+}
+
+.rules-dialog-body p {
+  margin-top: 7px;
+  color: #c0d9ce;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.rules-dialog-body .rules-note {
+  grid-column: 1 / -1;
+  margin-top: 0;
+  padding: 10px 13px;
+  border: 1px solid rgba(141, 240, 189, 0.22);
+  border-radius: 11px;
+  color: var(--mint);
+  background: rgba(141, 240, 189, 0.05);
+}
+
+.human-toast-stack {
+  z-index: 130;
+  bottom: 24px;
+}
+
+.human-toast-stack .toast {
+  font-size: 12px;
+}
+
+@media (max-width: 1280px), (max-height: 820px) {
+  .human-table-stage {
+    --own-hand-panel-bottom: 16px;
+    --bottom-seat-baseline: 192px;
+    min-height: max(680px, calc(490px + var(--own-hand-panel-height, 0px)));
+  }
+
+  .human-table-stage[data-game] .human-seat.seat-top {
+    top: 122px;
+  }
+
+  .human-table-stage[data-game] .human-seat.seat-left,
+  .human-table-stage[data-game] .human-seat.seat-right {
+    top: 45%;
+  }
+
+  .human-table-stage[data-game] .human-seat.seat-left {
+    left: 18px;
+  }
+
+  .human-table-stage[data-game] .human-seat.seat-right {
+    right: 18px;
+  }
+
+  .own-hand-panel {
+    min-height: 190px;
+    grid-template-columns: 80px minmax(0, 1fr) 174px;
+  }
+
+  .own-hand-list {
+    --own-hand-natural-step: 66px;
+    --own-hand-card-width: 65px;
+    --own-hand-card-height: 94px;
+    --own-hand-rank-reveal: 26px;
+    height: auto;
+    min-height: 136px;
+    padding-top: 12px;
+  }
+
+  .own-hand-list.wrapped-layout {
+    min-height: 136px;
+  }
+
+  .hand-card-button {
+    width: 36px;
+    height: var(--own-hand-card-height);
+    flex-basis: 36px;
+  }
+
+  .hand-card-button:last-child {
+    width: 65px;
+    flex-basis: 65px;
+  }
+
+  .hand-card-button .playing-card.hand {
+    width: 65px;
+    height: var(--own-hand-card-height);
+  }
+
+  .own-meld-stack {
+    width: var(--own-hand-group-step);
+    min-width: var(--own-hand-group-step);
+    flex-basis: var(--own-hand-group-step);
+  }
+
+  .own-meld-stack:last-child {
+    width: var(--own-hand-card-width);
+    min-width: var(--own-hand-card-width);
+    flex-basis: var(--own-hand-card-width);
+  }
+
+  .own-meld-stack .hand-card-button {
+    width: 65px;
+    height: var(--own-hand-card-height);
+    flex: 0 0 var(--own-hand-card-height);
+  }
+
+  .own-meld-stack .hand-card-button + .hand-card-button {
+    margin-top: calc(var(--own-hand-rank-reveal) - var(--own-hand-card-height));
+  }
+
+  .own-hand-list.fallback-layout {
+    --own-hand-natural-step: 36px;
+  }
+
+  .own-hand-list.fallback-layout .own-meld-stack {
+    width: var(--own-hand-group-step);
+    min-width: var(--own-hand-group-step);
+    flex-basis: var(--own-hand-group-step);
+  }
+
+  .own-hand-list.fallback-layout .own-meld-stack:last-child {
+    width: var(--own-hand-card-width);
+    min-width: var(--own-hand-card-width);
+    flex-basis: var(--own-hand-card-width);
+  }
+
+  .arrange-toolbar > small {
+    display: none;
+  }
+
+}
+
+@media (max-width: 1024px) {
+  .human-play-app {
+    overflow-x: hidden;
+  }
+
+  .human-table-stage.table-stage {
+    width: 100vw;
+    min-width: 0;
+  }
+
+  .human-seat.seat-left .seat-play-area {
+    top: 140px;
+    left: 0;
+  }
+
+  .human-seat.seat-right .seat-play-area {
+    top: 140px;
+    right: 0;
+  }
+
+  .own-hand-panel {
+    left: 12px;
+    width: var(--own-hand-panel-width, 760px);
+    max-width: calc(100vw - 24px);
+    transform: none;
+  }
+
+  .result-banner {
+    left: 12px;
+    width: calc(100vw - 24px);
+    transform: translateY(-50%);
+  }
+}
+
+@media (max-width: 760px) {
+  .human-table-stage.table-stage {
+    --bottom-seat-baseline: 42px;
+    --bottom-seat-gap: 26px;
+    height: max(100vh, calc(1120px + var(--own-hand-panel-height, 0px)));
+    min-height: calc(1120px + var(--own-hand-panel-height, 0px));
+  }
+
+  .human-table-stage[data-game] .human-seat {
+    width: min(330px, calc(100vw - 24px));
+  }
+
+  .human-table-stage[data-game] .human-seat .player-tag {
+    width: 100%;
+  }
+
+  .human-table-stage[data-game] .human-seat.seat-left {
+    top: 390px;
+    left: 12px;
+    transform: none;
+  }
+
+  .human-table-stage[data-game] .human-seat.seat-right {
+    top: 650px;
+    right: 12px;
+    transform: none;
+  }
+
+  .human-seat.seat-left .seat-play-area,
+  .human-seat.seat-right .seat-play-area {
+    top: 140px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .human-table-stage[data-game] .human-seat.seat-top .seat-play-area,
+  .human-table-stage[data-game] .human-seat.seat-bottom .seat-play-area {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .human-topbar {
+    right: 14px;
+    left: 14px;
+    grid-template-columns: auto 1fr auto;
+    gap: 8px;
+  }
+
+  .human-table-stage[data-game] .human-seat.seat-top {
+    top: 180px;
+  }
+
+  .human-table-center {
+    display: none;
+  }
+
+  .back-to-spectator span,
+  .topbar-review-link span,
+  .connection-chip span {
+    display: none;
+  }
+
+  .back-to-spectator,
+  .topbar-review-link {
+    width: 42px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .room-identity {
+    min-width: 0;
+    padding-right: 12px;
+  }
+
+  .room-status-strip {
+    width: calc(100vw - 24px);
+    height: 32px;
+    min-height: 32px;
+    padding: 4px;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 4px;
+    font-size: 9px;
+    white-space: nowrap;
+  }
+
+  .room-status-strip > * {
+    flex: 0 0 auto;
+  }
+
+  .room-status-strip > button,
+  .room-status-strip > a {
+    height: 22px;
+    padding: 0 5px;
+    font-size: 9px;
+  }
+
+  #copyTableBtn {
+    width: 24px;
+    padding: 0;
+    justify-content: center;
+    overflow: hidden;
+    color: transparent;
+    font-size: 0;
+  }
+
+  #copyTableBtn svg {
+    width: 12px;
+    height: 12px;
+    color: var(--cream);
+  }
+
+  .own-hand-panel {
+    left: 12px;
+    width: calc(100vw - 24px);
+    min-width: 0;
+    max-width: calc(100vw - 24px);
+    grid-template-columns: minmax(0, 1fr);
+    transform: none;
+  }
+
+  .own-hand-copy {
+    display: none;
+  }
+
+  .human-table-stage.own-hand-visible:not(.spectator-view) .human-seat.seat-bottom .player-tag {
+    display: flex;
+  }
+
+  .action-dock {
+    padding: 8px 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: 0;
+  }
+
+  .rule-badge-strip {
+    display: none;
+  }
+
+  .guandan-level-hud {
+    width: calc(100vw - 24px);
+    min-width: 0;
+    top: 116px;
+    left: 12px;
+    padding: 5px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .guandan-level-hud > strong {
+    flex: 1 1 auto;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  .guandan-level-hud > div {
+    flex: 0 0 auto;
+    margin-top: 0;
+    gap: 4px;
+  }
+
+  .guandan-level-hud span {
+    min-width: 70px;
+    height: 25px;
+    padding: 0 6px;
+  }
+
+  .doudizhu-status-panel {
+    width: calc(100vw - 24px);
+    top: 158px;
+    left: 12px;
+    display: block;
+    transform: none;
+  }
+
+  .doudizhu-status-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 5px;
+  }
+
+  .doudizhu-status-panel > p {
+    margin-top: 8px;
+    padding-top: 7px;
+  }
+
+  .doudizhu-status-panel > .doudizhu-multiplier-trail {
+    margin-top: 4px;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .doudizhu-bottom-row {
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+
+  .connection-freeze {
+    max-width: calc(100vw - 28px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .arrange-toolbar {
+    height: auto;
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+
+  .arrange-toolbar > div {
+    flex-wrap: wrap;
+  }
+
+  .result-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rules-dialog-body {
+    grid-template-columns: 1fr;
+  }
+
+.rules-dialog-body .rules-note {
+    grid-column: 1;
+  }
+}
+
+/* Keep the fixed viewport authoritative after the legacy compact media rules. */
+.human-fixed-viewport {
+  overflow: hidden;
+}
+
+.human-fixed-viewport .human-play-app {
+  width: 100vw;
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.human-fixed-viewport .own-hand-panel {
+  grid-template-columns: 232px minmax(0, 1fr) 196px;
+}
+
+.human-fixed-viewport .human-table-stage {
+  width: 1600px;
+  height: 900px;
+  min-width: 1600px;
+  min-height: 900px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(var(--human-table-scale, 1));
+  transform-origin: center center;
+}
+
+.human-fixed-viewport .human-table-stage[data-game] .human-seat.seat-left .seat-play-area {
+  top: 0;
+  left: 260px;
+  right: auto;
+  transform: none;
+}
+
+.human-fixed-viewport .human-table-stage[data-game] .human-seat.seat-right .seat-play-area {
+  top: 0;
+  right: 260px;
+  left: auto;
+  transform: none;
+}
+
+.human-fixed-viewport .human-seat.seat-top .opponent-hand,
+.human-fixed-viewport .human-seat.seat-top .spectator-hand {
+  left: calc(50% - 100px);
+  right: auto;
+  transform: translateX(-50%);
+}
+
+.human-fixed-viewport .human-table-stage[data-game] .human-seat.seat-top .seat-play-area {
+  top: 135px;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+}
+
+.human-fixed-viewport .human-table-stage[data-game] .human-seat.seat-bottom .seat-play-area {
+  bottom: 0;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+}
+
+/* A spectator sees the complete public hands, so give those seats the same
+   working canvas as the replay template. Player mode keeps the compact
+   interactive seat boxes above. */
+.human-fixed-viewport .human-table-stage.spectator-view .human-seat.seat-top {
+  width: 960px;
+  height: 282px;
+}
+
+.human-fixed-viewport .human-table-stage.spectator-view .human-seat.seat-bottom {
+  width: 1040px;
+  height: 310px;
+}
+
+.human-fixed-viewport .human-table-stage.spectator-view .human-seat.seat-left,
+.human-fixed-viewport .human-table-stage.spectator-view .human-seat.seat-right {
+  width: 350px;
+  height: 620px;
+}
+
+/* The replay page animates committed actions and its clock as independent
+   visual layers. Live human seats use the same classes/animations, while the
+   clock is deliberately placed in the empty lane beside each identity pill
+   instead of over a hand or a played card. */
+.human-seat.play-entering .play-cards {
+  transform-origin: 50% 50%;
+  will-change: opacity, transform, filter;
+  animation: played-action-arrive 580ms cubic-bezier(0.15, 0.86, 0.24, 1.18) both;
+}
+
+.human-seat.play-entering.passed .play-label {
+  transform-origin: 50% 50%;
+  will-change: opacity, transform, filter;
+  animation: played-pass-arrive 520ms cubic-bezier(0.15, 0.86, 0.24, 1.14) both;
+}
+
+/* Match replay semantics: once a seat owns the next decision, its previous
+   trick is no longer part of the active table. The new turn clock occupies
+   that visual layer instead. */
+.human-fixed-viewport .human-seat.current-actor .play-label,
+.human-fixed-viewport .human-seat.current-actor .play-cards {
+  display: none;
+}
+
+/* The arranged replay hand needs a real hand-zone in live spectator mode;
+   these anchors keep its four compact layouts away from the identity pills
+   and the independent play lanes at the fixed 1600x900 scale. */
+.human-fixed-viewport .human-seat.seat-top .spectator-hand {
+  top: 64px;
+  left: calc(50% - 100px);
+  right: auto;
+  height: 214px;
+  margin-top: 0;
+  padding: 4px 0;
+  transform: translateX(-50%);
+}
+
+.human-fixed-viewport .human-seat.seat-bottom .spectator-hand {
+  bottom: 70px;
+  left: calc(50% - 260px);
+  top: auto;
+  height: 242px;
+  margin-top: 0;
+  padding: 4px 0;
+  transform: translateX(-50%);
+}
+
+.human-fixed-viewport .human-seat.seat-left .spectator-hand {
+  top: 67px;
+  left: 10px;
+  width: 100%;
+  height: 538px;
+  margin-top: 0;
+  padding: 8px 14px;
+}
+
+.human-fixed-viewport .human-seat.seat-right .spectator-hand {
+  top: 67px;
+  right: 10px;
+  left: auto;
+  width: 100%;
+  height: 538px;
+  margin-top: 0;
+  padding: 8px 14px;
+}
+
+/* Solo product readability pass. The full arena keeps its original compact
+   density; only the standalone single-human product receives these larger
+   identity and status controls. */
+.solo-player-arena .room-identity {
+  min-width: 420px;
+  height: 64px;
+  padding: 8px 24px 8px 10px;
+  gap: 14px;
+}
+
+.solo-player-arena .room-identity strong {
+  font-size: 22px;
+}
+
+.solo-player-arena .room-identity small {
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+.solo-player-arena .connection-chip {
+  height: 42px;
+  padding: 0 16px;
+  font-size: 15px;
+}
+
+.solo-player-arena .solo-topbar-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.solo-player-arena .solo-topbar-tools .connection-chip {
+  margin-left: 0;
+}
+
+.solo-player-arena .solo-language-switch {
+  height: 42px;
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(2, 43, 30, 0.82);
+  box-shadow: 0 8px 24px rgba(0, 23, 16, 0.2);
+}
+
+.solo-player-arena .solo-language-switch button {
+  min-width: 52px;
+  height: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  color: var(--muted);
+  background: transparent;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.solo-player-arena .solo-language-switch button:hover {
+  color: var(--cream);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.solo-player-arena .solo-language-switch button.active {
+  color: #073b2c;
+  background: var(--mint);
+}
+
+.solo-player-arena .room-status-strip {
+  height: 48px;
+  top: 86px;
+  padding: 0 11px 0 16px;
+  gap: 12px;
+  font-size: 16px;
+}
+
+.solo-player-arena .room-status-strip > b {
+  height: 30px;
+  padding: 0 11px;
+  font-size: 14px;
+}
+
+.solo-player-arena .room-status-strip > button,
+.solo-player-arena .room-status-strip > a {
+  min-height: 31px;
+  padding: 0 11px;
+  font-size: 14px;
+}
+
+.solo-player-arena .guandan-level-hud {
+  min-width: 286px;
+  top: 137px;
+  padding: 13px 14px;
+  border-radius: 17px;
+}
+
+.solo-player-arena .guandan-level-hud > strong {
+  font-size: 19px;
+}
+
+.solo-player-arena .guandan-level-hud > div {
+  margin-top: 10px;
+  gap: 8px;
+}
+
+.solo-player-arena .guandan-level-hud span {
+  min-width: 119px;
+  height: 38px;
+  padding: 0 12px;
+  font-size: 14px;
+}
+
+.solo-player-arena .guandan-level-hud span b {
+  font-size: 19px;
+}
+
+.solo-player-arena .rule-badge-strip {
+  width: 338px;
+  top: 245px;
+  gap: 7px;
+}
+
+.solo-player-arena .rule-badge-strip span {
+  min-height: 30px;
+  padding: 0 11px;
+  font-size: 13px;
+}
+
+.solo-player-arena .human-table-stage[data-game] .human-seat {
+  width: 370px;
+  height: 180px;
+}
+
+.solo-player-arena .human-seat .player-tag {
+  width: 178px;
+  height: 116px;
+  padding: 7px 8px 8px;
+  gap: 3px;
+  border-radius: 15px;
+}
+
+.solo-player-arena .human-seat .seat-number {
+  width: 54px;
+  height: 54px;
+  flex-basis: 54px;
+  font-size: 21px;
+}
+
+.solo-player-arena .human-seat .player-name {
+  font-size: 18px;
+  line-height: 21px;
+}
+
+.solo-player-arena .human-seat .player-role {
+  font-size: 13px;
+  line-height: 17px;
+}
+
+.solo-player-arena .human-seat .hand-count {
+  font-size: 16px;
+}
+
+.solo-player-arena .ready-mark {
+  min-width: 44px;
+  height: 24px;
+  top: 7px;
+  right: 5px;
+  padding: 0 6px;
+  font-size: 10px;
+}
+
+.solo-player-arena .opponent-hand {
+  width: 190px;
+  height: 78px;
+  padding-left: 44px;
+}
+
+.solo-player-arena .opponent-hand .card-back {
+  width: 55px;
+  height: 78px;
+  margin-left: -44px;
+}
+
+.solo-player-arena .opponent-hand-count {
+  padding: 4px 8px;
+  font-size: 13px;
+}
+
+.solo-player-arena .human-seat.seat-left .opponent-hand,
+.solo-player-arena .human-seat.seat-right .opponent-hand {
+  top: 116px;
+}
+
+.solo-player-arena .human-seat.seat-top .opponent-hand {
+  top: 73px;
+}
+
+.solo-player-arena .own-hand-panel {
+  grid-template-columns: 270px minmax(0, 1fr) 220px;
+  min-height: 236px;
+  padding: 15px 16px 15px 19px;
+  gap: 12px;
+}
+
+.solo-player-arena .own-seat-identity {
+  grid-template-columns: 50px minmax(118px, 1fr) 68px;
+  column-gap: 12px;
+}
+
+.solo-player-arena .own-seat-copy {
+  min-width: 118px;
+}
+
+.solo-player-arena .own-seat-identity .seat-number {
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+}
+
+.solo-player-arena .own-seat-identity strong {
+  font-size: 19px;
+}
+
+.solo-player-arena .own-seat-identity small {
+  font-size: 14px;
+}
+
+.solo-player-arena .own-hand-copy > .own-hand-remaining {
+  font-size: 14px;
+}
+
+.solo-player-arena .own-hand-copy b {
+  font-size: 12px;
+}
+
+.solo-player-arena .own-hand-copy .turn-countdown-value {
+  color: #321008;
+  font-size: 28px;
+  font-weight: 950;
+  -webkit-text-stroke: 0.8px #321008;
+  text-shadow: 0 1px 1px rgba(44, 9, 4, 0.28);
+}
+
+.solo-player-arena .arrange-toolbar {
+  min-height: 50px;
+  padding: 0 10px 7px 6px;
+  gap: 10px;
+}
+
+.solo-player-arena .arrange-toolbar > span {
+  font-size: 14px;
+}
+
+.solo-player-arena .arrange-toolbar > div {
+  gap: 6px;
+}
+
+.solo-player-arena .arrange-toolbar button,
+.solo-player-arena .arrange-toolbar > .arrange-fixed-mode {
+  min-height: 34px;
+  padding: 0 11px;
+  font-size: 13px;
+}
+
+.solo-player-arena .arrange-toolbar > small {
+  font-size: 11px;
+}
+
+/* Solo entry keeps both create and resume paths readable at the fixed table
+   scale.  The two tabs are intentionally equal-width so neither disappears
+   when Chinese or English labels are active. */
+.solo-player-arena .entry-panel {
+  width: min(600px, calc(100vw - 40px));
+  padding: 31px;
+}
+
+.solo-player-arena .entry-brand h1 {
+  font-size: 29px;
+}
+
+.solo-player-arena .entry-brand small {
+  font-size: 11px;
+}
+
+.solo-player-arena .entry-panel > p {
+  margin: 20px 0;
+  font-size: 15px;
+}
+
+.solo-player-arena .entry-tabs button {
+  height: 50px;
+  padding-inline: 12px;
+  font-size: 16px;
+}
+
+.solo-player-arena .fixed-game-identity {
+  min-height: 70px;
+  padding-block: 15px;
+  gap: 18px;
+}
+
+.solo-player-arena .fixed-game-origin {
+  font-size: 10px;
+}
+
+.solo-player-arena .fixed-game-model {
+  font-size: 22px;
+}
+
+.solo-player-arena .fixed-game-name {
+  font-size: 16px;
+}
+
+.solo-player-arena .fixed-game-native {
+  font-size: 13px;
+}
+
+.solo-player-arena .fixed-game-seats {
+  padding: 6px 11px;
+  font-size: 12px;
+}
+
+.solo-player-arena .human-game-switch legend,
+.solo-player-arena .human-slot-switch legend,
+.solo-player-arena .entry-field > span {
+  font-size: 14px;
+}
+
+.solo-player-arena .human-game-switch label {
+  height: 70px;
+}
+
+.solo-player-arena .human-game-switch label strong {
+  font-size: 17px;
+}
+
+.solo-player-arena .human-game-switch label small,
+.solo-player-arena .join-note {
+  font-size: 13px;
+}
+
+.solo-player-arena .entry-field input {
+  height: 56px;
+  font-size: 17px;
+}
+
+.solo-player-arena .entry-submit {
+  height: 60px;
+  font-size: 18px;
+}
+
+/* A round result is a compact acknowledgement, not a second dashboard.  The
+   table already shows team levels in the persistent level HUD, so the modal
+   retains only finish order and the next-round control. */
+.solo-player-arena .result-banner {
+  width: min(500px, calc(100vw - 40px));
+  max-height: min(320px, calc(100vh - 48px));
+  top: 45%;
+  padding: 14px 18px;
+  border-radius: 16px;
+}
+
+.solo-player-arena .result-headline > strong {
+  margin-top: 4px;
+  font-size: 20px;
+}
+
+.solo-player-arena .result-headline > span,
+.solo-player-arena .result-round-meta {
+  margin-top: 6px;
+}
+
+.solo-player-arena .result-round-meta {
+  margin-top: 9px;
+  padding: 10px 12px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 3px 12px;
+  border: 1px solid rgba(141, 240, 189, 0.22);
+  border-radius: 12px;
+  background: rgba(141, 240, 189, 0.055);
+}
+
+.solo-player-arena .result-round-meta[hidden] {
+  display: none;
+}
+
+.solo-player-arena .result-round-meta > strong {
+  grid-row: 1 / 3;
+  color: var(--mint);
+  font-size: 20px;
+  white-space: nowrap;
+}
+
+.solo-player-arena .result-round-meta.lost > strong {
+  color: #f2b2a9;
+}
+
+.solo-player-arena .result-round-meta > span {
+  color: var(--cream);
+  font-size: 12px;
+}
+
+.solo-player-arena .result-round-meta > small {
+  grid-row: 1 / 3;
+  grid-column: 3;
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.solo-player-arena .result-detail-grid {
+  margin-top: 9px;
+  grid-template-columns: 1fr;
+}
+
+.solo-player-arena .result-detail-grid > section {
+  padding: 9px;
+}
+
+.solo-player-arena .result-detail-grid h2 {
+  margin-bottom: 6px;
+}
+
+.solo-player-arena .result-finish-order {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.solo-player-arena .result-finish-order li {
+  min-height: 27px;
+  padding: 4px 7px;
+  grid-template-columns: 38px 48px minmax(0, 1fr);
+  gap: 5px;
+}
+
+.solo-player-arena .result-ready-button {
+  height: 40px;
+  margin-top: 10px;
+}
+
+/* Settlement is a separate read-only presentation state.  Do not inherit the
+   replay renderer's 88x124 side cards or 108x152 bottom cards: those sizes are
+   designed for a full-screen spectator canvas and overflow the compact human
+   table.  All four seats use exactly the same footprint as committed cards. */
+.solo-player-arena .round-terminal .human-seat.terminal-reveal .spectator-hand {
+  overflow: visible;
+}
+
+/* Give settlement its own four clear reveal lanes.  The normal player-mode
+   baselines reserve space for the interactive hand panel (which is hidden at
+   settlement) and otherwise put the top/bottom hands underneath the compact
+   result card. */
+.solo-player-arena .round-terminal.human-table-stage[data-game] .human-seat.seat-top {
+  top: 76px;
+}
+
+.solo-player-arena .round-terminal.human-table-stage[data-game] .human-seat.seat-bottom {
+  bottom: 0;
+}
+
+.solo-player-arena .round-terminal .human-seat.seat-bottom .spectator-hand {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.solo-player-arena .round-terminal .human-seat.terminal-reveal .spectator-hand .playing-card.hand {
+  width: 54px;
+  height: 76px;
+  border-radius: 5px;
+}
+
+.solo-player-arena .round-terminal .human-seat.terminal-reveal .spectator-hand .playing-card.hand .card-corner {
+  top: 3px;
+  left: 3px;
+}
+
+.solo-player-arena .round-terminal .human-seat.terminal-reveal .spectator-hand .playing-card.hand .card-corner b {
+  font-size: 17px;
+}
+
+.solo-player-arena .round-terminal .human-seat.terminal-reveal .spectator-hand .playing-card.hand .card-corner i {
+  font-size: 13px;
+}
+
+.solo-player-arena .round-terminal .human-seat.terminal-reveal .spectator-hand .playing-card.hand em {
+  right: 3px;
+  bottom: 3px;
+  font-size: 27px;
+}
+
+.solo-player-arena .round-terminal .human-seat.terminal-reveal .spectator-hand .playing-card.hand.joker .card-corner b {
+  font-size: 12px;
+}
+
+/* Top and bottom keep Pailemen-style vertical meld columns, but use one fixed
+   20px rank reveal regardless of group size or density. */
+.solo-player-arena .round-terminal .human-seat:is(.seat-top, .seat-bottom) .spectator-hand .meld-stack,
+.solo-player-arena .round-terminal .human-seat:is(.seat-top, .seat-bottom) .spectator-hand .hand-layout.dense .meld-stack,
+.solo-player-arena .round-terminal .human-seat:is(.seat-top, .seat-bottom) .spectator-hand .hand-layout.very-dense .meld-stack,
+.solo-player-arena .round-terminal .human-seat:is(.seat-top, .seat-bottom) .spectator-hand .meld-stack:has(.playing-card.joker),
+.solo-player-arena .round-terminal .human-seat:is(.seat-top, .seat-bottom) .spectator-hand .meld-stack:has(.playing-card.level-card) {
+  width: 54px;
+  min-width: 54px;
+  flex: 0 0 54px;
+}
+
+.solo-player-arena .round-terminal .human-seat:is(.seat-top, .seat-bottom) .spectator-hand .meld-stack .playing-card + .playing-card {
+  margin-top: -56px !important;
+}
+
+/* Left and right retain horizontal meld rows.  The previous 72/88px cards
+   sat under the identity box and were visibly larger than every table card. */
+.solo-player-arena .round-terminal .human-seat:is(.seat-left, .seat-right) .spectator-hand {
+  top: 98px;
+  margin-top: 0;
+  padding-top: 24px;
+}
+
+.solo-player-arena .round-terminal .human-seat:is(.seat-left, .seat-right) .spectator-hand .meld-stack,
+.solo-player-arena .round-terminal .human-seat:is(.seat-left, .seat-right) .spectator-hand .hand-layout.dense .meld-stack,
+.solo-player-arena .round-terminal .human-seat:is(.seat-left, .seat-right) .spectator-hand .hand-layout.very-dense .meld-stack {
+  max-height: 28px;
+  flex: 1 1 28px;
+}
+
+.solo-player-arena .round-terminal .human-seat:is(.seat-left, .seat-right) .spectator-hand .meld-stack:last-child {
+  height: 76px;
+  min-height: 76px;
+  max-height: 76px;
+  flex: 0 0 76px;
+}
+
+.solo-player-arena .round-terminal .human-seat:is(.seat-left, .seat-right) .spectator-hand .meld-stack .playing-card + .playing-card {
+  margin-top: 0 !important;
+  margin-left: -34px !important;
+}
+
+.solo-player-arena .terminal-hand-count {
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  left: 14px;
+  padding: 3px 8px;
+  border: 1px solid rgba(141, 240, 189, 0.35);
+  border-radius: 999px;
+  color: var(--mint);
+  background: rgba(1, 35, 25, 0.94);
+  font-size: 11px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.solo-player-arena .round-terminal .human-seat.seat-right .terminal-hand-count {
+  right: 14px;
+  left: auto;
+}
+
+/* Solo phone layout */
+@media (max-width: 760px) {
+  .human-fixed-viewport.solo-player-arena {
+    min-width: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-play-app {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage {
+    --mobile-hand-panel-bottom: max(8px, env(safe-area-inset-bottom));
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    position: fixed;
+    inset: 0;
+    transform: none;
+    transform-origin: center;
+  }
+
+  .solo-player-arena .human-topbar {
+    min-height: 54px;
+    top: max(8px, env(safe-area-inset-top));
+    right: 12px;
+    left: 12px;
+    grid-template-areas:
+      "brand tools"
+      "room room";
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 10px;
+  }
+
+  .solo-player-arena .human-topbar-actions {
+    min-width: 0;
+    grid-area: brand;
+  }
+
+  .solo-player-arena .table-brand-lockup {
+    width: min(202px, 54vw);
+    height: 38px;
+    margin: 0;
+  }
+
+  .solo-player-arena .solo-topbar-tools {
+    grid-area: tools;
+    gap: 6px;
+  }
+
+  .solo-player-arena .solo-language-switch {
+    height: 48px;
+  }
+
+  .solo-player-arena .solo-language-switch button {
+    min-width: 44px;
+    min-height: 44px;
+    height: 44px;
+    padding: 0 8px;
+    font-size: 12px;
+    touch-action: manipulation;
+  }
+
+  .solo-player-arena .connection-chip {
+    width: auto;
+    min-width: 76px;
+    height: 44px;
+    padding: 0 10px;
+    justify-content: center;
+  }
+
+  .solo-player-arena .connection-chip span {
+    display: inline;
+    overflow: hidden;
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .solo-player-arena .room-identity {
+    width: 100%;
+    min-width: 0;
+    height: 48px;
+    padding: 6px 12px 6px 7px;
+    grid-area: room;
+  }
+
+  .solo-player-arena .room-identity strong {
+    font-size: 16px;
+  }
+
+  .solo-player-arena .room-identity small {
+    margin-top: 1px;
+    font-size: 11px;
+  }
+
+  .solo-player-arena .entry-panel {
+    width: calc(100% - 24px);
+    max-height: calc(100% - 112px - env(safe-area-inset-bottom));
+    top: calc(max(8px, env(safe-area-inset-top)) + 64px);
+    right: 12px;
+    bottom: auto;
+    left: 12px;
+    padding: 20px;
+    border-radius: 20px;
+    transform: none;
+  }
+
+  .solo-player-arena .entry-brand {
+    gap: 12px;
+  }
+
+  .solo-player-arena .entry-brand h1 {
+    font-size: clamp(23px, 7vw, 28px);
+  }
+
+  .solo-player-arena .entry-brand small {
+    font-size: 10px;
+  }
+
+  .solo-player-arena .entry-panel > p {
+    margin: 14px 0 16px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .solo-player-arena .entry-tabs button {
+    min-height: 48px;
+    height: auto;
+    padding: 8px;
+    font-size: 15px;
+    line-height: 1.2;
+    touch-action: manipulation;
+  }
+
+  .solo-player-arena .entry-form {
+    margin-top: 14px;
+  }
+
+  .solo-player-arena .fixed-game-identity {
+    min-height: 64px;
+    margin-bottom: 14px;
+    padding: 12px 0;
+    grid-template-columns: auto 1px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .solo-player-arena .fixed-game-brand {
+    min-width: 76px;
+  }
+
+  .solo-player-arena .fixed-game-model {
+    font-size: 20px;
+  }
+
+  .solo-player-arena .fixed-game-title {
+    gap: 6px;
+  }
+
+  .solo-player-arena .fixed-game-name {
+    font-size: 15px;
+  }
+
+  .solo-player-arena .fixed-game-native {
+    font-size: 12px;
+  }
+
+  .solo-player-arena .fixed-game-seats {
+    display: none;
+  }
+
+  .solo-player-arena .entry-field input {
+    height: 52px;
+    font-size: 16px;
+  }
+
+  .solo-player-arena .entry-submit {
+    min-height: 54px;
+    height: auto;
+    font-size: 16px;
+    touch-action: manipulation;
+  }
+
+  .solo-player-arena .room-status-strip {
+    width: calc(100% - 16px);
+    height: 46px;
+    min-height: 46px;
+    top: calc(max(8px, env(safe-area-inset-top)) + 110px);
+    left: 8px;
+    padding: 4px 6px;
+    justify-content: space-between;
+    gap: 4px;
+    font-size: 10px;
+    transform: none;
+  }
+
+  .solo-player-arena .room-status-strip > button,
+  .solo-player-arena .room-status-strip > a {
+    min-width: 42px;
+    min-height: 44px;
+    padding: 0 7px;
+    font-size: 10px;
+    touch-action: manipulation;
+  }
+
+  .solo-player-arena .guandan-level-hud {
+    width: calc(100% - 16px);
+    min-width: 0;
+    top: calc(max(8px, env(safe-area-inset-top)) + 162px);
+    left: 8px;
+    padding: 8px 10px;
+    flex-direction: row;
+  }
+
+  .solo-player-arena .guandan-level-hud > strong {
+    font-size: 13px;
+  }
+
+  .solo-player-arena .guandan-level-hud > div {
+    margin-top: 0;
+    gap: 5px;
+  }
+
+  .solo-player-arena .guandan-level-hud span {
+    min-width: 72px;
+    height: 30px;
+    padding: 0 7px;
+    font-size: 11px;
+  }
+
+  .solo-player-arena .guandan-level-hud span b {
+    font-size: 15px;
+  }
+
+  .solo-player-arena .rule-badge-strip {
+    display: none;
+  }
+
+  .solo-player-arena .human-table-center {
+    display: none;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat {
+    width: 152px;
+    height: 112px;
+    transform: none;
+  }
+
+  .solo-player-arena .human-seat .player-tag {
+    width: 102px;
+    height: 78px;
+    padding: 4px 5px;
+    border-radius: 12px;
+  }
+
+  .solo-player-arena .human-seat .seat-number {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+    font-size: 16px;
+  }
+
+  .solo-player-arena .human-seat .player-name {
+    font-size: 13px;
+    line-height: 15px;
+  }
+
+  .solo-player-arena .human-seat .player-role,
+  .solo-player-arena .human-seat .hand-count {
+    font-size: 10px;
+    line-height: 12px;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-top {
+    top: 222px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .solo-player-arena .human-seat.seat-top .player-tag {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-left {
+    top: 322px;
+    left: 8px;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-right {
+    top: 322px;
+    right: 8px;
+  }
+
+  .solo-player-arena .human-seat.seat-left .player-tag {
+    top: 0;
+    left: 0;
+  }
+
+  .solo-player-arena .human-seat.seat-right .player-tag {
+    top: 0;
+    right: 0;
+  }
+
+  .solo-player-arena .opponent-hand {
+    width: 102px;
+    height: 48px;
+    padding-left: 27px;
+  }
+
+  .solo-player-arena .opponent-hand .card-back {
+    width: 34px;
+    height: 48px;
+    margin-left: -27px;
+  }
+
+  .solo-player-arena .human-seat.seat-top .opponent-hand {
+    top: 69px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .solo-player-arena .human-seat.seat-left .opponent-hand,
+  .solo-player-arena .human-seat.seat-right .opponent-hand {
+    top: 69px;
+  }
+
+  .solo-player-arena .human-seat .seat-play-area {
+    min-width: 112px;
+    min-height: 66px;
+  }
+
+  .solo-player-arena .human-seat .play-cards {
+    --played-card-width: 42px;
+    --played-card-height: 59px;
+    --played-card-reveal: 14px;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-top .seat-play-area {
+    top: 112px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-left .seat-play-area {
+    top: 104px;
+    left: 34px;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-right .seat-play-area {
+    top: 104px;
+    right: 34px;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-bottom {
+    display: none;
+  }
+
+  .solo-player-arena .own-hand-panel {
+    width: calc(100% - 16px);
+    min-width: 0;
+    max-width: none;
+    min-height: 0;
+    max-height: min(350px, 45vh);
+    grid-template-columns: minmax(0, 1fr);
+    bottom: max(8px, env(safe-area-inset-bottom));
+    left: 8px;
+    padding: 9px;
+    gap: 6px;
+    overflow: hidden;
+    border-radius: 16px;
+    transform: none;
+  }
+
+  .solo-player-arena .own-hand-copy {
+    display: flex;
+    min-height: 34px;
+    padding: 0 4px 6px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .solo-player-arena .own-seat-identity {
+    grid-template-columns: 32px minmax(70px, 1fr) 42px;
+    column-gap: 7px;
+  }
+
+  .solo-player-arena .own-seat-identity .seat-number {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .solo-player-arena .own-seat-identity strong {
+    font-size: 13px;
+  }
+
+  .solo-player-arena .own-seat-identity small {
+    display: none;
+  }
+
+  .solo-player-arena .own-hand-copy > .own-hand-remaining {
+    font-size: 12px;
+  }
+
+  .solo-player-arena .own-hand-copy > b {
+    font-size: 11px;
+  }
+
+  .solo-player-arena .arrange-toolbar {
+    min-height: 48px;
+    padding: 0 0 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .solo-player-arena .arrange-toolbar,
+  .solo-player-arena .own-hand-scroll {
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+  }
+
+  .solo-player-arena .arrange-toolbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .solo-player-arena .arrange-toolbar > span,
+  .solo-player-arena .arrange-toolbar > small {
+    display: none;
+  }
+
+  .solo-player-arena .arrange-toolbar > div {
+    min-width: max-content;
+  }
+
+  .solo-player-arena .arrange-toolbar button,
+  .solo-player-arena .arrange-toolbar > .arrange-fixed-mode {
+    min-height: 44px;
+    padding: 0 12px;
+    font-size: 12px;
+    touch-action: manipulation;
+  }
+
+  .solo-player-arena .own-hand-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+  }
+
+  .solo-player-arena .own-hand-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .solo-player-arena .hand-scroll-hint {
+    min-height: 22px;
+    position: absolute;
+    z-index: 4;
+    right: 7px;
+    bottom: 4px;
+    padding: 0 8px;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgba(141, 240, 189, 0.24);
+    border-radius: 999px;
+    color: #b8d9ca;
+    background: rgba(2, 43, 30, 0.9);
+    box-shadow: 0 3px 10px rgba(0, 20, 14, 0.22);
+    font-size: 9px;
+    pointer-events: none;
+  }
+
+  .solo-player-arena .hand-scroll-hint[hidden] {
+    display: none;
+  }
+
+  .solo-player-arena .own-hand-list {
+    --own-hand-natural-step: 58px;
+    --own-hand-card-width: 58px;
+    --own-hand-card-height: 84px;
+    --own-hand-rank-reveal: 23px;
+    min-width: max-content;
+    min-height: 124px;
+    padding: 12px 8px 3px;
+    justify-content: flex-start;
+  }
+
+  .solo-player-arena .own-meld-stack .hand-card-button,
+  .solo-player-arena .own-meld-stack .hand-card-button:last-child,
+  .solo-player-arena .hand-card-button .playing-card.hand {
+    width: 58px;
+  }
+
+  .solo-player-arena .action-dock {
+    min-height: 54px;
+    padding: 7px 0 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .solo-player-arena .turn-hint {
+    min-width: 0;
+    overflow: hidden;
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .solo-player-arena .play-action-buttons button {
+    min-width: 72px;
+    min-height: 46px;
+    touch-action: manipulation;
+  }
+
+  .solo-player-arena .lobby-help {
+    width: calc(100% - 24px);
+    top: 54%;
+    padding: 18px;
+  }
+
+  .solo-player-arena .ready-button {
+    min-height: 52px;
+    touch-action: manipulation;
+  }
+
+  .solo-player-arena .result-banner {
+    width: calc(100% - 24px);
+    max-height: calc(100% - 120px);
+    padding: 14px;
+  }
+
+  .solo-player-arena .result-finish-order {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .solo-player-arena dialog.action-dialog {
+    width: calc(100% - 24px);
+    max-height: calc(100% - 32px);
+    margin: auto;
+  }
+}
+
+@media (max-width: 760px) and (orientation: landscape),
+  (min-width: 761px) and (max-width: 1024px) and (max-height: 600px) and (orientation: landscape) {
+  .human-fixed-viewport.solo-player-arena,
+  .human-fixed-viewport.solo-player-arena .human-play-app {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage {
+    --mobile-hand-panel-block-size: 184px;
+    --mobile-status-zone-size: 104px;
+    --mobile-hand-panel-bottom: max(8px, env(safe-area-inset-bottom));
+    --mobile-safe-left: max(8px, env(safe-area-inset-left));
+    --mobile-safe-right: max(8px, env(safe-area-inset-right));
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    position: fixed;
+    inset: 0;
+    padding: 0 var(--mobile-safe-right) var(--mobile-hand-panel-bottom) var(--mobile-safe-left);
+    display: grid;
+    grid-template-rows: var(--mobile-status-zone-size) minmax(0, 1fr) var(--mobile-hand-panel-block-size);
+    box-sizing: border-box;
+    transform: none;
+  }
+
+  .solo-player-arena .table-status-zone,
+  .solo-player-arena .table-battle-zone,
+  .solo-player-arena .table-hand-zone {
+    min-width: 0;
+    min-height: 0;
+    position: relative;
+    display: block;
+  }
+
+  .solo-player-arena .table-status-zone { grid-row: 1; z-index: 40; }
+  .solo-player-arena .table-battle-zone { grid-row: 2; z-index: 8; }
+  .solo-player-arena .table-hand-zone { grid-row: 3; z-index: 28; }
+
+  .solo-player-arena .human-topbar {
+    width: clamp(148px, 22vw, 180px);
+    min-height: 0;
+    top: 12px;
+    right: auto;
+    left: max(12px, env(safe-area-inset-left));
+    display: grid;
+    grid-template-areas: none;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .solo-player-arena .table-brand-lockup {
+    width: 100%;
+    max-width: 180px;
+    height: 36px;
+    margin: 0;
+  }
+
+  .solo-player-arena .solo-topbar-tools {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 4px;
+  }
+
+  .solo-player-arena .solo-language-switch {
+    height: 44px;
+  }
+
+  .solo-player-arena .solo-language-switch button {
+    min-width: 44px;
+    min-height: 44px;
+    height: 44px;
+    padding-inline: 6px;
+  }
+
+  .solo-player-arena .connection-chip {
+    width: auto;
+    min-width: 76px;
+    height: 44px;
+    padding: 0 10px;
+    justify-content: center;
+  }
+
+  .solo-player-arena .connection-chip span {
+    display: inline;
+    overflow: hidden;
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .solo-player-arena .entry-panel {
+    width: min(560px, calc(100% - 184px - var(--mobile-safe-left) - var(--mobile-safe-right)));
+    max-height: calc(100% - 24px);
+    top: 12px;
+    right: max(12px, env(safe-area-inset-right));
+    left: auto;
+    padding: 16px 20px;
+    transform: none;
+  }
+
+  .solo-player-arena .entry-brand h1 {
+    font-size: 24px;
+  }
+
+  .solo-player-arena .entry-panel > p {
+    display: none;
+  }
+
+  .solo-player-arena .entry-tabs button {
+    min-height: 44px;
+    height: 44px;
+    font-size: 14px;
+  }
+
+  .solo-player-arena .entry-form {
+    margin-top: 8px;
+  }
+
+  .solo-player-arena .fixed-game-identity {
+    min-height: 46px;
+    margin-bottom: 7px;
+    padding-block: 6px;
+  }
+
+  .solo-player-arena .fixed-game-seats {
+    display: none;
+  }
+
+  .solo-player-arena .entry-field > span {
+    margin-bottom: 4px;
+    font-size: 12px;
+  }
+
+  .solo-player-arena .entry-field input {
+    height: 44px;
+  }
+
+  .solo-player-arena .entry-submit {
+    min-height: 48px;
+  }
+
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) {
+    width: auto;
+    height: 44px;
+    min-height: 44px;
+    top: 8px;
+    right: 0;
+    left: 0;
+    grid-template-areas: none;
+    grid-template-columns: minmax(120px, 0.8fr) minmax(210px, 1.25fr) auto;
+    gap: 8px;
+  }
+
+  .solo-player-arena .human-topbar-actions,
+  .solo-player-arena .room-identity,
+  .solo-player-arena .solo-topbar-tools {
+    grid-area: auto;
+  }
+
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) .table-brand-lockup {
+    width: min(180px, 24vw);
+  }
+
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) .room-identity {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    padding: 5px 10px 5px 6px;
+  }
+
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) .room-identity strong {
+    font-size: 15px;
+  }
+
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) .room-identity small {
+    margin-top: 0;
+    font-size: 10px;
+  }
+
+  .solo-player-arena #copyTableBtn {
+    width: 44px;
+    padding: 0;
+    justify-content: center;
+    overflow: hidden;
+    color: transparent;
+    font-size: 0;
+  }
+
+  .solo-player-arena #copyTableBtn svg {
+    width: 14px;
+    height: 14px;
+    color: var(--cream);
+  }
+
+  .solo-player-arena .room-status-strip {
+    width: min(236px, 38%);
+    height: 44px;
+    min-height: 44px;
+    top: 60px;
+    left: 0;
+    padding: 4px 6px;
+    justify-content: space-between;
+    gap: 4px;
+    overflow: hidden;
+    font-size: 10px;
+    transform: none;
+  }
+
+  .solo-player-arena .room-status-strip > button,
+  .solo-player-arena .room-status-strip > a {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 6px;
+    font-size: 10px;
+  }
+
+  .solo-player-arena .room-status-strip #phaseText {
+    display: none;
+  }
+
+  .solo-player-arena .guandan-level-hud {
+    width: auto;
+    min-width: 0;
+    top: 60px;
+    right: 0;
+    left: 258px;
+    padding: 5px 8px;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .solo-player-arena .guandan-level-hud > strong {
+    font-size: 12px;
+  }
+
+  .solo-player-arena .guandan-level-hud > div {
+    margin-top: 0;
+  }
+
+  .solo-player-arena .guandan-level-hud span {
+    min-width: 66px;
+    height: 30px;
+    padding: 0 6px;
+    font-size: 10px;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-top,
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-left,
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-right {
+    top: 2px;
+    width: 134px;
+    height: calc(100% - 4px);
+    transform: none;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-top {
+    left: calc(50% - 67px);
+    transform: none;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-left {
+    left: 0;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-right {
+    right: 0;
+  }
+
+  .solo-player-arena .human-seat .player-tag {
+    width: 134px;
+    height: 36px;
+    box-sizing: border-box;
+    padding: 4px 50px 4px 6px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+  }
+
+  .solo-player-arena .human-seat .seat-number {
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
+  }
+
+  .solo-player-arena .human-seat .player-tag > div {
+    width: auto;
+    min-width: 0;
+    flex: 1 1 auto;
+    text-align: left;
+  }
+
+  .solo-player-arena .human-seat .player-name {
+    font-size: 12px;
+    line-height: 14px;
+  }
+
+  .solo-player-arena .human-seat .hand-count {
+    flex: 0 0 auto;
+    font-size: 10px;
+  }
+
+  .solo-player-arena .ready-mark {
+    min-width: 34px;
+    right: 4px;
+    padding: 0 4px;
+    font-size: 9px;
+  }
+
+  .solo-player-arena .human-seat .player-role {
+    display: none;
+  }
+
+  .solo-player-arena .human-seat.seat-top .player-tag {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .solo-player-arena .opponent-hand {
+    display: none;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-top .seat-play-area,
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-left .seat-play-area,
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-right .seat-play-area {
+    width: 134px;
+    height: 44px;
+    min-width: 0;
+    min-height: 0;
+    position: absolute;
+    top: 34px;
+    bottom: auto;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-top .seat-play-area {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-left .seat-play-area {
+    right: auto;
+    left: 0;
+    transform: none;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-right .seat-play-area {
+    right: 0;
+    left: auto;
+    transform: none;
+  }
+
+  .solo-player-arena .human-seat .play-cards {
+    --played-card-width: 32px;
+    --played-card-height: 44px;
+    --played-card-reveal: 10px;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-bottom {
+    display: none;
+  }
+
+  .solo-player-arena .rule-badge-strip,
+  .solo-player-arena .human-table-center {
+    display: none;
+  }
+
+  .solo-player-arena .own-hand-panel {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    min-height: 0;
+    height: var(--mobile-hand-panel-block-size);
+    max-height: var(--mobile-hand-panel-block-size);
+    position: absolute;
+    inset: 0;
+    padding: 6px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) 48px;
+    gap: 4px;
+    overflow: hidden;
+    transform: none;
+  }
+
+  .solo-player-arena .own-hand-copy {
+    width: 108px;
+    min-height: 28px;
+    position: absolute;
+    z-index: 3;
+    bottom: 10px;
+    left: 8px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+    border: 0;
+    pointer-events: none;
+  }
+
+  .solo-player-arena .own-seat-identity {
+    display: none;
+  }
+
+  .solo-player-arena .own-hand-copy > .own-hand-remaining,
+  .solo-player-arena .own-hand-copy > b {
+    min-width: 0;
+    padding: 3px 5px;
+    overflow: hidden;
+    border: 1px solid rgba(141, 240, 189, 0.18);
+    border-radius: 999px;
+    background: rgba(1, 45, 31, 0.82);
+    font-size: 9px;
+    line-height: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .solo-player-arena .own-hand-copy > .own-hand-remaining {
+    flex: 1 1 auto;
+  }
+
+  .solo-player-arena .own-hand-copy > b {
+    flex: 0 0 auto;
+  }
+
+  .solo-player-arena .own-hand-workspace {
+    min-height: 0;
+  }
+
+  .solo-player-arena .arrange-toolbar {
+    height: 44px;
+    min-height: 44px;
+    padding: 0 0 3px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .solo-player-arena .arrange-toolbar > span,
+  .solo-player-arena .arrange-toolbar > small {
+    display: none;
+  }
+
+  .solo-player-arena .arrange-toolbar > div {
+    min-width: max-content;
+  }
+
+  .solo-player-arena .arrange-toolbar button,
+  .solo-player-arena .arrange-toolbar > .arrange-fixed-mode {
+    min-height: 44px;
+  }
+
+  .solo-player-arena .arrange-toolbar,
+  .solo-player-arena .own-hand-scroll {
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+  }
+
+  .solo-player-arena .own-hand-scroll {
+    min-height: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    touch-action: pan-x;
+  }
+
+  .solo-player-arena .own-hand-list {
+    --own-hand-natural-step: 54px;
+    --own-hand-card-width: 54px;
+    --own-hand-card-height: 58px;
+    --own-hand-rank-reveal: 18px;
+    min-width: max-content;
+    min-height: 76px;
+    padding: 4px 8px 2px;
+    justify-content: flex-start;
+  }
+
+  .solo-player-arena .own-meld-stack .hand-card-button,
+  .solo-player-arena .own-meld-stack .hand-card-button:last-child,
+  .solo-player-arena .hand-card-button .playing-card.hand {
+    width: 54px;
+  }
+
+  .solo-player-arena .action-dock {
+    height: 48px;
+    min-height: 48px;
+    padding: 2px 0 0;
+    padding-left: 116px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    box-sizing: border-box;
+  }
+
+  .solo-player-arena .turn-hint {
+    min-width: 0;
+    overflow: hidden;
+    font-size: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .solo-player-arena .play-action-buttons button {
+    min-width: 72px;
+    min-height: 44px;
+  }
+
+  .solo-player-arena .hand-scroll-hint {
+    display: none;
+  }
+
+  .solo-player-arena .table-battle-zone > .human-seat-layer {
+    position: absolute;
+    inset: 0;
+  }
+}
+
+@media (max-width: 1024px) and (max-height: 375px) and (orientation: landscape) {
+  .human-fixed-viewport.solo-player-arena .human-table-stage {
+    --mobile-status-zone-size: 96px;
+    --mobile-hand-panel-block-size: 168px;
+  }
+
+  .solo-player-arena .room-status-strip,
+  .solo-player-arena .guandan-level-hud {
+    top: 52px;
+  }
+}
+
+@media (max-width: 760px) and (max-height: 340px) and (orientation: landscape) {
+  .human-fixed-viewport.solo-player-arena .human-table-stage {
+    --mobile-status-zone-size: 92px;
+    --mobile-hand-panel-block-size: 140px;
+  }
+
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) {
+    top: 2px;
+  }
+
+  .solo-player-arena .room-status-strip,
+  .solo-player-arena .guandan-level-hud {
+    top: 46px;
+  }
+
+  .solo-player-arena .arrange-toolbar {
+    display: none;
+  }
+
+  .solo-player-arena .own-hand-list {
+    --own-hand-card-height: 50px;
+    min-height: 60px;
+  }
+}
+
+@media (max-width: 760px) and (max-height: 680px) and (orientation: portrait) {
+  .human-fixed-viewport.solo-player-arena .human-table-stage {
+    --mobile-hand-panel-block-size: 224px;
+  }
+
+  .solo-player-arena .entry-panel {
+    max-height: calc(100% - 80px - env(safe-area-inset-bottom));
+    padding-block: 16px;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-top {
+    top: 222px;
+    left: calc(50% - 76px);
+    transform: none;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-left,
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-right {
+    top: 270px;
+    height: 70px;
+  }
+
+  .solo-player-arena .human-seat .player-tag {
+    width: 94px;
+    height: 64px;
+  }
+
+  .solo-player-arena .human-seat .seat-number {
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
+  }
+
+  .solo-player-arena .opponent-hand {
+    display: none;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-top .seat-play-area {
+    position: fixed;
+    top: auto;
+    bottom: calc(var(--mobile-hand-panel-block-size) + var(--mobile-hand-panel-bottom));
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-left .seat-play-area,
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-right .seat-play-area {
+    position: fixed;
+    top: auto;
+    bottom: 298px;
+    transform: none;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-left .seat-play-area {
+    right: auto;
+    left: 8px;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-right .seat-play-area {
+    right: 8px;
+    left: auto;
+  }
+
+  .solo-player-arena .own-hand-panel {
+    max-height: var(--mobile-hand-panel-block-size);
+  }
+
+  .solo-player-arena .own-hand-copy {
+    display: none;
+  }
+
+  .solo-player-arena .arrange-toolbar {
+    min-height: 44px;
+  }
+
+  .solo-player-arena .arrange-toolbar button,
+  .solo-player-arena .arrange-toolbar > .arrange-fixed-mode {
+    min-height: 44px;
+  }
+
+  .solo-player-arena .own-hand-list {
+    --own-hand-card-height: 72px;
+    --own-hand-rank-reveal: 20px;
+    min-height: 100px;
+    padding-top: 8px;
+  }
+
+  .solo-player-arena .action-dock {
+    min-height: 48px;
+  }
+
+  .solo-player-arena .play-action-buttons button {
+    min-height: 44px;
+  }
+}
+
+/* Playable mobile layout. Phone play is a touch workspace, not a scaled
+   desktop canvas: cards get a full-height runway and actions stay inside the
+   panel in both orientations. */
+html[data-locale="en"] .solo-player-arena .arrange-toolbar > small {
+  display: none;
+}
+
+html[data-locale="en"] .solo-player-arena .turn-hint {
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+@media (max-width: 760px) {
+  .solo-player-arena .own-hand-panel {
+    height: min(360px, 44dvh);
+    max-height: min(360px, 44dvh);
+    box-sizing: border-box;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 44px minmax(0, 1fr) 54px;
+    gap: 6px;
+  }
+
+  .solo-player-arena .own-hand-copy {
+    width: auto;
+    height: 44px;
+    min-height: 44px;
+    position: static;
+    grid-row: 1;
+    padding: 0 4px 5px;
+  }
+
+  .solo-player-arena .own-hand-workspace {
+    min-height: 0;
+    grid-row: 2;
+    overflow: hidden;
+  }
+
+  .solo-player-arena .own-hand-scroll {
+    min-height: 0;
+  }
+
+  .solo-player-arena .own-hand-list,
+  .solo-player-arena .own-hand-list.wrapped-layout {
+    width: max-content;
+    min-width: max-content;
+    min-height: 150px;
+    flex-wrap: nowrap;
+    align-content: normal;
+    row-gap: 0;
+  }
+
+  .solo-player-arena .own-hand-list {
+    --own-hand-natural-step: 59px;
+    --own-hand-card-height: 82px;
+    --own-hand-rank-reveal: 20px;
+  }
+
+  /* Only the exposed rank strip of an overlapped card owns its hit box.  The
+     full card remains visible, but can no longer cover the tap target above
+     it in the same stack. */
+  .solo-player-arena .own-meld-stack .hand-card-button:not(:last-child) {
+    height: var(--own-hand-rank-reveal);
+    flex-basis: var(--own-hand-rank-reveal);
+  }
+
+  .solo-player-arena .own-meld-stack .hand-card-button + .hand-card-button {
+    margin-top: 0;
+  }
+
+  .solo-player-arena .action-dock {
+    width: auto;
+    height: 54px;
+    min-height: 54px;
+    grid-row: 3;
+    padding: 0;
+    border-left: 0;
+  }
+
+  .solo-player-arena .turn-hint,
+  html[data-locale="en"] .solo-player-arena .turn-hint {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 760px) and (orientation: landscape),
+  (min-width: 761px) and (max-width: 1024px) and (max-height: 600px) and (orientation: landscape) {
+  .human-fixed-viewport.solo-player-arena .human-table-stage {
+    --mobile-status-zone-size: 88px;
+    --mobile-hand-panel-block-size: 190px;
+    --mobile-action-dock-width: 176px;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage:not(.own-hand-visible) {
+    --mobile-hand-panel-block-size: 0px;
+  }
+
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) {
+    top: 0;
+  }
+
+  .solo-player-arena .room-status-strip,
+  .solo-player-arena .guandan-level-hud {
+    top: 44px;
+  }
+
+  .solo-player-arena .room-status-strip {
+    width: min(320px, 52%);
+  }
+
+  .solo-player-arena .guandan-level-hud {
+    left: calc(min(320px, 52%) + 8px);
+  }
+
+  .solo-player-arena .own-hand-panel {
+    height: var(--mobile-hand-panel-block-size);
+    max-height: var(--mobile-hand-panel-block-size);
+    grid-template-columns: minmax(0, 1fr) var(--mobile-action-dock-width);
+    grid-template-rows: minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .solo-player-arena .own-hand-copy {
+    width: calc(var(--mobile-action-dock-width) - 12px);
+    height: 34px;
+    min-height: 34px;
+    position: absolute;
+    z-index: 4;
+    top: 7px;
+    right: 6px;
+    bottom: auto;
+    left: auto;
+    padding: 0;
+  }
+
+  .solo-player-arena .own-hand-workspace {
+    min-height: 0;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .solo-player-arena .own-hand-scroll {
+    min-height: 124px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .solo-player-arena .own-hand-list,
+  .solo-player-arena .own-hand-list.wrapped-layout {
+    --own-hand-natural-step: 59px;
+    --own-hand-card-width: 56px;
+    --own-hand-card-height: 74px;
+    --own-hand-rank-reveal: 18px;
+    width: max-content;
+    min-width: max-content;
+    min-height: 128px;
+    padding: 2px 8px;
+    flex-wrap: nowrap;
+  }
+
+  .solo-player-arena .own-meld-stack .hand-card-button,
+  .solo-player-arena .own-meld-stack .hand-card-button:last-child,
+  .solo-player-arena .hand-card-button .playing-card.hand {
+    width: 56px;
+  }
+
+  .solo-player-arena .own-meld-stack .hand-card-button:not(:last-child) {
+    height: var(--own-hand-rank-reveal);
+    flex-basis: var(--own-hand-rank-reveal);
+  }
+
+  .solo-player-arena .own-meld-stack .hand-card-button + .hand-card-button {
+    margin-top: 0;
+  }
+
+  .solo-player-arena .action-dock {
+    width: auto;
+    height: auto;
+    min-height: 0;
+    grid-column: 2;
+    grid-row: 1;
+    padding: 42px 0 0 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 6px;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .solo-player-arena .turn-hint,
+  html[data-locale="en"] .solo-player-arena .turn-hint {
+    min-height: 0;
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 11px;
+    line-height: 1.3;
+    text-align: left;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .solo-player-arena .action-dock > .play-action-buttons {
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .solo-player-arena .play-action-buttons button {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .solo-player-arena .lobby-help {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+
+@media (max-width: 760px) and (max-height: 340px) and (orientation: landscape) {
+  .human-fixed-viewport.solo-player-arena .human-table-stage {
+    --mobile-status-zone-size: 84px;
+    --mobile-hand-panel-block-size: 156px;
+    --mobile-action-dock-width: 140px;
+  }
+
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) {
+    height: 40px;
+    min-height: 40px;
+  }
+
+  .solo-player-arena .room-status-strip,
+  .solo-player-arena .guandan-level-hud {
+    top: 40px;
+  }
+
+  .solo-player-arena .guandan-level-hud > strong {
+    display: none;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-top,
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-left,
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-right {
+    height: 70px;
+  }
+
+  .solo-player-arena .human-seat .player-tag {
+    height: 30px;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-top .seat-play-area,
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-left .seat-play-area,
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-right .seat-play-area {
+    height: 40px;
+    top: 30px;
+  }
+
+  .solo-player-arena .human-seat .play-cards {
+    --played-card-width: 30px;
+    --played-card-height: 40px;
+    --played-card-reveal: 9px;
+  }
+
+  .solo-player-arena .own-hand-scroll {
+    min-height: 142px;
+  }
+
+  .solo-player-arena .own-hand-list,
+  .solo-player-arena .own-hand-list.wrapped-layout {
+    --own-hand-card-height: 70px;
+    --own-hand-rank-reveal: 17px;
+    min-height: 126px;
+  }
+
+  .solo-player-arena .action-dock {
+    padding-top: 36px;
+  }
+
+  .solo-player-arena .turn-hint {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .solo-player-arena .series-result-overlay {
+    padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  }
+
+  .solo-player-arena .series-result-shell {
+    padding: 18px 14px;
+    border-radius: 18px;
+  }
+
+  .solo-player-arena .series-result-header h1 {
+    font-size: 36px;
+  }
+
+  .solo-player-arena .series-last-round-meta {
+    grid-template-columns: minmax(0, 1fr) auto;
+    text-align: left;
+  }
+
+  .solo-player-arena .series-last-round-meta > span {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+/* Short portrait play workspace */
+@media (max-width: 480px) and (max-height: 680px) and (orientation: portrait) {
+  /* The round strip already carries the active level. Removing the duplicated
+     level card leaves one uninterrupted lane for opponents and their plays. */
+  .solo-player-arena .guandan-level-hud {
+    display: none;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-top,
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-left,
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-right {
+    width: 100px;
+    height: 88px;
+    top: 166px;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-top {
+    left: calc(50% - 50px);
+    transform: none;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-left {
+    left: 4px;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-right {
+    right: 4px;
+  }
+
+  .solo-player-arena .human-seat .player-tag {
+    width: 100px;
+    height: 44px;
+    padding: 4px 32px 4px 4px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .solo-player-arena .human-seat .seat-number {
+    width: 28px;
+    height: 28px;
+    flex-basis: 28px;
+    font-size: 14px;
+  }
+
+  .solo-player-arena .human-seat .player-name {
+    font-size: 11px;
+  }
+
+  .solo-player-arena .human-seat .player-tag > div {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .solo-player-arena .human-seat .player-role {
+    display: none;
+  }
+
+  .solo-player-arena .ready-mark {
+    min-width: 30px;
+    height: 20px;
+    top: 2px;
+    right: 2px;
+    padding: 0 3px;
+    font-size: 8px;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-top .seat-play-area,
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-left .seat-play-area,
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-right .seat-play-area {
+    width: 100px;
+    height: 44px;
+    min-width: 0;
+    min-height: 0;
+    position: fixed;
+    top: 210px;
+    bottom: auto;
+    transform: none;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-top .seat-play-area {
+    left: calc(50% - 50px);
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-left .seat-play-area {
+    left: 4px;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-right .seat-play-area {
+    right: 4px;
+    left: auto;
+  }
+
+  .solo-player-arena .human-seat .play-cards {
+    --played-card-width: 32px;
+    --played-card-height: 44px;
+    --played-card-reveal: 10px;
+  }
+
+  .solo-player-arena .human-seat .play-cards[data-card-count="8"],
+  .solo-player-arena .human-seat .play-cards[data-card-count="9"],
+  .solo-player-arena .human-seat .play-cards[data-card-count="10"],
+  .solo-player-arena .human-seat .play-cards[data-card-count="11"],
+  .solo-player-arena .human-seat .play-cards[data-card-count="12"] {
+    --played-card-reveal: 6px;
+  }
+
+  .solo-player-arena .own-hand-panel {
+    height: 300px;
+    max-height: 300px;
+    grid-template-rows: minmax(0, 1fr) 54px;
+    gap: 6px;
+  }
+
+  .solo-player-arena .own-hand-copy {
+    display: none;
+  }
+
+  .solo-player-arena .own-hand-workspace {
+    grid-row: 1;
+  }
+
+  .solo-player-arena .action-dock {
+    grid-row: 2;
+  }
+
+  .solo-player-arena .own-hand-list,
+  .solo-player-arena .own-hand-list.wrapped-layout {
+    min-height: 150px;
+  }
+}
+
+/* Keep Safari's changing visual viewport authoritative after every mobile
+   height override above. Older browsers retain the 100vh/100% fallback. */
+@supports (height: 100dvh) {
+  .human-fixed-viewport .human-play-app {
+    height: 100dvh;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage {
+    height: 100dvh;
+  }
+}
+
+/* Mobile usability release */
+.arrange-toolbar {
+  position: relative;
+  overflow: visible;
+}
+
+.arrange-menu-button {
+  min-width: 190px;
+  min-height: 40px;
+  padding: 0 12px;
+  display: inline-grid;
+  grid-template-columns: auto minmax(0, 1fr) 12px;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(141, 240, 189, 0.34);
+  border-radius: 12px;
+  color: var(--cream);
+  background: rgba(4, 62, 44, 0.74);
+  text-align: left;
+}
+
+.arrange-menu-button > span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.arrange-menu-button > b {
+  overflow: hidden;
+  color: var(--cream);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.arrange-menu-button > i {
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--mint);
+  border-bottom: 2px solid var(--mint);
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 150ms ease;
+}
+
+.arrange-toolbar.menu-open .arrange-menu-button > i {
+  transform: translateY(2px) rotate(225deg);
+}
+
+.arrange-toolbar #guandanArrangeControls[hidden] {
+  display: none;
+}
+
+.arrange-toolbar.menu-open #guandanArrangeControls {
+  width: min(320px, calc(100vw - 32px));
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 5px);
+  left: 0;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  border: 1px solid rgba(141, 240, 189, 0.28);
+  border-radius: 14px;
+  background: #02271c;
+  box-shadow: 0 14px 32px rgba(0, 18, 12, 0.46);
+}
+
+.arrange-toolbar.menu-open #guandanArrangeControls button {
+  min-height: 44px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+@media (max-width: 760px) {
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) {
+    width: calc(100% - 16px);
+    height: 44px;
+    min-height: 44px;
+    top: 4px;
+    right: 8px;
+    left: 8px;
+    grid-template-areas: none;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px;
+  }
+
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) .human-topbar-actions {
+    display: none;
+  }
+
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) .room-identity,
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) .solo-topbar-tools {
+    grid-area: auto;
+  }
+
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) .room-identity {
+    width: 100%;
+    height: 44px;
+    min-width: 0;
+  }
+
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) .solo-topbar-tools {
+    min-width: 0;
+    gap: 4px;
+  }
+
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) .connection-chip {
+    min-width: 68px;
+    padding-inline: 8px;
+  }
+
+  .solo-player-arena .room-status-strip {
+    width: calc(100% - 16px);
+    height: 44px;
+    min-height: 44px;
+    top: 52px;
+    left: 8px;
+    padding: 0 5px;
+    gap: 3px;
+    overflow: hidden;
+    transform: none;
+  }
+
+  .solo-player-arena .room-status-strip > button,
+  .solo-player-arena .room-status-strip > a {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .solo-player-arena .guandan-level-hud {
+    display: none;
+  }
+
+  .solo-player-arena .arrange-toolbar:not([hidden]) {
+    height: 44px;
+    min-height: 44px;
+    padding: 0 0 4px;
+    display: flex;
+    overflow: visible;
+  }
+
+  .solo-player-arena .arrange-menu-button {
+    width: min(230px, 100%);
+    min-width: 0;
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+
+  .solo-player-arena .arrange-toolbar.menu-open #guandanArrangeControls {
+    top: 46px;
+  }
+
+  .solo-player-arena .own-hand-list,
+  .solo-player-arena .own-hand-list.wrapped-layout {
+    gap: 8px;
+  }
+
+  .solo-player-arena .own-meld-stack {
+    width: max-content;
+    min-width: max-content;
+    flex: 0 0 auto;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .solo-player-arena .own-meld-stack:last-child {
+    width: max-content;
+    min-width: max-content;
+    flex-basis: auto;
+  }
+
+  .solo-player-arena .own-meld-stack .hand-card-button {
+    width: 44px;
+    min-width: 44px;
+    height: var(--own-hand-card-height);
+    flex: 0 0 44px;
+  }
+
+  .solo-player-arena .own-meld-stack .hand-card-button:not(:last-child) {
+    height: var(--own-hand-card-height);
+    flex-basis: 44px;
+  }
+
+  .solo-player-arena .own-meld-stack .hand-card-button:last-child {
+    width: var(--own-hand-card-width);
+    min-width: var(--own-hand-card-width);
+    height: var(--own-hand-card-height);
+    flex-basis: var(--own-hand-card-width);
+  }
+
+  .solo-player-arena .own-meld-stack .hand-card-button + .hand-card-button {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 760px) and (orientation: portrait) {
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-top,
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-left,
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-right {
+    width: calc((100% - 16px) / 3);
+    height: 88px;
+    top: 104px;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-top {
+    left: calc((100% - ((100% - 16px) / 3)) / 2);
+    transform: none;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-left {
+    left: 4px;
+  }
+
+  .solo-player-arena .human-table-stage[data-game] .human-seat.seat-right {
+    right: 4px;
+  }
+
+  .solo-player-arena .human-seat .player-tag {
+    width: 100%;
+    height: 44px;
+    padding: 4px 32px 4px 4px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .solo-player-arena .human-seat .player-role {
+    display: none;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-top .seat-play-area,
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-left .seat-play-area,
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-right .seat-play-area {
+    width: calc((100% - 16px) / 3);
+    height: 44px;
+    min-width: 0;
+    min-height: 0;
+    position: fixed;
+    top: 148px;
+    bottom: auto;
+    transform: none;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-top .seat-play-area {
+    left: calc((100% - ((100% - 16px) / 3)) / 2);
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-left .seat-play-area {
+    left: 4px;
+  }
+
+  .human-fixed-viewport.solo-player-arena .human-table-stage[data-game] .human-seat.seat-right .seat-play-area {
+    right: 4px;
+    left: auto;
+  }
+}
+
+@media (max-width: 760px) and (orientation: landscape),
+  (min-width: 761px) and (max-width: 1024px) and (max-height: 600px) and (orientation: landscape) {
+  .solo-player-arena .room-status-strip {
+    top: 44px;
+  }
+
+  .solo-player-arena .own-hand-scroll {
+    min-height: 0;
+  }
+
+  .solo-player-arena .own-hand-list,
+  .solo-player-arena .own-hand-list.wrapped-layout {
+    gap: 8px;
+  }
+
+  .solo-player-arena .own-meld-stack {
+    width: max-content;
+    min-width: max-content;
+    flex: 0 0 auto;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .solo-player-arena .own-meld-stack:last-child {
+    width: max-content;
+    min-width: max-content;
+    flex-basis: auto;
+  }
+
+  .solo-player-arena .own-meld-stack .hand-card-button {
+    width: 44px;
+    min-width: 44px;
+    height: var(--own-hand-card-height);
+    flex: 0 0 44px;
+  }
+
+  .solo-player-arena .own-meld-stack .hand-card-button:not(:last-child) {
+    height: var(--own-hand-card-height);
+    flex-basis: 44px;
+  }
+
+  .solo-player-arena .own-meld-stack .hand-card-button:last-child {
+    width: var(--own-hand-card-width);
+    min-width: var(--own-hand-card-width);
+    height: var(--own-hand-card-height);
+    flex-basis: var(--own-hand-card-width);
+  }
+
+  .solo-player-arena .own-meld-stack .hand-card-button + .hand-card-button {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) .room-identity {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) .room-identity .game-chip {
+    display: none;
+  }
+
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) .connection-chip {
+    width: 44px;
+    min-width: 44px;
+    padding: 0;
+  }
+
+  .solo-player-arena .human-topbar:has(.room-identity:not([hidden])) .connection-chip span {
+    width: 1px;
+    height: 1px;
+    position: absolute;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
