@@ -1,0 +1,16 @@
+README.md
+  h_fd5f1e8b7a7f06 26
+README.zh-CN.md
+  h_fd5f1e8b7a7f06 26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.7",
+  "base_commit_sha": "c0db232637d7bcba64422a84ce32bfba795a8709",
+  "prompts": {},
+  "humans": {
+    "h_fd5f1e8b7a7f06": {
+      "author": "xuzhouzheng <xuzhouzheng@kingsoft.com>"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+README.zh-CN.md
+  s_fd1d79bc09fe05::t_0e6819193f21ce 349-360
+README.md
+  s_fd1d79bc09fe05::t_0e6819193f21ce 349-360
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "59059bbc91382cafd0311ce1f9927cc227a2e0e9",
+  "prompts": {},
+  "sessions": {
+    "s_fd1d79bc09fe05": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe665-146b-7c82-baac-b78a1792cbb7",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": null
+    }
+  }
+}

@@ -1,0 +1,21 @@
+README.md
+  s_fd1d79bc09fe05::t_a1e07376faaba3 356
+README.zh-CN.md
+  s_fd1d79bc09fe05::t_a1e07376faaba3 356
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "4358d7ded70b533d0789331f71d892f07a5a7137",
+  "prompts": {},
+  "sessions": {
+    "s_fd1d79bc09fe05": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe665-146b-7c82-baac-b78a1792cbb7",
+        "model": "gpt-5.6-sol"
+      },
+      "human_author": "linzhenxin <linzhenxin@kingsoft.com>"
+    }
+  }
+}
