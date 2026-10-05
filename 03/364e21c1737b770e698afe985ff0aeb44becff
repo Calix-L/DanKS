@@ -1,0 +1,299 @@
+tests/test_repository.py
+  s_fd1d79bc09fe05::t_1aac91beb522ae 105-123
+  s_fd1d79bc09fe05::t_a013c1824b37c1 5,87,124-147,367-369
+.gitignore
+  s_fd1d79bc09fe05::t_1aac91beb522ae 12,36-37
+  s_fd1d79bc09fe05::t_1dfb1f88dd662b 34
+datasets/README.md
+  s_fd1d79bc09fe05::t_1aac91beb522ae 1-43
+datasets/README.zh-CN.md
+  s_fd1d79bc09fe05::t_1aac91beb522ae 1-43
+.github/guides/DEVELOPMENT.zh-CN.md
+  s_fd1d79bc09fe05::t_b6d3e72ed4105d 1-148
+versions/v3pro/USAGE.zh-CN.md
+  s_fd1d79bc09fe05::t_25c436bb72c7ef 1-43
+.github/guides/DEVELOPMENT.md
+  s_fd1d79bc09fe05::t_2893a739333214 1-148
+README.md
+  s_fd1d79bc09fe05::t_378b4dfe40aec2 186
+  s_fd1d79bc09fe05::t_1dfb1f88dd662b 185
+  s_fd1d79bc09fe05::t_1aac91beb522ae 28,116,118,120,122,124,172
+  s_fd1d79bc09fe05::t_466777845506b0 7,14-15,19-21,25-27,29-30,33,35-37,41,45,47,49,51,53,56-59,62,64,66,68-71,73,75-80,82,84,86-89,91,93,95,97,99-100,102,104,106,108-114,126,128,130,133-139,142,144,146,148,151-154,157,160,162,164-171,173-174,177,179,181,183,187,189,194-195
+README.zh-CN.md
+  s_fd1d79bc09fe05::t_18ce47aec34b45 186
+  s_fd1d79bc09fe05::t_bcf9dba9527da3 7,14-15,19-21,25-27,29-30,33,35-37,41,45,47,49,51,53,56-59,62,64,66,68-71,73,75-80,82,84,86-89,91,93,95,97,99-100,102,104,106,108-114,126,128,130,133-139,142,144,146,148,151-154,157,160,162,164-171,173-174,177,179,181,183,187,189,194-195
+  s_fd1d79bc09fe05::t_1dfb1f88dd662b 185
+  s_fd1d79bc09fe05::t_1aac91beb522ae 28,116,118,120,122,124,172
+versions/v3pro/USAGE.md
+  s_fd1d79bc09fe05::t_cb7ce10a245415 1-43
+services/v1/LICENSE
+  s_fd1d79bc09fe05::t_ce2fa286e1ab3e 1-201
+services/v1/MANIFEST.sha256
+  s_fd1d79bc09fe05::t_268b91691233bd 1-59
+services/v1/NOTICE
+  s_fd1d79bc09fe05::t_e0230bd8f651fe 1-20
+services/v1/README.md
+  s_fd1d79bc09fe05::t_5f666018a6bc50 1-70
+services/v1/README.zh-CN.md
+  s_fd1d79bc09fe05::t_10f8fb8daa02a5 1-66
+services/v1/arranger/cmd/hand-arranger/main.go
+  s_fd1d79bc09fe05::t_3f1aaa77f0056e 1-218
+services/v1/arranger/common/hand.go
+  s_fd1d79bc09fe05::t_5bd9be8cb63af4 1-889
+services/v1/arranger/common/pattern.go
+  s_fd1d79bc09fe05::t_136e3b4ff1dbf8 1-595
+services/v1/arranger/common/splitter.go
+  s_fd1d79bc09fe05::t_2c66b228ff2540 1-1811
+services/v1/arranger/common/splitter1.go
+  s_fd1d79bc09fe05::t_64b16f037da874 1-207
+services/v1/arranger/common/splitter2.go
+  s_fd1d79bc09fe05::t_d4e381496235a3 1-214
+services/v1/arranger/common/splitter3.go
+  s_fd1d79bc09fe05::t_69c07c71036b10 1-188
+services/v1/arranger/common/splitter4.go
+  s_fd1d79bc09fe05::t_5bfff4daed6afb 1-39
+services/v1/arranger/go.mod
+  s_fd1d79bc09fe05::t_33add39e7f9dd9 1-3
+services/v1/arranger/meld/meld.go
+  s_fd1d79bc09fe05::t_60ad247c7b3441 1-21
+services/v1/arranger/source-manifest.json
+  s_fd1d79bc09fe05::t_358e126ec02d2c 1-22
+services/v1/arranger/util/util.go
+  s_fd1d79bc09fe05::t_ef888f07a27e65 1-15
+services/v1/backend/__init__.py
+  s_fd1d79bc09fe05::t_d2a5bf93b3fc08 1-10
+services/v1/backend/human_table_models.py
+  s_fd1d79bc09fe05::t_2863e40034d226 1-242
+services/v1/backend/human_tables.py
+  s_fd1d79bc09fe05::t_664ab261d1d744 1-2946
+services/v1/backend/models.py
+  s_fd1d79bc09fe05::t_09c93099c775cd 1-241
+services/v1/backend/presentation.py
+  s_fd1d79bc09fe05::t_87611f66a97872 1-760
+services/v1/backend/settings.py
+  s_fd1d79bc09fe05::t_beb606cf2a5a26 1-76
+services/v1/backend/solo_app.py
+  s_fd1d79bc09fe05::t_2663e06aad497c 1-471
+services/v1/backend/storage.py
+  s_fd1d79bc09fe05::t_b13d873b4d26e3 1-248
+services/v1/docs/AI_INTERFACE.md
+  s_fd1d79bc09fe05::t_1d635070cd12a0 1-52
+services/v1/docs/DEVELOPMENT.md
+  s_fd1d79bc09fe05::t_d7c47039656186 1-109
+services/v1/docs/GAME_API.md
+  s_fd1d79bc09fe05::t_be7726beb2ba1d 1-66
+services/v1/docs/PACKAGE_REVIEW.md
+  s_fd1d79bc09fe05::t_597afcaccfaed0 1-45
+services/v1/docs/SOURCE_IDENTITY.json
+  s_fd1d79bc09fe05::t_26f4d1e68e86ef 1-37
+services/v1/docs/VERSION.md
+  s_fd1d79bc09fe05::t_f34635641b967e 1-52
+services/v1/integrations/__init__.py
+  s_fd1d79bc09fe05::t_4a7eee65cdf341 1
+services/v1/integrations/ai.py
+  s_fd1d79bc09fe05::t_9d10eab0cb984c 1-50
+services/v1/requirements.txt
+  s_fd1d79bc09fe05::t_dc18be75522f9f 1-5
+services/v1/rules/engine/__init__.py
+  s_fd1d79bc09fe05::t_c2f0acf96bb2a8 1-5
+services/v1/rules/engine/environment.py
+  s_fd1d79bc09fe05::t_7eaf4ee15c91ca 1-3
+services/v1/rules/engine/moves.py
+  s_fd1d79bc09fe05::t_e5ffbda59a0ec6 1-40
+services/v1/rules/engine/python_rules.py
+  s_fd1d79bc09fe05::t_8b5a42dffc2045 1-569
+services/v1/rules/engine/table.py
+  s_fd1d79bc09fe05::t_d2824ff223d122 1-669
+services/v1/rules/engine/types.py
+  s_fd1d79bc09fe05::t_8cced94d382d21 1-340
+services/v1/run.py
+  s_fd1d79bc09fe05::t_d4af029c93853b 1-23
+services/v1/scripts/build_arranger.py
+  s_fd1d79bc09fe05::t_bbd9f1fd639a4c 1-115
+services/v1/web/frontend/adapters.mjs
+  s_fd1d79bc09fe05::t_826ff528002cd9 1-449
+services/v1/web/frontend/base-path.mjs
+  s_fd1d79bc09fe05::t_f1ca5e328c4d86 1-39
+services/v1/web/frontend/card-ui.mjs
+  s_fd1d79bc09fe05::t_d613c682a8e042 1-81
+services/v1/web/frontend/hand-layout.mjs
+  s_fd1d79bc09fe05::t_14bf0b73629325 1-97
+services/v1/web/frontend/human-turn-visuals.mjs
+  s_fd1d79bc09fe05::t_74659ce3a79ebe 1-48
+services/v1/web/frontend/navigation.mjs
+  s_fd1d79bc09fe05::t_d88876736de701 1-35
+services/v1/web/frontend/room-api.mjs
+  s_fd1d79bc09fe05::t_4d10522e0ea87c 1-189
+services/v1/web/frontend/room-state.mjs
+  s_fd1d79bc09fe05::t_05cfb2a442ad70 1-894
+services/v1/web/frontend/solo-english.mjs
+  s_fd1d79bc09fe05::t_97e5f71f43936d 1-378
+services/v1/web/frontend/solo-session.mjs
+  s_fd1d79bc09fe05::t_e741db1c8aca8b 1-53
+services/v1/web/kingsoft-ai-product-center-dark.svg
+  s_fd1d79bc09fe05::t_48c5d2a28a9657 1-35
+services/v1/web/play.css
+  s_fd1d79bc09fe05::t_631321e2c2d3d8 1-5518
+services/v1/web/play.html
+  s_fd1d79bc09fe05::t_942a31e5209ad9 1-293
+services/v1/web/play.js
+  s_fd1d79bc09fe05::t_311c9389f323d3 1-1813
+services/v1/web/styles.css
+  s_fd1d79bc09fe05::t_d476d9d8b15517 1-3122
+services/v1/workers/__init__.py
+  s_fd1d79bc09fe05::t_d63536c93968df 1-3
+services/v1/workers/http_policy.py
+  s_fd1d79bc09fe05::t_4397a5adcfbd33 1-38
+services/v1/workers/table_worker.py
+  s_fd1d79bc09fe05::t_d47e7c39b299b7 1-1199
+services/v2/.gitignore
+  s_fd1d79bc09fe05::t_4efd5c4b772aaf 1-15
+services/v2/DESIGN.md
+  s_fd1d79bc09fe05::t_5ab06b8b8369a5 1-113
+services/v2/LICENSE
+  s_fd1d79bc09fe05::t_17c069360b1b19 1-201
+services/v2/MANIFEST.sha256
+  s_fd1d79bc09fe05::t_5d82fd8bcc606e 1-74
+services/v2/NOTICE
+  s_fd1d79bc09fe05::t_a418c732bf61ea 1-16
+services/v2/README.md
+  s_fd1d79bc09fe05::t_46838274c1e588 1-79
+services/v2/README.zh-CN.md
+  s_fd1d79bc09fe05::t_7b84bc7438c8da 1-74
+services/v2/arranger/cmd/hand-arranger/main.go
+  s_fd1d79bc09fe05::t_36ea301bc76161 1-218
+services/v2/arranger/common/hand.go
+  s_fd1d79bc09fe05::t_7c31d6a302f1aa 1-889
+services/v2/arranger/common/pattern.go
+  s_fd1d79bc09fe05::t_54163c7a6cd0f5 1-595
+services/v2/arranger/common/splitter.go
+  s_fd1d79bc09fe05::t_7616183ac8608e 1-1811
+services/v2/arranger/common/splitter1.go
+  s_fd1d79bc09fe05::t_6f523e2b095e17 1-207
+services/v2/arranger/common/splitter2.go
+  s_fd1d79bc09fe05::t_a80c08cf57f868 1-214
+services/v2/arranger/common/splitter3.go
+  s_fd1d79bc09fe05::t_6897de60d8da34 1-188
+services/v2/arranger/common/splitter4.go
+  s_fd1d79bc09fe05::t_e4f49ff6bb692d 1-39
+services/v2/arranger/go.mod
+  s_fd1d79bc09fe05::t_eca8ea511c3db1 1-3
+services/v2/arranger/meld/meld.go
+  s_fd1d79bc09fe05::t_ab206427f7ef77 1-21
+services/v2/arranger/source-manifest.json
+  s_fd1d79bc09fe05::t_fc3c13d79734c2 1-22
+services/v2/arranger/util/util.go
+  s_fd1d79bc09fe05::t_1fd9e130efd782 1-15
+services/v2/backend/__init__.py
+  s_fd1d79bc09fe05::t_4cb230c5b82d8a 1-10
+services/v2/backend/human_table_models.py
+  s_fd1d79bc09fe05::t_368c1a5399810c 1-246
+services/v2/backend/human_tables.py
+  s_fd1d79bc09fe05::t_4d8bb5a74d4285 1-3434
+services/v2/backend/models.py
+  s_fd1d79bc09fe05::t_4e8a0c4313a1dc 1-241
+services/v2/backend/presentation.py
+  s_fd1d79bc09fe05::t_415fd62b06a97f 1-760
+services/v2/backend/public_trick_history.py
+  s_fd1d79bc09fe05::t_b7421c07c4cc0e 1-111
+services/v2/backend/settings.py
+  s_fd1d79bc09fe05::t_6b68740b7a9e93 1-76
+services/v2/backend/solo_app.py
+  s_fd1d79bc09fe05::t_a17d636503d7da 1-548
+services/v2/backend/storage.py
+  s_fd1d79bc09fe05::t_f28a23989119eb 1-248
+services/v2/docs/AI_INTERFACE.md
+  s_fd1d79bc09fe05::t_3f0d1622cd1af5 1-52
+services/v2/docs/DEVELOPMENT.md
+  s_fd1d79bc09fe05::t_00227b40b4abd3 1-107
+services/v2/docs/GAME_API.md
+  s_fd1d79bc09fe05::t_95c37fd1a367f7 1-116
+services/v2/docs/PACKAGE_REVIEW.md
+  s_fd1d79bc09fe05::t_5357b10d5fc316 1-72
+services/v2/docs/VERSION.md
+  s_fd1d79bc09fe05::t_07e515140cfb4b 1-16
+services/v2/integrations/__init__.py
+  s_fd1d79bc09fe05::t_39e5fdb6573834 1
+services/v2/integrations/ai.py
+  s_fd1d79bc09fe05::t_06d9e500749c75 1-50
+services/v2/requirements.txt
+  s_fd1d79bc09fe05::t_4a5adbdbe5d607 1-5
+services/v2/rules/engine/__init__.py
+  s_fd1d79bc09fe05::t_116456fb0bc99a 1-5
+services/v2/rules/engine/environment.py
+  s_fd1d79bc09fe05::t_6ea2d89dfb99d4 1-3
+services/v2/rules/engine/moves.py
+  s_fd1d79bc09fe05::t_2244491bf7be48 1-40
+services/v2/rules/engine/python_rules.py
+  s_fd1d79bc09fe05::t_568c4b7d25b3c0 1-569
+services/v2/rules/engine/table.py
+  s_fd1d79bc09fe05::t_fff425c31d9c08 1-669
+services/v2/rules/engine/types.py
+  s_fd1d79bc09fe05::t_1a4edb115dbb26 1-340
+services/v2/run.py
+  s_fd1d79bc09fe05::t_7ed7c98afb94ae 1-23
+services/v2/scripts/build_arranger.py
+  s_fd1d79bc09fe05::t_e3e36830450da2 1-115
+services/v2/web/frontend/adapters.mjs
+  s_fd1d79bc09fe05::t_417148d09a7a59 1-449
+services/v2/web/frontend/base-path.mjs
+  s_fd1d79bc09fe05::t_6ca246f7a56600 1-39
+services/v2/web/frontend/card-ui.mjs
+  s_fd1d79bc09fe05::t_40774df3fe2748 1-127
+services/v2/web/frontend/guandan-presentation.mjs
+  s_fd1d79bc09fe05::t_a7c6134d0d25c3 1-82
+services/v2/web/frontend/hand-interactions.mjs
+  s_fd1d79bc09fe05::t_db01d672275d2d 1-254
+services/v2/web/frontend/hand-layout.mjs
+  s_fd1d79bc09fe05::t_704a2d6ff2a4b4 1-97
+services/v2/web/frontend/human-turn-visuals.mjs
+  s_fd1d79bc09fe05::t_fdfc5d5d502f97 1-48
+services/v2/web/frontend/navigation.mjs
+  s_fd1d79bc09fe05::t_9c77e5d98a93ef 1-26
+services/v2/web/frontend/room-api.mjs
+  s_fd1d79bc09fe05::t_5358e33609f0c0 1-209
+services/v2/web/frontend/room-state.mjs
+  s_fd1d79bc09fe05::t_83f3949bae0f04 1-916
+services/v2/web/frontend/solo-english.mjs
+  s_fd1d79bc09fe05::t_29bb3447560d89 1-526
+services/v2/web/frontend/solo-session.mjs
+  s_fd1d79bc09fe05::t_461fce106a064f 1-104
+services/v2/web/frontend/table-frame.mjs
+  s_fd1d79bc09fe05::t_d95f3e8809471e 1-64
+services/v2/web/frontend/table-sound.mjs
+  s_fd1d79bc09fe05::t_c3dd597b94c132 1-53
+services/v2/web/frontend/trick-history.mjs
+  s_fd1d79bc09fe05::t_626537457be5a1 1-37
+services/v2/web/kingsoft-ai-product-center-dark.svg
+  s_fd1d79bc09fe05::t_0fcdfe4e9f9b48 1-35
+services/v2/web/play.css
+  s_fd1d79bc09fe05::t_b712854bd737c9 1-6850
+services/v2/web/play.html
+  s_fd1d79bc09fe05::t_2d6afdb298da37 1-441
+services/v2/web/play.js
+  s_fd1d79bc09fe05::t_a8a68ec3004118 1-2667
+services/v2/web/styles.css
+  s_fd1d79bc09fe05::t_b984f968e4f2bc 1-3051
+services/v2/workers/__init__.py
+  s_fd1d79bc09fe05::t_5dffe599be01cf 1-3
+services/v2/workers/http_policy.py
+  s_fd1d79bc09fe05::t_0dac0466dfd13b 1-38
+services/v2/workers/table_worker.py
+  s_fd1d79bc09fe05::t_01d5a060160f48 1-1067
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "03364e21c1737b770e698afe985ff0aeb44becff",
+  "prompts": {},
+  "sessions": {
+    "s_fd1d79bc09fe05": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019fe665-146b-7c82-baac-b78a1792cbb7",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "Calix <zhenxinlin290@gmail.com>"
+    }
+  }
+}
