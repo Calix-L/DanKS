@@ -6848,3 +6848,63 @@ html.fixed-aspect-table .solo-player-arena .human-table-stage[data-short-landsca
 @media (max-width: 600px) {
   .solo-player-arena .rules-dialog .rules-dialog-body { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Local manual arrangement extends the existing hand rail, never an overlay
+   covering cards. Runtime palette and card dimensions remain canonical. */
+.solo-player-arena #manualArrangeControls[hidden],
+.solo-player-arena #manualArrangeButton[hidden] { display: none; }
+.solo-player-arena #manualArrangeControls:not([hidden]) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+html.fixed-aspect-table .solo-player-arena #arrangeToolbar[data-manual-editing="true"] > :is(.arrange-group-label, #rankDisplayButton, #arrangeMenuButton, #guandanArrangeControls),
+.solo-player-arena #arrangeToolbar[data-manual-editing="true"] > :is(.arrange-group-label, #rankDisplayButton, #arrangeMenuButton, #guandanArrangeControls) { display: none; }
+.solo-player-arena #manualArrangeControls button {
+  flex: 1 1 0;
+  min-width: 0;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.solo-player-arena #manualArrangeControls button:disabled { cursor: default; opacity: .45; }
+.solo-player-arena #manualArrangeControls button:hover:not(:disabled),
+.solo-player-arena #manualArrangeButton:hover:not(:disabled) { border-color: var(--gold); color: var(--gold); }
+.solo-player-arena #manualArrangeControls button:active:not(:disabled) { background: var(--felt); }
+html.fixed-aspect-table .solo-player-arena #manualArrangeControls button[data-manual-operation="done"],
+.solo-player-arena #manualArrangeControls button[data-manual-operation="done"] { background: var(--gold); border-color: var(--gold); color: var(--ink); font-weight: 750; }
+.solo-player-arena #manualArrangeControls button:focus-visible,
+.solo-player-arena #manualArrangeButton:focus-visible { outline: 2px solid var(--cream); outline-offset: 3px; }
+html.fixed-aspect-table .solo-player-arena .arrange-toolbar[data-manual-editing="true"] #arrangeHint { left: 320px; width: 720px; }
+html.fixed-aspect-table .solo-player-arena .human-table-stage[data-short-landscape="true"] #manualArrangeControls button,
+html.fixed-aspect-table .solo-player-arena .human-table-stage[data-short-landscape="true"] #manualArrangeButton { min-height: 80px; height: 80px; font-size: 20px; }
+html.fixed-aspect-table .solo-player-arena .human-table-stage[data-short-landscape="true"] .arrange-toolbar[data-manual-editing="true"] { padding-right: 300px; }
+.solo-player-arena .action-dock[data-manual-editing="true"] .play-action-buttons { visibility: hidden; }
+.solo-player-arena .action-dock[data-manual-editing="true"] #turnHint { color: var(--gold); font-size: 22px; font-weight: 750; }
+.solo-player-arena .action-dock[data-manual-editing="true"] #selectionStatus { font-size: 18px; line-height: 1.5; white-space: normal; }
+.solo-player-arena .expanded-manual-controls:not([hidden]) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  flex: 0 0 auto;
+  padding: 12px 16px;
+  border-top: 1px solid var(--line);
+}
+.solo-player-arena .expanded-manual-controls button {
+  min-height: 44px;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--felt);
+  color: var(--cream);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.solo-player-arena .expanded-manual-controls button[data-manual-operation="done"] { grid-column: span 2; background: var(--gold); color: var(--ink); border-color: var(--gold); font-weight: 750; }
+.solo-player-arena .expanded-manual-controls button:disabled { opacity: .45; cursor: default; }
+.solo-player-arena .expanded-manual-controls button:hover:not(:disabled) { border-color: var(--gold); }
+.solo-player-arena .expanded-manual-controls button:active:not(:disabled) { filter: brightness(.92); }
+.solo-player-arena .expanded-manual-controls button:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }

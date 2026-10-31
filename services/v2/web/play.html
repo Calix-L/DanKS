@@ -36,7 +36,7 @@
       })();
     </script>
     <link rel="stylesheet" href="./styles.css?v=20261004-7" />
-    <link rel="stylesheet" href="./play.css?v=20261005-r1" />
+    <link rel="stylesheet" href="./play.css?v=20261101-manual-1" />
   </head>
   <body data-arena-mode="solo" class="human-fixed-viewport solo-player-arena">
     <noscript><style>.human-play-app { display: none; }</style><p class="page-boot-noscript">游玩 DanKS 需要启用 JavaScript，请在浏览器设置中启用后重新加载。</p></noscript>
@@ -208,6 +208,16 @@
                 <button type="button" data-arrange-mode="2" aria-pressed="false" aria-describedby="arrangeHint">同花顺优先</button>
                 <button type="button" data-arrange-mode="3" aria-pressed="false" aria-describedby="arrangeHint">整牌优先</button>
                 <button type="button" data-arrange-mode="4" aria-pressed="false" aria-describedby="arrangeHint">简单理牌</button>
+              </div>
+              <button id="manualArrangeButton" type="button" aria-expanded="false" aria-controls="manualArrangeControls">手动理牌</button>
+              <div id="manualArrangeControls" role="group" aria-label="手动理牌工具" hidden>
+                <button type="button" data-manual-operation="group" aria-describedby="arrangeHint">归为一组</button>
+                <button type="button" data-manual-operation="split" aria-describedby="arrangeHint">拆为单张</button>
+                <button type="button" data-manual-operation="left" aria-describedby="arrangeHint">← 左移</button>
+                <button type="button" data-manual-operation="right" aria-describedby="arrangeHint">右移 →</button>
+                <button type="button" data-manual-operation="undo">撤销</button>
+                <button type="button" data-manual-operation="redo">重做</button>
+                <button type="button" data-manual-operation="done">完成</button>
               </div>
               <small id="arrangeHint">只调整显示分组，不改变规则手牌或合法出牌。</small>
             </div>
@@ -390,6 +400,7 @@
         <p class="storage-notice" data-storage-notice role="status" hidden>浏览器无法保存对局信息。本页仍可游玩，刷新或关闭后可能无法续局。</p>
         <div id="tableToolsActions" class="control-preset-options table-tools-actions" role="group" aria-label="牌桌工具">
           <button type="button" data-table-tool="hand" disabled>展开选牌</button>
+          <button type="button" data-table-tool="manual" disabled>手动理牌</button>
           <button type="button" data-table-tool="rules">规则说明</button>
           <button type="button" data-table-tool="history">上一轮出牌</button>
           <button type="button" data-table-tool="copy" disabled>复制桌号</button>
@@ -436,6 +447,6 @@
     </main>
 
     <p class="landscape-hint" id="landscapeHint" hidden>横屏体验更好</p>
-    <script type="module" src="./play.js?v=20261005-r1"></script>
+    <script type="module" src="./play.js?v=20261101-manual-1"></script>
   </body>
 </html>

@@ -1,11 +1,12 @@
 import { createPlayingCard } from "./frontend/card-ui.mjs?v=20261004-7";
+import { editHandGroups, manualCapabilities, manualSelectionInfo, rebindManualHistory } from "./frontend/manual-arrange.mjs?v=20261101-manual-1";
 import {
   fallbackHandGroups,
   renderHandLayout,
 } from "./frontend/hand-layout.mjs?v=20261004-7";
 import { resolveArenaBasePath } from "./frontend/base-path.mjs?v=20260805-1";
 import { reviewHref } from "./frontend/navigation.mjs?v=20260810-1";
-import { installSoloLocale } from "./frontend/solo-english.mjs?v=20261005-r1";
+import { installSoloLocale } from "./frontend/solo-english.mjs?v=20261101-manual-1";
 import { selectionFeedback, selectionExplanation, pendingActionResolved, toggleGroupSelection, groupSelectionFeedback, stableHandGroups, canContinueHandGesture, canPrepareOwnHand, reconcileHandSelection, beginHandSweep, paintHandSweep, rankDisplayGroups, boundedHandColumns, rebindDisplayGroups, fitHandStackReveal, handInspectionSignature, handRefreshBindings, actionChoiceContext, isCurrentActionChoice } from "./frontend/hand-interactions.mjs?v=20261005-r1";
 import { guandanTypeLabel, guandanRankLabel, wildcardCaption, confirmedTableFeedback, currentPublicPlayArea, soloLobbyPresentation } from "./frontend/guandan-presentation.mjs?v=20261005-r1";
 import { createTableSound } from "./frontend/table-sound.mjs?v=20261004-3";
@@ -91,6 +92,11 @@ const state = {
   pendingMutation: false,
   retryError: "",
   pendingArrange: false,
+  manualEditing: false,
+  manualHistory: [],
+  manualRedo: [],
+  manualHandSignature: "",
+  manualMessage: "",
   connectionState: "idle",
   handLayoutObserver: null,
   handLayoutFrame: null,
@@ -184,9 +190,15 @@ function initializeTablePresentation() {
   renderHandSpreadControl();
   renderControlPreferences();
   $("expandHandButton").addEventListener("click", openExpandedHand);
+  // Both surfaces share the same buttons, operations and selection state.
+  const expandedManualControls = $("manualArrangeControls").cloneNode(true);
+  expandedManualControls.id = "expandedManualArrangeControls";
+  expandedManualControls.className = "expanded-manual-controls";
+  expandedManualControls.querySelectorAll("button").forEach(button => button.setAttribute("aria-describedby", "expandedHandStatus"));
+  $("expandedHandDialog").querySelector(".expanded-hand-footer").before(expandedManualControls);
   $("expandedHandDialog").addEventListener("close", () => {
     state.expandedHandSignature = null;
-    const trigger = $("expandHandButton");
+    const trigger = $(!state.manualEditing && state.handDisplayMode === "manual" ? "manualArrangeButton" : "expandHandButton");
     if (!trigger.disabled && !$("ownHandPanel").hidden && trigger.getClientRects().length) trigger.focus({ preventScroll: true });
   });
   $("expandedHandGroups").addEventListener("click", event => {
@@ -223,6 +235,7 @@ function initializeTablePresentation() {
     if (target === "rules") { state.rulesTrigger = state.controlsTrigger; openDialog($("rulesDialog")); }
     if (target === "history") { state.historyTrigger = state.controlsTrigger; renderTrickHistory(state.view); openDialog($("trickHistoryDialog")); }
     if (target === "hand") openExpandedHand();
+    if (target === "manual") { startManualArrangement(); openExpandedHand(); }
   });
   document.querySelectorAll("button[data-control-size], button[data-control-side]").forEach(button => {
     button.addEventListener("click", () => {
@@ -406,8 +419,10 @@ function bindRoomControls() {
   $("rulesButton").addEventListener("click", () => { state.rulesTrigger = "rulesButton"; openDialog($("rulesDialog")); });
   const arrangeMenuButton = $("arrangeMenuButton");
   $("rankDisplayButton").addEventListener("click", () => {
-    if (interactionFrozen() || state.pendingArrange || state.pendingAction || !state.view) return;
+    if (state.manualEditing || interactionFrozen() || state.pendingArrange || state.pendingAction || !state.view) return;
     cancelSelectionGesture();
+    state.manualHistory = [];
+    state.manualRedo = [];
     state.handDisplayMode = state.handDisplayMode === "rank" ? "arranged" : "rank";
     state.resetHandLayout = true;
     setArrangeMenuOpen(false);
@@ -415,6 +430,11 @@ function bindRoomControls() {
   });
   arrangeMenuButton.addEventListener("click", () => {
     setArrangeMenuOpen(arrangeMenuButton.getAttribute("aria-expanded") !== "true");
+  });
+  $("manualArrangeButton").addEventListener("click", startManualArrangement);
+  for (const id of ["manualArrangeControls", "expandedManualArrangeControls"]) $(id).addEventListener("click", event => {
+    const button = event.target.closest("button[data-manual-operation]");
+    if (button && !button.disabled) applyManualArrangement(button.dataset.manualOperation);
   });
   document.querySelectorAll("[data-arrange-mode]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -426,6 +446,7 @@ function bindRoomControls() {
     if (!$("arrangeToolbar").contains(event.target)) setArrangeMenuOpen(false);
   });
   document.addEventListener("keydown", (event) => {
+    if (handleManualArrangeShortcut(event)) return;
     if (event.key === "Escape" && arrangeMenuButton.getAttribute("aria-expanded") === "true") {
       setArrangeMenuOpen(false, { restoreFocus: true });
       return;
@@ -938,6 +959,9 @@ function applyRoomView(rawView) {
       });
     }
     state.displayGroups = state.displayGroups.map(group => ({ ...group, cards: group.cards.map(card => bindings.get(card.id)) }));
+    state.manualHistory = rebindManualHistory(state.manualHistory, bindings);
+    state.manualRedo = rebindManualHistory(state.manualRedo, bindings);
+    state.manualHandSignature = manualHandIdentity(nextView);
   }
   // Discard an old gesture before filtering or clearing authoritative selection.
   // Its cancellation baseline must never leak into a new server decision.
@@ -1472,6 +1496,10 @@ function renderOwnHand(view, spectator) {
     cancelSelectionGesture();
     state.displayGroups = [];
     state.displayContext = "";
+    state.manualEditing = false;
+    state.manualHistory = [];
+    state.manualRedo = [];
+    state.manualHandSignature = "";
     $("ownHand").replaceChildren();
     renderArrangeToolbar(view);
     $("arrangeToolbar").hidden = true;
@@ -1518,13 +1546,22 @@ function renderOwnHand(view, spectator) {
   const rawGroups = layout?.groups?.length
     ? layout.groups
     : [{ pattern: 0, minor: 0, value: null, cards: view.own_hand }];
+  const context = `${view.table_no}:${view.round_no}:${view.viewer.seat}:${view.game}`;
+  if (state.displayContext !== context && state.handDisplayMode === "manual") state.handDisplayMode = "rank";
   const incomingGroups = state.handDisplayMode === "rank"
     ? rankDisplayGroups(view.own_hand, view.level)
     : layout?.fallback && rawGroups.length === 1 && rawGroups[0].cards.length > 8
     ? rawGroups[0].cards.map((card) => ({ pattern: 0, minor: 0, value: null, cards: [card] }))
     : rawGroups;
-  const context = `${view.table_no}:${view.round_no}:${view.viewer.seat}:${view.game}`;
   const reset = state.resetHandLayout || state.displayContext !== context;
+  const manualHandSignature = manualHandIdentity(view);
+  if (state.manualHandSignature !== manualHandSignature || reset) {
+    state.manualHistory = [];
+    state.manualRedo = [];
+    if (state.displayContext !== context || reset) state.manualEditing = false;
+    else if (state.manualEditing) state.manualMessage = "手牌已更新，撤销记录已清空";
+    state.manualHandSignature = manualHandSignature;
+  }
   const membershipChanged = state.displayGroups.flatMap(group => group.cards).map(card => card.id).sort().join("|") !== view.own_hand.map(card => card.id).sort().join("|");
   if (reset || membershipChanged || !selectable) cancelSelectionGesture();
   const groups = boundedHandColumns(stableHandGroups(state.displayGroups, incomingGroups, view.own_hand, { reset }));
@@ -1621,6 +1658,7 @@ function renderArrangeToolbar(view) {
   const available = view.own_hand.length > 0 && !isSpectatorRole(view.viewer.role) && !isTerminalPhase(view.phase);
   $("tableToolsArrange").hidden = !available;
   $("tableToolsActions").querySelector('[data-table-tool="hand"]').disabled = !canSelectOwnHand();
+  $("tableToolsActions").querySelector('[data-table-tool="manual"]').disabled = !canSelectOwnHand() || view.game !== "guandan";
   $("tableToolsActions").querySelector('[data-table-tool="copy"]').disabled = !state.tableNo;
   toolbar.hidden = !available;
   if (!available) {
@@ -1628,10 +1666,10 @@ function renderArrangeToolbar(view) {
     return;
   }
   $("arrangeLabel").textContent = "理牌";
-  $("arrangeCurrentMode").textContent = state.handDisplayMode === "rank" ? "牌型分组" : ARRANGE_MODE_LABELS[view.arrange_mode] ?? "选择方式";
+  $("arrangeCurrentMode").textContent = state.handDisplayMode === "manual" ? "手动分组" : state.handDisplayMode === "rank" ? "牌型分组" : ARRANGE_MODE_LABELS[view.arrange_mode] ?? "选择方式";
   $("rankDisplayButton").setAttribute("aria-pressed", String(state.handDisplayMode === "rank"));
-  $("rankDisplayButton").disabled = state.pendingArrange || Boolean(state.pendingAction) || interactionFrozen();
-  $("arrangeMenuButton").disabled = state.pendingArrange || Boolean(state.pendingAction) || interactionFrozen();
+  $("rankDisplayButton").disabled = state.manualEditing || state.pendingArrange || Boolean(state.pendingAction) || interactionFrozen();
+  $("arrangeMenuButton").disabled = state.manualEditing || state.pendingArrange || Boolean(state.pendingAction) || interactionFrozen();
   if (document.documentElement.classList.contains("fixed-aspect-table")) setArrangeMenuOpen(false);
   document.querySelectorAll("button[data-arrange-mode]").forEach((button) => {
     const mode = Number(button.dataset.arrangeMode);
@@ -1646,13 +1684,143 @@ function renderArrangeToolbar(view) {
       delete button.dataset.variantCount;
       button.setAttribute("aria-label", ARRANGE_MODE_LABELS[mode]);
     }
-    button.disabled = state.pendingArrange || Boolean(state.pendingAction) || interactionFrozen();
+    button.disabled = state.manualEditing || state.pendingArrange || Boolean(state.pendingAction) || interactionFrozen();
   });
   $("arrangeHint").textContent = state.pendingArrange
     ? "正在重新分组；已选牌保持不变…"
     : view.own_hand_layout?.fallback
       ? "理牌服务暂不可用，当前按安全回退顺序显示；规则手牌未改变。"
       : "重复点击当前方式切换方案";
+  renderManualArrangeControls();
+}
+
+// Manual edits are presentation partitions only. Existing snapshot binding and
+// authoritative legal-action matching remain the only card/action owners.
+function manualHandIdentity(view) {
+  return JSON.stringify([view.table_no, view.round_no, view.series?.series_no, view.viewer.seat,
+    view.game, view.level, view.own_hand.map(c => [c.id, c.code]).sort()]);
+}
+
+function startManualArrangement() {
+  if (!canSelectOwnHand() || state.view?.game !== "guandan") return;
+  cancelSelectionGesture();
+  state.manualEditing = true;
+  state.manualMessage = "选牌后归组；移动时请先整组选择";
+  setArrangeMenuOpen(false);
+  renderOwnHand(state.view, false);
+  $("ownHand").querySelector(".hand-card-button")?.focus({ preventScroll: true });
+}
+
+function handleManualArrangeShortcut(event) {
+  if (!state.manualEditing || event.isComposing || event.altKey || !(event.metaKey || event.ctrlKey)
+    || event.target?.closest?.('input, textarea, select, [contenteditable="true"]')) return false;
+  const dialog = document.querySelector("dialog[open]");
+  if (dialog && dialog.id !== "expandedHandDialog") return false;
+  if (!$("ownHandPanel").contains(event.target) && !$("expandedHandDialog").contains(event.target)) return false;
+  const key = event.key.toLowerCase();
+  const operation = key === "z" ? (event.shiftKey ? "redo" : "undo") : key === "y" ? "redo" : null;
+  if (!operation) return false;
+  event.preventDefault();
+  applyManualArrangement(operation);
+  return true;
+}
+
+function manualSelectionText() {
+  const info = manualSelectionInfo(state.displayGroups, state.selectedIds);
+  return !info.selected ? "点选要放在一起的牌，或整组选择后移动"
+    : info.whole ? `已选完整一组 · ${info.selected} 张`
+    : `已选 ${info.selected} 张 · 来自 ${info.touched} 组`;
+}
+
+function renderManualArrangeControls() {
+  const toolbar = $("arrangeToolbar");
+  toolbar.dataset.manualEditing = String(state.manualEditing);
+  $("manualArrangeButton").hidden = state.view?.game !== "guandan" || state.manualEditing;
+  $("manualArrangeButton").disabled = !canSelectOwnHand();
+  $("manualArrangeButton").setAttribute("aria-expanded", String(state.manualEditing));
+  $("manualArrangeButton").setAttribute("aria-pressed", String(state.handDisplayMode === "manual"));
+  $("manualArrangeControls").hidden = !state.manualEditing;
+  $("expandedManualArrangeControls").hidden = !state.manualEditing;
+  $("expandedHandDialog").querySelector(".expanded-hand-footer").hidden = state.manualEditing;
+  if (!state.manualEditing) {
+    if (state.handDisplayMode === "manual") $("arrangeHint").textContent = "已保留手动分组；自动理牌会重新排列";
+    return;
+  }
+  const enabled = canSelectOwnHand();
+  const capabilities = manualCapabilities(state.displayGroups, state.selectedIds);
+  const info = manualSelectionInfo(state.displayGroups, state.selectedIds);
+  for (const button of [...$("manualArrangeControls").querySelectorAll("button"), ...$("expandedManualArrangeControls").querySelectorAll("button")]) {
+    const operation = button.dataset.manualOperation;
+    if (operation === "group") button.textContent = info.whole ? "继续选牌" : "归为一组";
+    button.disabled = operation === "done" ? false
+      : !enabled || (operation === "undo" ? !state.manualHistory.length
+        : operation === "redo" ? !state.manualRedo.length
+        : operation === "group" ? !(capabilities.group || info.whole) : !capabilities[operation]);
+    button.title = operation === "undo" ? "撤销上一步（Ctrl / ⌘ Z）"
+      : operation === "redo" ? "重做上一步（Ctrl / ⌘ Shift Z）"
+      : operation === "left" || operation === "right" ? !info.whole ? "请先整组选择" : button.disabled ? "已经移到边缘" : "移动选中的整组牌"
+      : operation === "group" && info.whole ? "收好这一组，继续选择其他牌" : "只调整手牌的显示分组";
+  }
+  $("arrangeHint").textContent = state.manualMessage || "选牌后归组；移动时请先整组选择";
+}
+
+function applyManualArrangement(operation) {
+  if (!state.manualEditing) return;
+  if (operation === "done") {
+    cancelSelectionGesture();
+    state.manualEditing = false;
+    state.selectedIds.clear();
+    closeExpandedHand();
+    renderOwnHand(state.view, false);
+    $("manualArrangeButton").focus({ preventScroll: true });
+    return;
+  }
+  if (!canSelectOwnHand()) return;
+  cancelSelectionGesture();
+  if (operation === "group" && manualSelectionInfo(state.displayGroups, state.selectedIds).whole) {
+    const info = manualSelectionInfo(state.displayGroups, state.selectedIds);
+    const nextGroup = state.displayGroups[info.index + 1] ?? state.displayGroups[0];
+    state.manualMessage = "这一组已收好，继续选择下一组";
+    clearHandSelection();
+    const container = $($("expandedHandDialog").open ? "expandedHandGroups" : "ownHand");
+    [...container.querySelectorAll("button[data-card-id]")].find(button => button.dataset.cardId === nextGroup?.cards[0]?.id)?.focus({ preventScroll: true });
+    return;
+  }
+  const inspectionOpen = $("expandedHandDialog").open;
+  if (operation === "undo" || operation === "redo") {
+    const from = operation === "undo" ? state.manualHistory : state.manualRedo;
+    const to = operation === "undo" ? state.manualRedo : state.manualHistory;
+    const previous = from.pop();
+    if (!previous) return;
+    to.push({ groups: state.displayGroups, selectedIds: [...state.selectedIds], mode: state.handDisplayMode });
+    if (to.length > 20) to.shift();
+    state.displayGroups = previous.groups;
+    state.selectedIds = new Set(previous.selectedIds);
+    state.handDisplayMode = previous.mode;
+    state.manualMessage = operation === "undo" ? "已撤销上一步" : "已重做上一步";
+  } else {
+    const result = editHandGroups(state.displayGroups, state.selectedIds, operation);
+    if (!result.changed) return;
+    state.manualHistory.push({ groups: state.displayGroups, selectedIds: [...state.selectedIds], mode: state.handDisplayMode });
+    if (state.manualHistory.length > 20) state.manualHistory.shift();
+    state.manualRedo = [];
+    state.displayGroups = result.groups;
+    state.selectedIds = result.selectedIds;
+    state.handDisplayMode = "manual";
+    state.manualMessage = ({ group: "已归为一组", split: "已拆为单张", left: "已向左移动一组", right: "已向右移动一组" })[operation];
+  }
+  // An explicit local edit can redraw the current picker in place. Unexpected
+  // authoritative changes still close it through the existing signature guard.
+  if (inspectionOpen) state.expandedHandSignature = null;
+  renderOwnHand(state.view, false);
+  if (inspectionOpen) openExpandedHand();
+  // A boundary move may disable the button just activated. Restore a visible
+  // focus target rather than stranding keyboard users on a disabled control.
+  const surface = $(inspectionOpen ? "expandedManualArrangeControls" : "manualArrangeControls");
+  const repeatedControl = surface.querySelector(`[data-manual-operation="${operation}"]`);
+  const nextControl = repeatedControl && !repeatedControl.disabled ? repeatedControl
+    : surface.querySelector('[data-manual-operation="done"]');
+  nextControl.focus({ preventScroll: true });
 }
 
 function setArrangeMenuOpen(open, { restoreFocus = false } = {}) {
@@ -1686,15 +1854,16 @@ function renderActionControls(view) {
   $("selectedCount").textContent = `${state.selectedIds.size} 张已选`;
   $("actionDock").classList.toggle("pending", pending);
   $("actionDock").setAttribute("aria-busy", String(pending));
+  $("actionDock").dataset.manualEditing = String(state.manualEditing);
   $("playButton").setAttribute("aria-busy", String(pending));
   const uncertain = Boolean(state.pendingAction?.uncertain);
   $("reconcileActionButton").hidden = !uncertain;
   $("reconcileActionButton").disabled = interactionFrozen();
   renderHandSpreadControl();
   $("playActionButtons").hidden = false;
-  $("passButton").disabled = !ownPlayTurn || !view.decision?.can_pass || pending || state.pendingArrange || interactionFrozen();
+  $("passButton").disabled = state.manualEditing || !ownPlayTurn || !view.decision?.can_pass || pending || state.pendingArrange || interactionFrozen();
   const feedback = selectionFeedback(view, state.selectedIds);
-  $("playButton").disabled = !ownPlayTurn || feedback.matches.length === 0 || pending || state.pendingArrange || interactionFrozen();
+  $("playButton").disabled = state.manualEditing || !ownPlayTurn || feedback.matches.length === 0 || pending || state.pendingArrange || interactionFrozen();
   $("clearSelectionButton").disabled = !canSelectOwnHand() || state.selectedIds.size === 0;
   $("swipeSelectButton").disabled = !canSelectOwnHand();
   $("expandHandButton").disabled = !canSelectOwnHand();
@@ -1711,6 +1880,7 @@ function renderActionControls(view) {
     : interactionFrozen() ? "连接恢复后可继续选牌"
     : state.actionError?.text ? state.actionError.text
     : state.pendingArrange ? "正在重新分组…"
+    : state.manualEditing ? manualSelectionText()
     : state.selectedIds.size ? selectionExplanation(view, state.selectedIds)
     : !ownPlayTurn ? (canSelectOwnHand() ? "可预选手牌，轮到你时校验" : "轮到你后可选牌")
     : state.swipeSelection ? "滑动选牌；再次点击滑选可恢复浏览"
@@ -1723,6 +1893,8 @@ function renderActionControls(view) {
   $("actionDock").classList.toggle("own-turn", ownPlayTurn);
   if (view.phase === "paused" || view.phase === "error") {
     $("turnHint").textContent = view.phase === "paused" ? "AI 暂时不可用" : "牌局无法继续";
+  } else if (state.manualEditing) {
+    $("turnHint").textContent = "手动理牌中";
   } else if (pending) {
     $("turnHint").textContent = "已提交，等待服务器确认…";
   } else if (ownPlayTurn) {
@@ -1905,6 +2077,7 @@ function syncOwnHandSelection() {
     stack.classList.toggle("logical-selected", Boolean(group?.selectionIds.every(id => state.selectedIds.has(id))));
   });
   if (state.view) renderActionControls(state.view);
+  renderManualArrangeControls();
   syncExpandedHandSelection();
 }
 
@@ -1924,6 +2097,7 @@ function openExpandedHand() {
   if (!signature) return;
   cancelSelectionGesture();
   state.expandedHandSignature = signature;
+  $("expandedHandTitle").textContent = state.manualEditing ? "手动理牌" : "展开选牌";
   const sections = state.displayGroups.map((group, index) => {
     const section = document.createElement("section");
     section.className = "expanded-hand-group";
@@ -1953,7 +2127,7 @@ function openExpandedHand() {
   });
   $("expandedHandGroups").replaceChildren(...sections);
   syncExpandedHandSelection();
-  openDialog($("expandedHandDialog"));
+  if (!$("expandedHandDialog").open) openDialog($("expandedHandDialog"));
 }
 
 function syncExpandedHandSelection() {
@@ -1974,12 +2148,12 @@ function syncExpandedHandSelection() {
     button.setAttribute("aria-pressed", feedback.pressed);
     button.setAttribute("aria-label", `选择整组 ${button.dataset.groupIndex}，${feedback.total} 张，已选 ${feedback.selected} 张`);
   });
-  $("expandedHandStatus").textContent = `已选 ${state.selectedIds.size} 张 · 完成后回到牌桌出牌`;
+  $("expandedHandStatus").textContent = state.manualEditing ? manualSelectionText() : `已选 ${state.selectedIds.size} 张 · 完成后回到牌桌出牌`;
 }
 
 function prepareSelectedPlay() {
   const view = state.view;
-  if (!isOwnPlayDecision(view) || state.pendingAction || state.pendingArrange || interactionFrozen()) return;
+  if (state.manualEditing || !isOwnPlayDecision(view) || state.pendingAction || state.pendingArrange || interactionFrozen()) return;
   const selectedCards = selectedCardCodes(view.own_hand, state.selectedIds);
   // A stale/unknown physical ID must not silently disappear from a submission.
   if (selectedCards.length !== state.selectedIds.size) return;
@@ -2035,7 +2209,7 @@ function closeActionChoices() {
 
 function submitPass() {
   const decision = state.view?.decision;
-  if (!isOwnPlayDecision(state.view) || !decision?.can_pass || state.pendingAction || state.pendingArrange || interactionFrozen()) return;
+  if (state.manualEditing || !isOwnPlayDecision(state.view) || !decision?.can_pass || state.pendingAction || state.pendingArrange || interactionFrozen()) return;
   const passAction = decision.actions.find((action) =>
     action.type.toUpperCase() === "PASS" || action.label.toUpperCase() === "PASS",
   );
@@ -2048,7 +2222,7 @@ function submitPass() {
 
 async function submitLegalAction(action, { selectedCards = [], context = actionChoiceContext(state.view) } = {}) {
   const view = state.view;
-  if (!state.token || !isCurrentActionChoice(view, action, context, {
+  if (state.manualEditing || !state.token || !isCurrentActionChoice(view, action, context, {
     pendingAction: state.pendingAction, pendingArrange: state.pendingArrange, interactionFrozen: interactionFrozen(),
   })) return;
   if (action.cards?.length && selectedCardCodes(view.own_hand, state.selectedIds).length !== state.selectedIds.size) return;
@@ -2168,7 +2342,7 @@ async function toggleReady() {
 async function arrangeOwnHand(mode) {
   const view = state.view;
   if (
-    view?.game !== "guandan" ||
+    state.manualEditing || view?.game !== "guandan" ||
     !Number.isInteger(view.viewer?.seat) ||
     ![1, 2, 3, 4].includes(mode) ||
     state.pendingArrange ||

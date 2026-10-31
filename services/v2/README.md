@@ -12,6 +12,7 @@ your own AI through a standard HTTP interface.
 
 - **Table experience** — fixed-aspect desktop and mobile-landscape layouts, card selection, play controls and results.
 - **Flexible hand arrangement** — bombs-first, straight-flush-first, made-hand and simple modes, with alternative partitions.
+- **Manual arrangement**: group or split selected cards, move whole groups, and undo or redo changes without changing game rules.
 - **Realtime play** — WebSocket updates, reconnects, seat recovery and external-AI retries.
 - **Authoritative rules** — legal actions, turns and scoring handled by the game service.
 - **Modular design** — separate UI, rooms, rules, hand arrangement and AI integration.
@@ -34,6 +35,17 @@ Stop the service with Ctrl+C.
 
 On Windows, create the environment with `py -3.12 -m venv .venv` and activate it
 with `.venv\Scripts\activate`.
+
+### Arrange your hand manually
+
+Choose **Arrange manually** on the hand toolbar, or through **Tools** on a phone.
+Select cards to group or split; select a complete group to move it left or right.
+Undo/Redo supports up to 20 changes, including Ctrl/Command+Z and Shift+Z.
+Choose **Done** to keep the layout and return to play. Play/Pass and automatic
+arrangement are disabled while editing; choosing an automatic mode afterwards
+replaces the manual layout. Groups and history stay in page memory, not across
+reloads. The editor lives in `web/frontend/manual-arrange.mjs`, with UI wiring
+in `web/play.js`.
 
 ## Connect your AI
 

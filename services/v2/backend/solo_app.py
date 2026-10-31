@@ -489,6 +489,7 @@ def create_solo_app(
         "card-ui.mjs",
         "hand-layout.mjs",
         "hand-interactions.mjs",
+        "manual-arrange.mjs",
         "guandan-presentation.mjs",
         "table-sound.mjs",
         "table-frame.mjs",
